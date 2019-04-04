@@ -1,4 +1,3 @@
-
 #include "cmp_sprite.h"
 #include "system_renderer.h"
 

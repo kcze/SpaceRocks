@@ -1,5 +1,5 @@
 #include "scene_menu.h"
-//#include "../components/cmp_text.h"
+#include "../components/cmp_text.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
@@ -11,8 +11,8 @@ void MenuScene::Load() {
   cout << "Menu Load \n";
   {
     auto txt = makeEntity();
-    //auto t = txt->addComponent<TextComponent>(
-    //    "Platformer\nPress Space to Start");
+    auto t = txt->addComponent<TextComponent>(
+        "Platformer\nPress Space to Start");
   }
   setLoaded(true);
 }
@@ -22,7 +22,7 @@ void MenuScene::Update(const double& dt) {
 
   if (sf::Keyboard::isKeyPressed(Keyboard::Space)) {
 	  cout << "Changing level...\n";
-    Engine::ChangeScene(&level1);
+    Engine::ChangeScene(&gameScene);
   }
 
   Scene::Update(dt);

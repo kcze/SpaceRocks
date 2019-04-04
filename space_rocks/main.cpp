@@ -4,11 +4,9 @@
 
 using namespace std;
 
-MenuScene menu;
-Level1Scene level1;
-//Level2Scene level2;
-//Level3Scene level3;
+MenuScene menuScene;
+GameScene gameScene;
 
 int main() {
-	Engine::Start(1280, 720, "Space Rocks", &menu);
+	Engine::Start(1280, 720, "Space Rocks", &menuScene);
 }

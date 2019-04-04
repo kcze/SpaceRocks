@@ -2,10 +2,10 @@
 
 #include "engine.h"
 
-class Level1Scene : public Scene {
+class GameScene : public Scene {
 public:
-	Level1Scene() = default;
-  ~Level1Scene() override = default;
+	GameScene() = default;
+  ~GameScene() override = default;
 
   void Load() override;
 
