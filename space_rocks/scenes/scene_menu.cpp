@@ -3,6 +3,8 @@
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
+#include <vector>
+#include "../input.h"
 
 using namespace std;
 using namespace sf;
@@ -87,7 +89,7 @@ void MenuScene::Load() {
   {
     auto txt = makeEntity();
     auto t = txt->addComponent<TextComponent>(
-        "Platformer\nPress Space to Start");
+        "Space Rocks\nPress Enter to Start\nPress Space to test player input");
 	txt->setPosition(Vector2f(500.0f, 32.0f));
   }
   UpdateScaling();
@@ -97,11 +99,16 @@ void MenuScene::Load() {
 void MenuScene::Update(const double& dt) {
   // cout << "Menu Update "<<dt<<"\n";
 
-  if (sf::Keyboard::isKeyPressed(Keyboard::Space)) {
+  if (sf::Keyboard::isKeyPressed(Keyboard::Enter)) {
 	  cout << "Changing level...\n";
     Engine::ChangeScene(&gameScene);
   }
 
+  if (Input::isKeyDown(Input::KeyCode::P1_FIRE)) {
+	  cout << "Player 1 Fire works!\n";
+
+  }
+  
   Scene::Update(dt);
 }
 
