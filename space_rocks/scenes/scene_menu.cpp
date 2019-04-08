@@ -1,15 +1,26 @@
 #include "scene_menu.h"
 #include "../components/cmp_text.h"
+#include "../components/cmp_sprite.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <vector>
 #include "../input.h"
+#include "system_renderer.h"
 
 using namespace std;
 using namespace sf;
 
-std::shared_ptr<Entity> title;
+//Entities
+std::shared_ptr<Entity> txtTitle;
+std::shared_ptr<Entity> txtNewGame;
+std::shared_ptr<Entity> txtLoad;
+std::shared_ptr<Entity> txtHighScores;
+std::shared_ptr<Entity> txtOptions;
+std::shared_ptr<Entity> txtExit;
+std::shared_ptr<Entity> menuCursor;
+
+unsigned int cursorOffset = 100.0f;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -88,43 +99,49 @@ void MenuScene::Load() {
 	cout << "Menu Load \n";
 	{
 		// Title
-		auto title = makeEntity();
-		auto txt = title->addComponent<TextComponent>("SPACE ROCKS");
-		txt->SetAlignment(0);
+		txtTitle = makeEntity();
+		auto txt = txtTitle->addComponent<TextComponent>("SPACE ROCKS");
 		txt->SetSize(64);
-		title->setPosition(Vector2f(640.0f, 32.0f));
+		txtTitle->setPosition(Vector2f(640.0f, 32.0f));
 
 		// Menu Options
 		//New Game
-		auto txtNewGame = makeEntity();
+		txtNewGame = makeEntity();
 		txt = txtNewGame->addComponent<TextComponent>("New Game");
-		txt->SetAlignment(0);
 		txt->SetSize(32);
 		txtNewGame->setPosition(Vector2f(640.0f, 192.0f));
 		//Load
-		auto txtLoad = makeEntity();
+		txtLoad = makeEntity();
 		txt = txtLoad->addComponent<TextComponent>("Load");
 		txtLoad->setPosition(Vector2f(640.0f, 240.0f));
-		txt->SetAlignment(0);
 		txt->SetSize(32);
 		//HighScores
-		auto txtHighScores = makeEntity();
+		txtHighScores = makeEntity();
 		txt = txtHighScores->addComponent<TextComponent>("HighScores");
 		txtHighScores->setPosition(Vector2f(640.0f, 288.0f));
-		txt->SetAlignment(0);
 		txt->SetSize(32);
 		//Options
-		auto txtOptions = makeEntity();
+		txtOptions = makeEntity();
 		txt = txtOptions->addComponent<TextComponent>("Options");
 		txtOptions->setPosition(Vector2f(640.0f, 336.0f));
-		txt->SetAlignment(0);
 		txt->SetSize(32);
 		//Exit
-		auto txtExit = makeEntity(); 
+		txtExit = makeEntity(); 
 		txt = txtExit->addComponent<TextComponent>("Exit");
 		txtExit->setPosition(Vector2f(640.0f, 384.0f));
-		txt->SetAlignment(0);
 		txt->SetSize(32);
+
+		// Cursor
+		menuCursor = makeEntity();
+		auto img = menuCursor->addComponent<ShapeComponent>();
+		img->setShape<sf::CircleShape>(10.0f);
+		img->SetAnchor(sf::Vector2f(0.5f, 0.3f));
+
+		menuCursor->setPosition(sf::Vector2f(
+			txtNewGame->getPosition().x - cursorOffset,
+			txtNewGame->getPosition().y
+		));
+
 	}
 	UpdateScaling();
 	setLoaded(true);
