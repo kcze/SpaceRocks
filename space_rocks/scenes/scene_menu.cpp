@@ -21,6 +21,8 @@ std::shared_ptr<Entity> txtExit;
 std::shared_ptr<Entity> menuCursor;
 
 unsigned int cursorOffset = 100.0f;
+unsigned int target = 1;
+unsigned int numOptions = 5;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -136,19 +138,65 @@ void MenuScene::Load() {
 		auto img = menuCursor->addComponent<ShapeComponent>();
 		img->setShape<sf::CircleShape>(10.0f);
 		img->SetAnchor(sf::Vector2f(0.5f, 0.3f));
-
-		menuCursor->setPosition(sf::Vector2f(
-			txtNewGame->getPosition().x - cursorOffset,
-			txtNewGame->getPosition().y
-		));
-
 	}
 	UpdateScaling();
 	setLoaded(true);
 }
 
+void MenuCursorUpdate() {
+	switch (target) {
+	case 1:
+		menuCursor->setPosition(sf::Vector2f(
+			txtNewGame->getPosition().x - cursorOffset,
+			txtNewGame->getPosition().y
+		));
+		break;
+	case 2:
+		menuCursor->setPosition(sf::Vector2f(
+			txtLoad->getPosition().x - cursorOffset,
+			txtLoad->getPosition().y
+		));
+		break;	
+	case 3:
+		menuCursor->setPosition(sf::Vector2f(
+			txtHighScores->getPosition().x - cursorOffset,
+			txtHighScores->getPosition().y
+		));
+		break;
+	case 4:
+		menuCursor->setPosition(sf::Vector2f(
+			txtOptions->getPosition().x - cursorOffset,
+			txtOptions->getPosition().y
+		));
+		break;
+	case 5:
+		menuCursor->setPosition(sf::Vector2f(
+			txtExit->getPosition().x - cursorOffset,
+			txtExit->getPosition().y
+		));
+		break;
+	}
+}
+
 void MenuScene::Update(const double& dt) {
   // cout << "Menu Update "<<dt<<"\n";
+
+	//Cycle up
+	if (sf::Keyboard::isKeyPressed(Keyboard::Up))
+	{
+		target == 1 ? target = numOptions : target--;
+		cout << "Target" << target << "\n";
+	}
+	//Cycle down
+	if (sf::Keyboard::isKeyPressed(Keyboard::Down))
+	{
+		target == numOptions ? target = 1 : target++;
+		cout << "Target" << target << "\n";
+	}
+
+
+
+
 
   if (sf::Keyboard::isKeyPressed(Keyboard::Enter)) {
 	  cout << "Changing level...\n";
@@ -161,5 +209,7 @@ void MenuScene::Update(const double& dt) {
   }
   
   Scene::Update(dt);
+  MenuCursorUpdate();
 }
+
 
