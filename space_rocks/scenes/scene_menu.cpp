@@ -190,8 +190,8 @@ void MenuScene::Update(const double& dt) {
 		if (newUpPress)
 		{
 			newUpPress = false;
-		target == 1 ? target = numOptions : target--;
-	}
+			target == 1 ? target = numOptions : target--;
+		}
 	}
 	else
 	{
@@ -205,7 +205,7 @@ void MenuScene::Update(const double& dt) {
 		if (newDownPress)
 		{
 			newDownPress = false;
-		target == numOptions ? target = 1 : target++;
+			target == numOptions ? target = 1 : target++;
 		}
 	}
 	else
@@ -217,8 +217,26 @@ void MenuScene::Update(const double& dt) {
 
 
   if (sf::Keyboard::isKeyPressed(Keyboard::Enter)) {
-	  cout << "Changing level...\n";
-    Engine::ChangeScene(&gameScene);
+	  switch (target)
+	  {
+		//New Game
+		case 1 :
+			cout << "Changing level...\n";
+			Engine::ChangeScene(&gameScene);
+			break;
+		//Load
+		case 2 :
+			break;
+		//HighScore
+		case 3 :
+			break;
+		//Options
+		case 4 :
+			break;
+		//Exit
+		case 5 :
+			break;
+	  }
   }
 
   if (Input::isKeyDown(Input::KeyCode::P1_FIRE)) {
