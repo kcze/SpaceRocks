@@ -85,15 +85,49 @@ void UpdateScaling()
 }
 
 void MenuScene::Load() {
-  cout << "Menu Load \n";
-  {
-    auto txt = makeEntity();
-    auto t = txt->addComponent<TextComponent>(
-        "Space Rocks\nPress Enter to Start\nPress Space to test player input");
-	txt->setPosition(Vector2f(500.0f, 32.0f));
-  }
-  UpdateScaling();
-  setLoaded(true);
+	cout << "Menu Load \n";
+	{
+		// Title
+		auto title = makeEntity();
+		auto txt = title->addComponent<TextComponent>("SPACE ROCKS");
+		txt->SetAlignment(0);
+		txt->SetSize(64);
+		title->setPosition(Vector2f(640.0f, 32.0f));
+
+		// Menu Options
+		//New Game
+		auto txtNewGame = makeEntity();
+		txt = txtNewGame->addComponent<TextComponent>("New Game");
+		txt->SetAlignment(0);
+		txt->SetSize(32);
+		txtNewGame->setPosition(Vector2f(640.0f, 192.0f));
+		//Load
+		auto txtLoad = makeEntity();
+		txt = txtLoad->addComponent<TextComponent>("Load");
+		txtLoad->setPosition(Vector2f(640.0f, 240.0f));
+		txt->SetAlignment(0);
+		txt->SetSize(32);
+		//HighScores
+		auto txtHighScores = makeEntity();
+		txt = txtHighScores->addComponent<TextComponent>("HighScores");
+		txtHighScores->setPosition(Vector2f(640.0f, 288.0f));
+		txt->SetAlignment(0);
+		txt->SetSize(32);
+		//Options
+		auto txtOptions = makeEntity();
+		txt = txtOptions->addComponent<TextComponent>("Options");
+		txtOptions->setPosition(Vector2f(640.0f, 336.0f));
+		txt->SetAlignment(0);
+		txt->SetSize(32);
+		//Exit
+		auto txtExit = makeEntity(); 
+		txt = txtExit->addComponent<TextComponent>("Exit");
+		txtExit->setPosition(Vector2f(640.0f, 384.0f));
+		txt->SetAlignment(0);
+		txt->SetSize(32);
+	}
+	UpdateScaling();
+	setLoaded(true);
 }
 
 void MenuScene::Update(const double& dt) {
