@@ -24,6 +24,7 @@ public:
 class ShapeComponent : public Component {
 protected:
   std::shared_ptr<sf::Shape> _shape;
+  sf::Vector2f _anchor;
   // sf::Shape _shape;
 
 public:
@@ -31,9 +32,14 @@ public:
 
   explicit ShapeComponent(Entity* p);
 
+  void ShapeComponent::SetAnchor(sf::Vector2f vec);
+
   void update(double dt) override;
+  
   void render() override;
+  
   sf::Shape& getShape() const;
+  
   template <typename T, typename... Targs> void setShape(Targs... params) {
     _shape.reset(new T(params...));
   }
