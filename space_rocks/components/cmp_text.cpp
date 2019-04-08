@@ -7,9 +7,7 @@ void TextComponent::update(double dt) {
 	sf::FloatRect bounds = _text.getLocalBounds();
 	
 	//Position
-	_text.setPosition(sf::Vector2f(
-		_parent->getPosition().x - _anchor.x * bounds.width,
-		_parent->getPosition().y - _anchor.y * bounds.height));
+	_text.setPosition(GetAnchoredPosition());
 }
 
 void TextComponent::render() { Renderer::queue(&_text); }
@@ -42,6 +40,18 @@ void TextComponent::SetAnchor(sf::Vector2f vec)
 
 	_anchor = vec;
 }
+
+//Returns the anchor
+sf::Vector2f TextComponent::GetAnchoredPosition()
+{
+	sf::FloatRect bounds = _text.getLocalBounds();
+
+	sf::Vector2f pos = sf::Vector2f(
+		_parent->getPosition().x - _anchor.x * bounds.width,
+		_parent->getPosition().y - _anchor.y * (bounds.top + bounds.height));
+	return pos;
+}
+
 
 //Set character size in pixels
 void TextComponent::SetSize(unsigned int size)

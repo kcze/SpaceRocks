@@ -16,6 +16,7 @@ public:
   void SetText(const std::string& str);
 
   void TextComponent::SetAnchor(sf::Vector2f vec);
+  sf::Vector2f TextComponent::GetAnchoredPosition();
 
   void TextComponent::SetSize(unsigned int size);
 
