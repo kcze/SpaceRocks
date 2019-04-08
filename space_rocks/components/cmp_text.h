@@ -15,8 +15,11 @@ public:
 
   void SetText(const std::string& str);
 
+  void TextComponent::SetAlignment(int i);
+
 protected:
   std::shared_ptr<sf::Font> _font;
   std::string _string;
   sf::Text _text;
+  int _alignment;
 };
