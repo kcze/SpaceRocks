@@ -6,21 +6,10 @@ void TextComponent::update(double dt) {
 
 	sf::FloatRect bounds = _text.getLocalBounds();
 	
-	switch (_alignment)
-	{
-	//Left Edge
-	case -1: 
-		_text.setPosition(_parent->getPosition());
-		break;
-	//Center
-	case 0 : 
-		_text.setPosition(sf::Vector2f(_parent->getPosition().x - bounds.width / 2, _parent->getPosition().y));
-		break;
-	//Right Edge
-	case 1 : 
-		_text.setPosition(sf::Vector2f(_parent->getPosition().x - bounds.width, _parent->getPosition().y));
-		break;
-	}
+	//Position
+	_text.setPosition(sf::Vector2f(
+		_parent->getPosition().x - _anchor.x * bounds.width,
+		_parent->getPosition().y - _anchor.y * bounds.height));
 }
 
 void TextComponent::render() { Renderer::queue(&_text); }
@@ -30,7 +19,7 @@ TextComponent::TextComponent(Entity* const p, const std::string& str)
   _text.setString(_string);
   _font = Resources::get<sf::Font>("Acuter.ttf");
   _text.setFont(*_font);
-  _alignment = 0;
+  _anchor = sf::Vector2f(0.5f, 0.5f);
 }
 
 void TextComponent::SetText(const std::string& str) {
@@ -38,12 +27,20 @@ void TextComponent::SetText(const std::string& str) {
   _text.setString(_string);
 }
 
-// Set text alignment (anchor position): 
-// -1 = Left Edge, 0 = Center, 1 = Right Edge
-void TextComponent::SetAlignment(int i)
+// Set anchor:
+// 0.0, 0.0	= top left
+// 0.5, 0.5	= center
+// 1.0, 1.0	= bottom right
+// Values outside of this range will be rounded to closest edge
+void TextComponent::SetAnchor(sf::Vector2f vec)
 {
-	if (i >= -1 && i <= 1)
-		_alignment = i;
+	//Inforce limits
+	vec.x = vec.x < 0.0f ? 0.0f : vec.x;
+	vec.x = vec.x > 1.0f ? 1.0f : vec.x;
+	vec.y = vec.y < 0.0f ? 0.0f : vec.y;
+	vec.y = vec.y > 1.0f ? 1.0f : vec.y;
+
+	_anchor = vec;
 }
 
 //Set character size in pixels

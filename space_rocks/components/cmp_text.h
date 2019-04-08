@@ -15,7 +15,7 @@ public:
 
   void SetText(const std::string& str);
 
-  void TextComponent::SetAlignment(int i);
+  void TextComponent::SetAnchor(sf::Vector2f vec);
 
   void TextComponent::SetSize(unsigned int size);
 
@@ -23,5 +23,5 @@ protected:
   std::shared_ptr<sf::Font> _font;
   std::string _string;
   sf::Text _text;
-  int _alignment;
+  sf::Vector2f _anchor;
 };
