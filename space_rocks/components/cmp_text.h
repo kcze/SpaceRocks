@@ -17,6 +17,8 @@ public:
 
   void TextComponent::SetAlignment(int i);
 
+  void TextComponent::SetSize(unsigned int size);
+
 protected:
   std::shared_ptr<sf::Font> _font;
   std::string _string;

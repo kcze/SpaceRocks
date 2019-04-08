@@ -45,3 +45,9 @@ void TextComponent::SetAlignment(int i)
 	if (i >= -1 && i <= 1)
 		_alignment = i;
 }
+
+//Set character size in pixels
+void TextComponent::SetSize(unsigned int size)
+{
+	_text.setCharacterSize(size);
+}
