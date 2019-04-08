@@ -23,13 +23,7 @@ Keyboard::Key Input::lastKey = Keyboard::Key::Unknown;//todo change to vector
 Mouse::Button Input::lastButton = (sf::Mouse::Button)-1;//todo change to vector
 Vector2f Input::lastMousePos;
 
-void Input::init() {
-	//todo temp
-	Input::keys[KeyCode::P1_LEFT] = Keyboard::Key::Left;
-	Input::keys[KeyCode::P1_RIGHT] = Keyboard::Key::Right;
-	Input::keys[KeyCode::P1_THRUST] = Keyboard::Key::Up;
-	Input::keys[KeyCode::P1_FIRE] = Keyboard::Key::Space;
-}
+void Input::init() { }
 
 //todo useless
 bool Input::isKeyPressed(Keyboard::Key key) { return  sf::Keyboard::isKeyPressed((sf::Keyboard::Key)key); }
