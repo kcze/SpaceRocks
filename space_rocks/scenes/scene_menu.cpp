@@ -23,6 +23,8 @@ std::shared_ptr<Entity> menuCursor;
 unsigned int cursorOffset = 100.0f;
 unsigned int target = 1;
 unsigned int numOptions = 5;
+bool newUpPress = true;
+bool newDownPress = true;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -179,22 +181,38 @@ void MenuCursorUpdate() {
 }
 
 void MenuScene::Update(const double& dt) {
-  // cout << "Menu Update "<<dt<<"\n";
 
+	// Menu Cycling
 	//Cycle up
 	if (sf::Keyboard::isKeyPressed(Keyboard::Up))
 	{
+		//Fire once per keypress
+		if (newUpPress)
+		{
+			newUpPress = false;
 		target == 1 ? target = numOptions : target--;
-		cout << "Target" << target << "\n";
+	}
+	}
+	else
+	{
+		//reset flag
+		newUpPress = true;
 	}
 	//Cycle down
 	if (sf::Keyboard::isKeyPressed(Keyboard::Down))
 	{
+		//Fire once per keypress
+		if (newDownPress)
+		{
+			newDownPress = false;
 		target == numOptions ? target = 1 : target++;
-		cout << "Target" << target << "\n";
+		}
 	}
-
-
+	else
+	{
+		//reset flag
+		newDownPress = true;
+	}
 
 
 
