@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+// Sprite
 class SpriteComponent : public Component {
 protected:
   std::shared_ptr<sf::Sprite> _sprite;
@@ -19,8 +20,10 @@ public:
 
 
   void setTexure(std::shared_ptr<sf::Texture> tex);
+  void setTextureRect(sf::IntRect);
 };
 
+// Shape
 class ShapeComponent : public Component {
 protected:
   std::shared_ptr<sf::Shape> _shape;
