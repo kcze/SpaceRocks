@@ -3,11 +3,21 @@
 
 using namespace std;
 
-//Sprite
+// Sprite
 void SpriteComponent::setTexure(std::shared_ptr<sf::Texture> tex)
 {
   _texture = tex;
   _sprite->setTexture(*_texture);
+}
+
+void SpriteComponent::setTextureRect(sf::IntRect rect)
+{
+	_sprite->setTextureRect(rect);
+}
+
+void SpriteComponent::setOrigin(const sf::Vector2f origin)
+{
+	_sprite->setOrigin(origin);
 }
 
 SpriteComponent::SpriteComponent(Entity* p)
@@ -21,7 +31,7 @@ void SpriteComponent::update(double dt) {
 void SpriteComponent::render() { Renderer::queue(_sprite.get()); }
 
 
-//Shape
+// Shape
 void ShapeComponent::update(double dt) {
 	sf::FloatRect bounds = _shape->getLocalBounds();
 

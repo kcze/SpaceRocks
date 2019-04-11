@@ -9,5 +9,7 @@ public:
 
   void Load() override;
 
+  void SpawnAsteroid();
+
   void Update(const double& dt) override;
 };

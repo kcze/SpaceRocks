@@ -238,11 +238,6 @@ void MenuScene::Update(const double& dt) {
 			break;
 	  }
   }
-
-  if (Input::isKeyDown(Input::KeyCode::P1_FIRE)) {
-	  cout << "Player 1 Fire works!\n";
-
-  }
   
   Scene::Update(dt);
   MenuCursorUpdate();
