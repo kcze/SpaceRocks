@@ -21,11 +21,36 @@ void SpriteComponent::setOrigin(const sf::Vector2f origin)
 }
 
 SpriteComponent::SpriteComponent(Entity* p)
-    : Component(p), _sprite(make_shared<sf::Sprite>()) {}
+    : Component(p), _sprite(make_shared<sf::Sprite>()) {
+	_anchor = sf::Vector2f(0.5f, 0.5f);
+}
+
+// Set anchor:
+// 0.0, 0.0	= top left
+// 0.5, 0.5	= center
+// 1.0, 1.0	= bottom right
+// Values outside of this range will be rounded to closest edge
+void SpriteComponent::SetAnchor(sf::Vector2f vec) 
+{
+	//Inforce limits
+	vec.x = vec.x < 0.0f ? 0.0f : vec.x;
+	vec.x = vec.x > 1.0f ? 1.0f : vec.x;
+	vec.y = vec.y < 0.0f ? 0.0f : vec.y;
+	vec.y = vec.y > 1.0f ? 1.0f : vec.y;
+
+	_anchor = vec;
+}
 
 void SpriteComponent::update(double dt) {
-  _sprite->setPosition(_parent->getPosition());
-  _sprite->setRotation(_parent->getRotation());
+	//Position
+	sf::FloatRect bounds = _sprite->getLocalBounds();
+	//set
+	 _sprite->setPosition(sf::Vector2f(
+		 _parent->getPosition().x - _anchor.x * bounds.width,
+		 _parent->getPosition().y - _anchor.y * bounds.height));
+
+	//Rotation
+	_sprite->setRotation(_parent->getRotation());
 }
 
 void SpriteComponent::render() { Renderer::queue(_sprite.get()); }
@@ -40,6 +65,7 @@ void ShapeComponent::update(double dt) {
 		_parent->getPosition().x - _anchor.x * bounds.width,
 		_parent->getPosition().y - _anchor.y * bounds.height));
 
+	//Rotation
 	_shape->setRotation(_parent->getRotation());
 }
 
