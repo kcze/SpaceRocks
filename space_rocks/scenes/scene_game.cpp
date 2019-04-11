@@ -34,7 +34,7 @@ void GameScene::Load() {
 
 	// Test ship
 	auto ship = ShipFactory::makePlayer();
-	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(200.0f, 200.0f));
+	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
 	srand(time(NULL));
 	setLoaded(true);
