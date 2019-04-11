@@ -3,13 +3,12 @@
 #include "ecm.h"
 
 class DestructibleComponent : public Component {
-protected:
-	float _hp;
-	float _maxHp;
 
 public:
-	DestructibleComponent(Entity* d, const float hp);
+	DestructibleComponent() = delete;
+	explicit DestructibleComponent(Entity* p, const float hp);
 
+	void render() override { } 
 	void update(double dt) override;
 	float getHp() const;
 	float getMaxHp() const;
@@ -17,4 +16,8 @@ public:
 	void repair(const float hp);
 
 	~DestructibleComponent() override = default;
+
+protected:
+	float _hp;
+	float _maxHp;
 };
