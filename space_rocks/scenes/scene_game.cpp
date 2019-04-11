@@ -12,6 +12,7 @@
 #include <time.h>
 #include "system_resources.h"
 #include <random>
+#include "..\ship_factory.h"
 
 using namespace std;
 using namespace sf;
@@ -31,6 +32,11 @@ void GameScene::Load() {
 	// Load spritesheets
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
+	// Test ship
+	auto ship = ShipFactory::makePlayer();
+	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(200.0f, 200.0f));
+
+	srand(time(NULL));
 	setLoaded(true);
 }
 

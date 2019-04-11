@@ -51,6 +51,10 @@ static double deg2rad(double degrees) {
   return degrees * 4.0 * atan(1.0) / 180.0;
 }
 
+static double rad2deg(double radians) {
+	return radians * 180.0 / (4.0 * atan(1.0));
+}
+
 template <typename T>
 Vector2<T> rotate(const Vector2<T>& v, const double degrees) {
   const double theta = deg2rad(degrees);
