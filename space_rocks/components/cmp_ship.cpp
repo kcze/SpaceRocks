@@ -2,13 +2,13 @@
 #include "maths.h"
 #include <Box2D\Dynamics\b2Fixture.h>
 
-ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSpeed, const float reload, Entity* bullet) : Component(p)
+ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSpeed, const float reload) : Component(p)
 {
 	// Setting hp values
 	_speed = speed;
 	_angularSpeed = angularSpeed;
 	_reload = reload;
-	_bullet = bullet;
+	//_bullet = bullet;
 	_physicsComponent = _parent->get_components<PhysicsComponent>()[0];
 	_physicsComponent->getFixture()->GetBody()->SetLinearDamping(0.01f);
 	_physicsComponent->getFixture()->GetBody()->SetAngularDamping(0.01f);
@@ -31,5 +31,6 @@ void ShipComponent::shoot()
 
 void ShipComponent::update(double dt)
 {
+	//todo probably not needed
 	//_physicsComponent->dampen(sf::Vector2f(0.9f * dt, 0.9f * dt));
 }

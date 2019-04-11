@@ -10,6 +10,7 @@
 #include "maths.h"
 #include <stdlib.h>
 #include <time.h>
+#include "..\ship_factory.h"
 
 using namespace std;
 using namespace sf;
@@ -29,6 +30,9 @@ void GameScene::Load() {
 	//	std::cerr << "Failed to load asteroid spritesheet!" << std::endl;
 	//}
 
+	// Test ship
+	auto ship = ShipFactory::makeShip();
+	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(200.0f, 200.0f));
 
 	srand(time(NULL));
 	setLoaded(true);
