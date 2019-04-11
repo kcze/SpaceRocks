@@ -32,6 +32,7 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 	auto sprite = entity->addComponent<SpriteComponent>();
 	//sprite->setTextureRect(sf::IntRect(0, 0, 256, 256));
 	sprite->setTexure(Resources::load<sf::Texture>("player.png"));
+	sprite->SetAnchor(sf::Vector2f(0.0f, 0.0f));
 	sprite->setOrigin(sf::Vector2f(128, 128));
 
 	// Physics
