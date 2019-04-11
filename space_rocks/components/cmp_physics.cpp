@@ -1,5 +1,6 @@
 #include "cmp_physics.h"
 #include "system_physics.h"
+#include "maths.h"
 
 using namespace std;
 using namespace sf;
@@ -101,6 +102,13 @@ void PhysicsComponent::render() {}
 void PhysicsComponent::impulse(const sf::Vector2f& i) {
   auto a = b2Vec2(i.x, i.y * -1.0f);
   _body->ApplyLinearImpulseToCenter(a, true);
+}
+
+void PhysicsComponent::impulseRelative(sf::Vector2f& i) {
+	double deg = rad2deg(_body->GetAngle());
+	sf::Vector2f v = rotate(i, deg);
+	auto a = b2Vec2(v.x, v.y * -1.0f);
+	_body->ApplyLinearImpulseToCenter(a, true);
 }
 
 void PhysicsComponent::dampen(const sf::Vector2f& i) {
