@@ -55,13 +55,13 @@ void GameScene::SpawnAsteroid()
 	//calculate center of screen
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
-	asteroid->setPosition(center);
+	asteroid->setPosition(center + dir*800.0f);
 	
 	// Physics
 	auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	phys->setVelocity(sf::Vector2f(-dir.x * 10.0f, -dir.y * 10.0f));
+	phys->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
 
 	// Sprite
 	auto spr = asteroid->addComponent<SpriteComponent>();
