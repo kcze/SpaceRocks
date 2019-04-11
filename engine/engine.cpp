@@ -7,6 +7,7 @@
 #include <future>
 #include <iostream>
 #include <stdexcept>
+#include "..\space_rocks\input.h"
 
 using namespace sf;
 using namespace std;
@@ -90,9 +91,15 @@ void Engine::Start(unsigned int width, unsigned int height,
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
-      if (event.type == Event::Closed) {
-        window.close();
-      }
+		switch (event.type) {
+			case sf::Event::Closed:				window.close();					break;
+			case sf::Event::KeyPressed:			Input::onKeyPressed(event);		break;
+			case sf::Event::KeyReleased:		Input::onKeyReleased(event);	break;
+			case sf::Event::MouseButtonPressed:	Input::onMousePressed(event);	break;
+			case sf::Event::MouseButtonReleased:Input::onMouseReleased(event);	break;
+			case sf::Event::MouseMoved:			Input::onMouseMoved(event);		break;
+			case sf::Event::Resized:			Input::onResized(event);		break;
+		}
     }
     if (Keyboard::isKeyPressed(Keyboard::Escape)) {
       window.close();

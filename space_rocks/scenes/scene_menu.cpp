@@ -180,65 +180,39 @@ void MenuCursorUpdate() {
 	}
 }
 
-void MenuScene::Update(const double& dt) {
-
-	// Menu Cycling
-	//Cycle up
-	if (sf::Keyboard::isKeyPressed(Keyboard::Up))
+void MenuScene::onKeyPressed(Keyboard::Key key)
+{
+	if(key == Keyboard::Up)
+		target == 1 ? target = numOptions : target--;
+	else if (key == Keyboard::Down)
+		target == numOptions ? target = 1 : target++;
+	else if (key == Keyboard::Enter)
 	{
-		//Fire once per keypress
-		if (newUpPress)
+		switch (target)
 		{
-			newUpPress = false;
-			target == 1 ? target = numOptions : target--;
-		}
-	}
-	else
-	{
-		//reset flag
-		newUpPress = true;
-	}
-	//Cycle down
-	if (sf::Keyboard::isKeyPressed(Keyboard::Down))
-	{
-		//Fire once per keypress
-		if (newDownPress)
-		{
-			newDownPress = false;
-			target == numOptions ? target = 1 : target++;
-		}
-	}
-	else
-	{
-		//reset flag
-		newDownPress = true;
-	}
-
-
-
-  if (sf::Keyboard::isKeyPressed(Keyboard::Enter)) {
-	  switch (target)
-	  {
-		//New Game
-		case 1 :
+			//New Game
+		case 1:
 			cout << "Changing level...\n";
 			Engine::ChangeScene(&gameScene);
 			break;
-		//Load
-		case 2 :
+			//Load
+		case 2:
 			break;
-		//HighScore
-		case 3 :
+			//HighScore
+		case 3:
 			break;
-		//Options
-		case 4 :
+			//Options
+		case 4:
 			break;
-		//Exit
-		case 5 :
+			//Exit
+		case 5:
 			break;
-	  }
-  }
-  
+		}
+	}
+}
+
+void MenuScene::Update(const double& dt) {
+
   Scene::Update(dt);
   MenuCursorUpdate();
 }
