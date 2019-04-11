@@ -6,12 +6,17 @@
 #include "components\cmp_physics.h"
 #include "components\cmp_ship.h"
 #include "components\cmp_destructible.h"
+#include "components\cmp_player.h"
 #include "system_resources.h"
 #include <string>
 
 std::shared_ptr<Entity> ShipFactory::makePlayer()
 {
-	return makeShip();
+	auto player = makeShip();
+
+	player->addComponent<PlayerComponent>(1);
+
+	return player;
 }
 
 std::shared_ptr<Entity> ShipFactory::makeEnemy()

@@ -10,18 +10,18 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_reload = reload;
 	//_bullet = bullet;
 	_physicsComponent = _parent->get_components<PhysicsComponent>()[0];
-	_physicsComponent->getFixture()->GetBody()->SetLinearDamping(0.01f);
-	_physicsComponent->getFixture()->GetBody()->SetAngularDamping(0.01f);
+	_physicsComponent->getFixture()->GetBody()->SetLinearDamping(3.0f);
+	_physicsComponent->getFixture()->GetBody()->SetAngularDamping(5.0f);
 }
 
-void ShipComponent::thrust()
+void ShipComponent::thrust(double dt)
 {
-	_physicsComponent->setVelocity(sf::Vector2f(0.0f, 1.0f));
+	_physicsComponent->impulseRelative(sf::Vector2f(0.0f, -_speed * dt));
 }
 
-void ShipComponent::rotate(bool left)
+void ShipComponent::rotate(bool right)
 {
-	_physicsComponent->setAngularVelocity(left ? _angularSpeed : -_angularSpeed);
+	_physicsComponent->setAngularVelocity(right ? _angularSpeed : -_angularSpeed);
 }
 
 void ShipComponent::shoot()

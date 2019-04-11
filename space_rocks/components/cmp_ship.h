@@ -11,8 +11,8 @@ public:
 
 	void render() override { }
 	void update(double dt) override;
-	void thrust();
-	void rotate(bool left);
+	void thrust(double dt);
+	void rotate(bool right);
 	void shoot();
 
 	~ShipComponent() override = default;
