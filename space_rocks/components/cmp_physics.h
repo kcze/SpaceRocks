@@ -26,6 +26,7 @@ public:
   void impulse(const sf::Vector2f& i);
   void dampen(const sf::Vector2f& s);
   void setVelocity(const sf::Vector2f& v);
+  void setAngularVelocity(const float a);
   void teleport(const sf::Vector2f& v);
   ~PhysicsComponent() override;
 };
