@@ -8,6 +8,7 @@ void SpriteComponent::setTexure(std::shared_ptr<sf::Texture> tex)
 {
   _texture = tex;
   _sprite->setTexture(*_texture);
+  SetAnchor(sf::Vector2f(0.5f, 0.5f));
 }
 
 void SpriteComponent::setTextureRect(sf::IntRect rect)
@@ -21,9 +22,7 @@ void SpriteComponent::setOrigin(const sf::Vector2f origin)
 }
 
 SpriteComponent::SpriteComponent(Entity* p)
-    : Component(p), _sprite(make_shared<sf::Sprite>()) {
-	_anchor = sf::Vector2f(0.5f, 0.5f);
-}
+    : Component(p), _sprite(make_shared<sf::Sprite>()) {}
 
 // Set anchor:
 // 0.0, 0.0	= top left
@@ -38,16 +37,22 @@ void SpriteComponent::SetAnchor(sf::Vector2f vec)
 	vec.y = vec.y < 0.0f ? 0.0f : vec.y;
 	vec.y = vec.y > 1.0f ? 1.0f : vec.y;
 
+	//store anchor
 	_anchor = vec;
+
+	//get bounds
+	sf::FloatRect bounds = _sprite->getLocalBounds();
+
+	//set origin
+	_sprite->setOrigin(sf::Vector2f(
+		_anchor.x * bounds.width,
+		_anchor.y * bounds.height));
+	cout << "Origin set to: " << _anchor.x * bounds.width << ", " << _anchor.y * bounds.height << endl;
 }
 
 void SpriteComponent::update(double dt) {
 	//Position
-	sf::FloatRect bounds = _sprite->getLocalBounds();
-	//set
-	 _sprite->setPosition(sf::Vector2f(
-		 _parent->getPosition().x - _anchor.x * bounds.width,
-		 _parent->getPosition().y - _anchor.y * bounds.height));
+	 _sprite->setPosition(_parent->getPosition());
 
 	//Rotation
 	_sprite->setRotation(_parent->getRotation());
