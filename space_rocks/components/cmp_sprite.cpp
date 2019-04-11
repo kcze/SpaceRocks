@@ -15,6 +15,11 @@ void SpriteComponent::setTextureRect(sf::IntRect rect)
 	_sprite->setTextureRect(rect);
 }
 
+void SpriteComponent::setOrigin(const sf::Vector2f origin)
+{
+	_sprite->setOrigin(origin);
+}
+
 SpriteComponent::SpriteComponent(Entity* p)
     : Component(p), _sprite(make_shared<sf::Sprite>()) {}
 

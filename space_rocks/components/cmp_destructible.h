@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ecm.h"
-#include <SFML/Graphics/Text.hpp>
 
 class DestructibleComponent : public Component {
 
