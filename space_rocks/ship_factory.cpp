@@ -15,6 +15,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	auto player = makeShip();
 
 	player->addComponent<PlayerComponent>(1);
+	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+	player->get_components<PhysicsComponent>()[0]->dump();
 
 	return player;
 }
