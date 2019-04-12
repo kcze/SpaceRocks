@@ -28,8 +28,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	b2Vec2 vertices[3];
 	float PSI = Physics::physics_scale_inv;
 	vertices[0].Set(0.0f * PSI, 55.0f * PSI);
-	vertices[1].Set(-38.0f * PSI, -44.0f * PSI);
-	vertices[2].Set(38.0f * PSI, -44.0f * PSI);
+	vertices[1].Set(-38.0f * PSI, -40.0f * PSI);
+	vertices[2].Set(38.0f * PSI, -40.0f * PSI);
 	unsigned int vertexCount = 3;
 	//Assign vertices to shape
 	Shape.Set(vertices, vertexCount);
