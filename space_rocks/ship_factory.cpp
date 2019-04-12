@@ -8,6 +8,7 @@
 #include "components\cmp_destructible.h"
 #include "components\cmp_player.h"
 #include "system_resources.h"
+#include "Box2D/Box2D.h"
 #include <string>
 
 std::shared_ptr<Entity> ShipFactory::makePlayer()
@@ -15,7 +16,28 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	auto player = makeShip();
 
 	player->addComponent<PlayerComponent>(1);
+	
 	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+	
+	//Collider properties
+	b2FixtureDef fixtureDef;
+	
+	//Create shape
+	b2PolygonShape Shape;
+	fixtureDef.shape = &Shape;
+	//TODO: Set accurate vertices
+	b2Vec2 vertices[3];
+	vertices[0].Set(0.0f, 0.0f);
+	vertices[1].Set(1.0f, 0.0f);
+	vertices[2].Set(0.0f, 1.0f);
+	unsigned int vertexCount = 3;
+
+	b2PolygonShape polygon;
+	polygon.Set(vertices, vertexCount);
+
+	player->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+
+	//Debug dump
 	player->get_components<PhysicsComponent>()[0]->dump();
 
 	return player;

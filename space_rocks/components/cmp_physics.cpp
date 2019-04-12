@@ -30,22 +30,22 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
   // Create the body
   _body = Physics::GetWorld()->CreateBody(&BodyDef);
   _body->SetActive(true);
-  {
-    // Create the fixture shape
-    b2PolygonShape Shape;
-    // SetAsBox box takes HALF-Widths!
-    Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-    b2FixtureDef FixtureDef;
-    // Fixture properties
-    // FixtureDef.density = _dynamic ? 10.f : 0.f;
-    FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
-    FixtureDef.restitution = .2;
-    FixtureDef.shape = &Shape;
-    // Add to body
-    _fixture = _body->CreateFixture(&FixtureDef);
-    //_fixture->SetRestitution(.9)
-    FixtureDef.restitution = .2;
-  }
+  //{
+  //  // Create the fixture shape
+  //  b2PolygonShape Shape;
+  //  // SetAsBox box takes HALF-Widths!
+  //  Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
+  //  b2FixtureDef FixtureDef;
+  //  // Fixture properties
+  //  // FixtureDef.density = _dynamic ? 10.f : 0.f;
+  //  FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
+  //  FixtureDef.restitution = .2;
+  //  FixtureDef.shape = &Shape;
+  //  // Add to body
+  //  _fixture = _body->CreateFixture(&FixtureDef);
+  //  //_fixture->SetRestitution(.9)
+  //  FixtureDef.restitution = .2;
+  //}
 
   _maxSpeed = 500.0f;
 
@@ -74,6 +74,17 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
       _body->CreateFixture(&FixtureDefCircle);
     }
   */
+}
+
+void PhysicsComponent::setFixtureDef(b2FixtureDef fix)
+{
+	//set properties
+	//fix.density = _dynamic ? 10.f : 0.f;
+	fix.friction = _dynamic ? 0.1f : 0.8f;
+	fix.restitution = .2;
+
+	//Attach to body
+	_fixture = _body->CreateFixture(&fix);
 }
 
 void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
