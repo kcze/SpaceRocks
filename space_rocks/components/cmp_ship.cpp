@@ -13,8 +13,8 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_physicsComponent = _parent->get_components<PhysicsComponent>()[0];
 	_thrusterSpriteComponent = _parent->get_components<SpriteComponent>()[1];
 	_thrusterSpriteComponent->setDraw(false);
-	_physicsComponent->getFixture()->GetBody()->SetLinearDamping(3.0f);
-	_physicsComponent->getFixture()->GetBody()->SetAngularDamping(5.0f);
+	_physicsComponent->setLinearDampening(3.0f);
+	_physicsComponent->setAngularDampening(5.0f);
 }
 
 void ShipComponent::thrust(double dt)
