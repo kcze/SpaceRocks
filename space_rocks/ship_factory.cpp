@@ -24,17 +24,17 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	
 	//Create shape
 	b2PolygonShape Shape;
-	fixtureDef.shape = &Shape;
-	//TODO: Set accurate vertices
+	//Set collision vertices
 	b2Vec2 vertices[3];
-	vertices[0].Set(0.0f, 0.0f);
-	vertices[1].Set(1.0f, 0.0f);
-	vertices[2].Set(0.0f, 1.0f);
+	vertices[0].Set(0.0f, -55.0f);
+	vertices[1].Set(-38.0f, 44.0f);
+	vertices[2].Set(38.0f, 44.0f);
 	unsigned int vertexCount = 3;
-
-	b2PolygonShape polygon;
-	polygon.Set(vertices, vertexCount);
-
+	//Assign vertices to shape
+	Shape.Set(vertices, vertexCount);
+	//Assign shape to fixtureDef
+	fixtureDef.shape = &Shape;
+	//Assign fixtureDef to physics component
 	player->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
 
 	//Debug dump
