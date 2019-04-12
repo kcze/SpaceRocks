@@ -24,4 +24,5 @@ protected:
 	Entity* _bullet;
 
 	std::shared_ptr<PhysicsComponent> _physicsComponent;
+	std::shared_ptr<SpriteComponent> _thrusterSpriteComponent;
 };

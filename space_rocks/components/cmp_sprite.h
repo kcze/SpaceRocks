@@ -10,6 +10,8 @@ protected:
   std::shared_ptr<sf::Sprite> _sprite;
   std::shared_ptr<sf::Texture> _texture;
   sf::Vector2f _anchor;
+  bool _draw;
+
 public:
   SpriteComponent() = delete;
 
@@ -25,6 +27,7 @@ public:
   void setTexure(std::shared_ptr<sf::Texture> tex);
   void setTextureRect(sf::IntRect);
   void setOrigin(const sf::Vector2f origin);
+  void setDraw(bool draw);
 };
 
 // Shape

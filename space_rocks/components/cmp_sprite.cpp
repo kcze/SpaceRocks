@@ -21,8 +21,10 @@ void SpriteComponent::setOrigin(const sf::Vector2f origin)
 	_sprite->setOrigin(origin);
 }
 
+void SpriteComponent::setDraw(bool draw) { _draw = draw; }
+
 SpriteComponent::SpriteComponent(Entity* p)
-    : Component(p), _sprite(make_shared<sf::Sprite>()) {}
+    : Component(p), _sprite(make_shared<sf::Sprite>()), _draw(true) {}
 
 // Set anchor:
 // 0.0, 0.0	= top left
@@ -58,7 +60,10 @@ void SpriteComponent::update(double dt) {
 	_sprite->setRotation(_parent->getRotation());
 }
 
-void SpriteComponent::render() { Renderer::queue(_sprite.get()); }
+void SpriteComponent::render() {
+	if(_draw)
+		Renderer::queue(_sprite.get());
+}
 
 
 // Shape

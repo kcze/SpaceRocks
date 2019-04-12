@@ -35,12 +35,20 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 	//sprite->setTextureRect(sf::IntRect(0, 0, 256, 256));
 	sprite->setTexure(Resources::load<sf::Texture>("player.png"));
 
+	// Thruster sprite
+	sprite = entity->addComponent<SpriteComponent>();
+	//sprite->setTextureRect(sf::IntRect(0, 0, 256, 256));
+	sprite->setTexure(Resources::load<sf::Texture>("thrust.png"));
+
 	// Physics
 	entity->addComponent<PhysicsComponent>(true, sf::Vector2f(192.0f, 192.0f));
+
 	// Ship
 	entity->addComponent<ShipComponent>(20.0f, 2.0f, 1.0f);
+
 	// Destructible
 	entity->addComponent<DestructibleComponent>(100.0f);
+
 
 	return entity;
 }
