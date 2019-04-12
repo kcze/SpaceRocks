@@ -33,8 +33,8 @@ void GameScene::Load() {
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
 	// Test ship
-	auto ship = ShipFactory::makePlayer();
-	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	auto player = ShipFactory::makePlayer();
+	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
 	srand(time(NULL));
 	setLoaded(true);
