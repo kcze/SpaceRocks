@@ -87,6 +87,17 @@ void PhysicsComponent::setAngularVelocity(const float a) {
 	_body->SetAngularVelocity(a);
 }
 
+void PhysicsComponent::dump()
+{
+	_body->Dump();
+}
+
+void PhysicsComponent::setLinearDampening(float f)
+{
+	_body->SetLinearDamping(f);
+}
+
+
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 
 PhysicsComponent::~PhysicsComponent() {
