@@ -78,11 +78,6 @@ void GameScene::SpawnAsteroid()
 
 void GameScene::Update(const double& dt) {
 	 
-
-	if (sf::Keyboard::isKeyPressed(Keyboard::Space)) {
-		cout << "Game Scene " << dt << "\n";
-	}
-	
 	//If less than 5 total asteroids, spawn another big asteroid.
 	if (asteroids.size() < 5)
 	{

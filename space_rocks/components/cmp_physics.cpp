@@ -81,8 +81,13 @@ void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
 void PhysicsComponent::setMass(float m) { _fixture->SetDensity(m); }
 
 void PhysicsComponent::teleport(const sf::Vector2f& v) {
-  _body->SetTransform(sv2_to_bv2(invert_height(v)), 0.0f);
+  _body->SetTransform(sv2_to_bv2(invert_height(v)), _body->GetAngle()); 
 }
+
+void PhysicsComponent::setAngle(const float angle) {
+	_body->SetTransform(_body->GetPosition(), angle);
+}
+
 
 const sf::Vector2f PhysicsComponent::getVelocity() const {
   return bv2_to_sv2(_body->GetLinearVelocity(), true);
