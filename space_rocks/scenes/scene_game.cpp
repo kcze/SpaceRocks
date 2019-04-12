@@ -26,7 +26,11 @@ uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 void GameScene::Load() {
 	cout << "Game Scene Load \n";
 	{
+		//Score text
 		auto txt = makeEntity();
+		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
+		txtcmp->SetAnchor(sf::Vector2f(0.0f, 0.5f));
+		txt->setPosition(sf::Vector2f(16.0f, 16.0f));
 	}
 
 	// Load spritesheets
