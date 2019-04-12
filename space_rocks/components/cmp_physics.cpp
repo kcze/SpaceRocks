@@ -8,6 +8,12 @@ using namespace sf;
 using namespace Physics;
 
 void PhysicsComponent::update(double dt) {
+	//Enforce speedlimit
+	float currentSpeed = sf::length(getVelocity());
+	if (currentSpeed > _maxSpeed)
+		setVelocity((_maxSpeed / currentSpeed) * getVelocity());
+
+
   _parent->setPosition(invert_height(bv2_to_sv2(_body->GetPosition())));
   _parent->setRotation((180 / b2_pi) * _body->GetAngle());
 }
@@ -40,6 +46,8 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
     //_fixture->SetRestitution(.9)
     FixtureDef.restitution = .2;
   }
+
+  _maxSpeed = 500.0f;
 
   // An ideal Pod/capusle shape should be used for hte player,
   // this isn't built into B2d, but we can combine two shapes to do so.
@@ -86,6 +94,17 @@ void PhysicsComponent::setVelocity(const sf::Vector2f& v) {
 void PhysicsComponent::setAngularVelocity(const float a) {
 	_body->SetAngularVelocity(a);
 }
+
+void PhysicsComponent::dump()
+{
+	_body->Dump();
+}
+
+void PhysicsComponent::setLinearDampening(float f)
+{
+	_body->SetLinearDamping(f);
+}
+
 
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 

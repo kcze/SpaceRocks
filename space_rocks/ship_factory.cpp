@@ -15,6 +15,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	auto player = makeShip();
 
 	player->addComponent<PlayerComponent>(1);
+	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+	player->get_components<PhysicsComponent>()[0]->dump();
 
 	return player;
 }
@@ -32,7 +34,6 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 	auto sprite = entity->addComponent<SpriteComponent>();
 	//sprite->setTextureRect(sf::IntRect(0, 0, 256, 256));
 	sprite->setTexure(Resources::load<sf::Texture>("player.png"));
-	sprite->setOrigin(sf::Vector2f(128, 128));
 
 	// Physics
 	entity->addComponent<PhysicsComponent>(true, sf::Vector2f(192.0f, 192.0f));

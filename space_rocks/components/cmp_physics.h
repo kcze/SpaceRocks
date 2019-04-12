@@ -9,6 +9,7 @@ protected:
   b2Body* _body;
   const bool _dynamic;
   b2Fixture* _fixture;
+  float _maxSpeed;
 
 public:
   PhysicsComponent(Entity* p, bool dyn, const sf::Vector2f& size);
@@ -29,5 +30,7 @@ public:
   void setVelocity(const sf::Vector2f& v);
   void setAngularVelocity(const float a);
   void teleport(const sf::Vector2f& v);
+  void dump();
+  void setLinearDampening(float f);
   ~PhysicsComponent() override;
 };

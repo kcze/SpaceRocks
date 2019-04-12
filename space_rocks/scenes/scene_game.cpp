@@ -10,6 +10,8 @@
 #include "maths.h"
 #include <stdlib.h>
 #include <time.h>
+#include "system_resources.h"
+#include <random>
 #include "..\ship_factory.h"
 
 using namespace std;
@@ -18,21 +20,25 @@ using namespace sf;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::shared_ptr<sf::Texture> ssAsteroids;
+default_random_engine randomGenerator((int)time(NULL));
+uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 
 void GameScene::Load() {
 	cout << "Game Scene Load \n";
 	{
+		//Score text
 		auto txt = makeEntity();
+		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
+		txtcmp->SetAnchor(sf::Vector2f(0.0f, 0.5f));
+		txt->setPosition(sf::Vector2f(16.0f, 16.0f));
 	}
 
-	//// Load spritesheets
-	//if (!ssAsteroids->loadFromFile("res/img/asteroid-1.png")) {
-	//	std::cerr << "Failed to load asteroid spritesheet!" << std::endl;
-	//}
+	// Load spritesheets
+	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
 	// Test ship
-	auto ship = ShipFactory::makePlayer();
-	ship->get_components<PhysicsComponent>()[0]->teleport(Vector2f(200.0f, 200.0f));
+	auto player = ShipFactory::makePlayer();
+	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
 	srand(time(NULL));
 	setLoaded(true);
@@ -44,20 +50,24 @@ void GameScene::SpawnAsteroid()
 	
 	auto asteroid = makeEntity();
 	// Generate random position off screen
-	float rx = ((1.0f - 0.0f) * ((float)rand() / RAND_MAX)) + 0.0f;
-	float ry = ((1.0f - 0.0f) * ((float)rand() / RAND_MAX)) + 0.0f;
+	float rx = distrib(randomGenerator);
+	float ry = distrib(randomGenerator);
+	cout << "rx: " << rx << "  ry: " << ry;
+	//get normalised direction from random values
 	sf::Vector2f dir = sf::Vector2f(rx, ry);
 	dir = sf::normalize<float>(dir);
-	dir *= 800.0f;
-	asteroid->setPosition(dir);
+	//calculate center of screen
+	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
+	//Set asteroid starting position
+	asteroid->setPosition(center + dir*800.0f);
 	
 	// Physics
-	//auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
+	auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	//phys->setVelocity(sf::Vector2f(-rx, -ry));
+	phys->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
 
-	//Sprite
+	// Sprite
 	auto spr = asteroid->addComponent<SpriteComponent>();
 	spr->setTextureRect(sf::IntRect(0, 0, 256, 256));
 	spr->setTexure(ssAsteroids);
@@ -74,8 +84,10 @@ void GameScene::Update(const double& dt) {
 	}
 	
 	//If less than 5 total asteroids, spawn another big asteroid.
-	//if (asteroids.size() < 5)
-	//	SpawnAsteroid();
+	if (asteroids.size() < 5)
+	{
+		SpawnAsteroid();
+	}
 
 	Scene::Update(dt);
 }
