@@ -22,4 +22,8 @@ void PlayerComponent::update(double dt)
 	{
 		_shipComponent->rotate(true);
 	}
+	if (Input::isKeyDown(Input::KeyCode::P1_FIRE))
+	{
+		_shipComponent->shoot();
+	}
 }

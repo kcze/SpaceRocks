@@ -21,7 +21,9 @@ protected:
 	float _speed;
 	float _angularSpeed;
 	float _reload;
+	float _time;
 	Entity* _bullet;
 
 	std::shared_ptr<PhysicsComponent> _physicsComponent;
+	std::shared_ptr<SpriteComponent> _thrusterSpriteComponent;
 };
