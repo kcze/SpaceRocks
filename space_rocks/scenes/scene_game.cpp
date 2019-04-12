@@ -13,6 +13,8 @@
 #include "system_resources.h"
 #include <random>
 #include "..\ship_factory.h"
+#include "Box2D/Box2D.h"
+
 
 using namespace std;
 using namespace sf;
@@ -66,6 +68,22 @@ void GameScene::SpawnAsteroid()
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
 	phys->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
+	//Collider
+	//Create fixturedef and shape
+	b2FixtureDef fixtureDef;
+	b2PolygonShape Shape;
+	//Set collision vertices
+	b2Vec2 vertices[3];
+	vertices[0].Set(0.0f, -1.0f);
+	vertices[1].Set(-1.0f, 1.0f);
+	vertices[2].Set(1.0f, 1.0f);
+	unsigned int vertexCount = 3;
+	//Assign vertices to shape
+	Shape.Set(vertices, vertexCount);
+	//Assign shape to fixtureDef
+	fixtureDef.shape = &Shape;
+	//Assign fixtureDef to physics component
+	phys->setFixtureDef(fixtureDef);
 
 	// Sprite
 	auto spr = asteroid->addComponent<SpriteComponent>();
