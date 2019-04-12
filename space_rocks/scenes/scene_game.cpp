@@ -74,13 +74,17 @@ void GameScene::SpawnAsteroid()
 	b2FixtureDef fixtureDef;
 	b2PolygonShape Shape;
 	//Set collision vertices
-	const unsigned int vertexCount = 4;
+	const unsigned int vertexCount = 8;
 	b2Vec2 vertices[vertexCount];
 	float PSI = Physics::physics_scale_inv;
-	vertices[0].Set(-100.0f*PSI, 100.0f*PSI);
-	vertices[1].Set(-100.0f*PSI, -100.0f*PSI);
-	vertices[2].Set(100.0f*PSI, -100.0f*PSI);
-	vertices[3].Set(100.0f*PSI, 100.0f*PSI);
+	vertices[0].Set(0.0f * PSI, 100.0f * PSI);
+	vertices[1].Set(-85.0f * PSI, 66.0f * PSI);
+	vertices[2].Set(-100.0f * PSI, -17.0f * PSI);
+	vertices[3].Set(-81.0f * PSI, -67.0f * PSI);	
+	vertices[4].Set(0.0f * PSI, -100.0f * PSI);
+	vertices[5].Set(82.0f  *PSI, -66.0f * PSI);
+	vertices[6].Set(100.0f * PSI, 0.0f * PSI);
+	vertices[7].Set(67.0f * PSI, 67.0f * PSI);
 	//Assign vertices to shape
 	Shape.Set(vertices, vertexCount);
 	//Assign shape to fixtureDef
