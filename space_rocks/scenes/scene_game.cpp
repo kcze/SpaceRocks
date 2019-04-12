@@ -14,6 +14,7 @@
 #include <random>
 #include "..\ship_factory.h"
 #include "Box2D/Box2D.h"
+#include "system_physics.h"
 
 
 using namespace std;
@@ -73,11 +74,13 @@ void GameScene::SpawnAsteroid()
 	b2FixtureDef fixtureDef;
 	b2PolygonShape Shape;
 	//Set collision vertices
-	b2Vec2 vertices[3];
-	vertices[0].Set(0.0f, -1.0f);
-	vertices[1].Set(-1.0f, 1.0f);
-	vertices[2].Set(1.0f, 1.0f);
-	unsigned int vertexCount = 3;
+	const unsigned int vertexCount = 4;
+	b2Vec2 vertices[vertexCount];
+	float PSI = Physics::physics_scale_inv;
+	vertices[0].Set(-100.0f*PSI, 100.0f*PSI);
+	vertices[1].Set(-100.0f*PSI, -100.0f*PSI);
+	vertices[2].Set(100.0f*PSI, -100.0f*PSI);
+	vertices[3].Set(100.0f*PSI, 100.0f*PSI);
 	//Assign vertices to shape
 	Shape.Set(vertices, vertexCount);
 	//Assign shape to fixtureDef
