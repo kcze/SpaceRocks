@@ -10,6 +10,8 @@
 #include "system_resources.h"
 #include "Box2D/Box2D.h"
 #include <string>
+#include "system_physics.h"
+
 
 std::shared_ptr<Entity> ShipFactory::makePlayer()
 {
@@ -19,16 +21,15 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	
 	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
 	
-	//Collider properties
-	b2FixtureDef fixtureDef;
-	
-	//Create shape
+	//Create fixturedef and shape
+	b2FixtureDef fixtureDef;	
 	b2PolygonShape Shape;
 	//Set collision vertices
 	b2Vec2 vertices[3];
-	vertices[0].Set(0.0f, -55.0f);
-	vertices[1].Set(-38.0f, 44.0f);
-	vertices[2].Set(38.0f, 44.0f);
+	float PSI = Physics::physics_scale_inv;
+	vertices[0].Set(0.0f * PSI, 55.0f * PSI);
+	vertices[1].Set(-38.0f * PSI, -44.0f * PSI);
+	vertices[2].Set(38.0f * PSI, -44.0f * PSI);
 	unsigned int vertexCount = 3;
 	//Assign vertices to shape
 	Shape.Set(vertices, vertexCount);
