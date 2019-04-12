@@ -35,5 +35,6 @@ public:
   void setAngle(const float angle);
   void dump();
   void setLinearDampening(float f);
+  void setAngularDampening(float f);
   ~PhysicsComponent() override;
 };

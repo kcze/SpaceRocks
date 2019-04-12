@@ -121,6 +121,12 @@ void PhysicsComponent::setLinearDampening(float f)
 	_body->SetLinearDamping(f);
 }
 
+void PhysicsComponent::setAngularDampening(float f) {
+
+	_body->SetAngularDamping(f);
+}
+
+
 
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 
