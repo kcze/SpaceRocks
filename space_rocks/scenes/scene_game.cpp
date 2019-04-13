@@ -119,6 +119,8 @@ void GameScene::createEdges()
 	b2EdgeShape edgeShape;
 	//Create Fixtures
 	b2FixtureDef fixtureDef;
+	fixtureDef.filter.categoryBits = EDGE;
+	fixtureDef.filter.maskBits = PLAYER_SHIP;
 	// left
 	edgeShape.Set(upLeft, downLeft);
 	fixtureDef.shape = &edgeShape;
