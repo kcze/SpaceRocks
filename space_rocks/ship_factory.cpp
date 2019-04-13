@@ -8,14 +8,37 @@
 #include "components\cmp_destructible.h"
 #include "components\cmp_player.h"
 #include "system_resources.h"
+#include "Box2D/Box2D.h"
 #include <string>
+#include "system_physics.h"
+
 
 std::shared_ptr<Entity> ShipFactory::makePlayer()
 {
 	auto player = makeShip();
 
 	player->addComponent<PlayerComponent>(1);
+	
 	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+	
+	//Create fixturedef and shape
+	b2FixtureDef fixtureDef;	
+	b2PolygonShape Shape;
+	//Set collision vertices
+	b2Vec2 vertices[3];
+	float PSI = Physics::physics_scale_inv;
+	vertices[0].Set(0.0f * PSI, 55.0f * PSI);
+	vertices[1].Set(-38.0f * PSI, -40.0f * PSI);
+	vertices[2].Set(38.0f * PSI, -40.0f * PSI);
+	unsigned int vertexCount = 3;
+	//Assign vertices to shape
+	Shape.Set(vertices, vertexCount);
+	//Assign shape to fixtureDef
+	fixtureDef.shape = &Shape;
+	//Assign fixtureDef to physics component
+	player->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+
+	//Debug dump
 	player->get_components<PhysicsComponent>()[0]->dump();
 
 	return player;

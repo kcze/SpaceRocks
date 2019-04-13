@@ -14,6 +14,8 @@ protected:
 public:
   PhysicsComponent(Entity* p, bool dyn, const sf::Vector2f& size);
 
+
+  void setFixtureDef(b2FixtureDef fix);
   b2Fixture* const getFixture() const;
   bool isTouching(const PhysicsComponent& pc) const;
   bool isTouching(const PhysicsComponent& pc, b2Contact const* bc) const;
@@ -33,5 +35,6 @@ public:
   void setAngle(const float angle);
   void dump();
   void setLinearDampening(float f);
+  void setAngularDampening(float f);
   ~PhysicsComponent() override;
 };
