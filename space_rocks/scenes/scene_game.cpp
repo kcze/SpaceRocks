@@ -25,6 +25,7 @@ std::vector<std::shared_ptr<Entity>> asteroids;
 std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
+float PSI = Physics::physics_scale_inv;
 
 void GameScene::Load() {
 	cout << "Game Scene Load \n";
@@ -43,7 +44,8 @@ void GameScene::Load() {
 	auto player = ShipFactory::makePlayer();
 	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
-	srand(time(NULL));
+	createEdges();
+
 	setLoaded(true);
 }
 
@@ -76,7 +78,6 @@ void GameScene::SpawnAsteroid()
 	//Set collision vertices
 	const unsigned int vertexCount = 8;
 	b2Vec2 vertices[vertexCount];
-	float PSI = Physics::physics_scale_inv;
 	vertices[0].Set(0.0f * PSI, 100.0f * PSI);
 	vertices[1].Set(-85.0f * PSI, 66.0f * PSI);
 	vertices[2].Set(-100.0f * PSI, -17.0f * PSI);
@@ -99,6 +100,42 @@ void GameScene::SpawnAsteroid()
 
 	//Add to collection
 	asteroids.push_back(asteroid);
+}
+
+void GameScene::createEdges()
+{
+	// Create entity
+	auto edges = makeEntity();
+	edges->setPosition(sf::Vector2f(0.0f, 0.0f));
+
+	// Physics
+	auto phys = edges->addComponent<PhysicsComponent>(false, sf::Vector2f(1.0f, 1.0f));
+	//Get corners
+	b2Vec2 upLeft = b2Vec2(0.0f, 0.0f);
+	b2Vec2 downLeft = b2Vec2(0.0f, -GAMEY * PSI);
+	b2Vec2 downRight = b2Vec2(GAMEX * PSI, -GAMEY * PSI);
+	b2Vec2 upRight = b2Vec2(GAMEX * PSI, 0.0f);
+	//Create Shape
+	b2EdgeShape edgeShape;
+	//Create Fixtures
+	b2FixtureDef fixtureDef;
+	// left
+	edgeShape.Set(upLeft, downLeft);
+	fixtureDef.shape = &edgeShape;
+	phys->setFixtureDef(fixtureDef);
+	// bottom
+	edgeShape.Set(downLeft, downRight);
+	fixtureDef.shape = &edgeShape;
+	phys->setFixtureDef(fixtureDef);
+	// right
+	edgeShape.Set(downRight, upRight);
+	fixtureDef.shape = &edgeShape;
+	phys->setFixtureDef(fixtureDef);
+	// top
+	edgeShape.Set(upRight, upLeft);
+	fixtureDef.shape = &edgeShape;
+	phys->setFixtureDef(fixtureDef);
+
 }
 
 void GameScene::Update(const double& dt) {
