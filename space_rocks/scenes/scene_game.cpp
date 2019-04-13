@@ -15,6 +15,7 @@
 #include "..\ship_factory.h"
 #include "Box2D/Box2D.h"
 #include "system_physics.h"
+#include "..\asteroid_factory.h"
 
 
 using namespace std;
@@ -53,7 +54,9 @@ void GameScene::SpawnAsteroid()
 {
 	//asteroids.shrink_to_fit(); //TODO: Ensure list is shrunk when asteroid is destroyed...
 	
-	auto asteroid = makeEntity();
+	auto asteroid = AsteroidFactory::makeAsteroid(11);
+
+	// -----------------KEEP-------------------------------
 	// Generate random position off screen
 	float rx = distrib(randomGenerator);
 	float ry = distrib(randomGenerator);
@@ -65,41 +68,20 @@ void GameScene::SpawnAsteroid()
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
 	asteroid->setPosition(center + dir*800.0f);
+	// -----------------------------------------------------
 	
-	// Physics
-	auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
+	// -----------------KEEP-------------------------------
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	phys->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
-	//Collider
-	//Create fixturedef and shape
-	b2FixtureDef fixtureDef;
-	b2PolygonShape Shape;
-	//Set collision vertices
-	const unsigned int vertexCount = 8;
-	b2Vec2 vertices[vertexCount];
-	vertices[0].Set(0.0f * PSI, 100.0f * PSI);
-	vertices[1].Set(-85.0f * PSI, 66.0f * PSI);
-	vertices[2].Set(-100.0f * PSI, -17.0f * PSI);
-	vertices[3].Set(-81.0f * PSI, -67.0f * PSI);	
-	vertices[4].Set(0.0f * PSI, -100.0f * PSI);
-	vertices[5].Set(82.0f  *PSI, -66.0f * PSI);
-	vertices[6].Set(100.0f * PSI, 0.0f * PSI);
-	vertices[7].Set(67.0f * PSI, 67.0f * PSI);
-	//Assign vertices to shape
-	Shape.Set(vertices, vertexCount);
-	//Assign shape to fixtureDef
-	fixtureDef.shape = &Shape;
-	//Assign fixtureDef to physics component
-	phys->setFixtureDef(fixtureDef);
+	asteroid->get_components<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
+	// -----------------------------------------------------
 
-	// Sprite
-	auto spr = asteroid->addComponent<SpriteComponent>();
-	spr->setTextureRect(sf::IntRect(0, 0, 256, 256));
-	spr->setTexure(ssAsteroids);
 
+	// -----------------KEEP-------------------------------
 	//Add to collection
 	asteroids.push_back(asteroid);
+	// -----------------------------------------------------
+
 }
 
 void GameScene::createEdges()
