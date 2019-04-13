@@ -22,7 +22,9 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
 	
 	//Create fixturedef and shape
-	b2FixtureDef fixtureDef;	
+	b2FixtureDef fixtureDef;
+	fixtureDef.filter.categoryBits = PLAYER_SHIP;
+	fixtureDef.filter.maskBits = EDGE | ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
 	b2PolygonShape Shape;
 	//Set collision vertices
 	b2Vec2 vertices[3];
