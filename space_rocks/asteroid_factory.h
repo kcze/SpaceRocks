@@ -9,30 +9,17 @@
 #include "components\cmp_sprite.h"
 #include "components\cmp_physics.h"
 #include "system_resources.h"
-
-
+#include <string>
 
 class AsteroidFactory {
 public:
 	static std::shared_ptr<Entity> makeAsteroid(unsigned int id);
 
-private:
+protected:
 	AsteroidFactory() {}
 
-	std::shared_ptr<sf::Texture> ssAsteroids;
+	//std::shared_ptr<sf::Texture> _ssAsteroids;
 
-	static std::map<unsigned int, b2Vec2* > _coords;
-	//Asteroid 1
-	static b2Vec2* _11Coords;
-	static b2Vec2* _121Coords;
-	static b2Vec2* _122Coords;
-	static b2Vec2* _123Coords;
-	static b2Vec2* _1311Coords;
-	static b2Vec2* _1312Coords;
-	static b2Vec2* _1321Coords;
-	static b2Vec2* _1322Coords;
-	static b2Vec2* _1331Coords;
-	static b2Vec2* _1332Coords;
+	static std::map < unsigned int, std::vector<b2Vec2 >> _coords;
 
 };
-

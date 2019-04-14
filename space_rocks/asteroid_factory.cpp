@@ -1,38 +1,20 @@
 #include "asteroid_factory.h"
 
-
-//Asteroid 1
-static b2Vec2 _11CoordsData[] =
-{
-	{0.0f * Physics::physics_scale_inv, 96.0f * Physics::physics_scale_inv},
-	{-80.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv},
-	{-96.0f * Physics::physics_scale_inv, -16.0f * Physics::physics_scale_inv},
-	{-80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
-	{0.0f * Physics::physics_scale_inv, -96.0f * Physics::physics_scale_inv},
-	{80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
-	{96.0f * Physics::physics_scale_inv, 0.0f * Physics::physics_scale_inv},
-	{64.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv}
-};
-
-static b2Vec2* _11Coords = _11CoordsData;
-
-std::vector<b2Vec2> _121Coords;
-std::vector<b2Vec2> _122Coords;
-std::vector<b2Vec2> _123Coords;
-std::vector<b2Vec2> _1311Coords;
-std::vector<b2Vec2> _1312Coords;
-std::vector<b2Vec2> _1321Coords;
-std::vector<b2Vec2> _1322Coords;
-std::vector<b2Vec2> _1331Coords;
-std::vector<b2Vec2> _1332Coords;
-
-
-std::map<unsigned int, b2Vec2* > _coords =
-{
-	// Asteroid 1
-	//size 1
-	{11, _11Coords }
-
+std::map < unsigned int, std::vector<b2Vec2 >> AsteroidFactory::_coords = {
+	// 11
+	{ 11,
+		{
+			{0.0f * Physics::physics_scale_inv, 96.0f * Physics::physics_scale_inv},
+			{-80.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv},
+			{-96.0f * Physics::physics_scale_inv, -16.0f * Physics::physics_scale_inv},
+			{-80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
+			{0.0f * Physics::physics_scale_inv, -96.0f * Physics::physics_scale_inv},
+			{80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
+			{96.0f * Physics::physics_scale_inv, 0.0f * Physics::physics_scale_inv},
+			{64.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv}
+		}
+	}
+	
 };
 
 
@@ -49,11 +31,12 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id)
 		//Collider
 		//Create fixturedef and shape
 		b2FixtureDef fixtureDef;
-		b2PolygonShape Shape;
+		b2PolygonShape shape;
+		
 		//Assign vertices to shape
-		Shape.Set(_coords[11], _coords[11]->Length());
+		shape.Set(&_coords[11].front(), _coords[11].size());
 		//Assign shape to fixtureDef
-		fixtureDef.shape = &Shape;
+		fixtureDef.shape = &shape;
 		//Assign fixtureDef to physics component
 		phys->setFixtureDef(fixtureDef);
 
