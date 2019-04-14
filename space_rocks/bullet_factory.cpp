@@ -59,6 +59,11 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 			sprite->setTextureRect(_objectData[24]._texRect);
 			sprite->SetAnchor(sf::Vector2f(0.5f, 0.5f));
 		}
+
+		//Destructible
+		{
+			bullet->addComponent<DestructibleComponent>(1.0f);
+		}
 		return bullet;
 		break;
 	}
