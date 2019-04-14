@@ -8,8 +8,16 @@
 #include "engine.h"
 #include "components\cmp_sprite.h"
 #include "components\cmp_physics.h"
+#include "components\cmp_destructible.h"
 #include "system_resources.h"
 #include <string>
+
+struct ObjectData
+{
+	std::vector<b2Vec2 > _coords;
+	std::shared_ptr<sf::Texture> _tex;
+	sf::IntRect _texRect;
+};
 
 class AsteroidFactory {
 public:
@@ -20,6 +28,6 @@ protected:
 
 	//std::shared_ptr<sf::Texture> _ssAsteroids;
 	static const float PSI16; 
-	static std::map < unsigned int, std::vector<b2Vec2 >> _coords;
+	static std::map < unsigned int, ObjectData> _objectData;
 
 };
