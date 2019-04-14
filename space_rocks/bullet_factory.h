@@ -4,6 +4,7 @@
 #include "components\cmp_sprite.h"
 #include "components\cmp_physics.h"
 #include "components\cmp_destructible.h"
+#include "components\cmp_bullet.h"
 #include "engine.h"
 #include "game.h"
 #include "system_resources.h"
