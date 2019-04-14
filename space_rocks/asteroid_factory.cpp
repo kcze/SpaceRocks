@@ -114,8 +114,9 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id)
 		//Collider
 		//Create fixturedef and shape
 		b2FixtureDef fixtureDef;
+		fixtureDef.filter.categoryBits = ASTEROIDS;
+		fixtureDef.filter.maskBits = PLAYER_BULLET | PLAYER_SHIP | ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
 		b2PolygonShape shape;
-		
 		//Assign vertices to shape
 		shape.Set(&_coords[11].front(), _coords[11].size());
 		//Assign shape to fixtureDef
@@ -132,5 +133,6 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id)
 		break;
 	}
 
+	std::cout << "Invalid ID" << std::endl;
 	return NULL;
 }
