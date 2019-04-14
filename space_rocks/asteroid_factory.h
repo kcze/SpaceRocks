@@ -19,7 +19,7 @@ protected:
 	AsteroidFactory() {}
 
 	//std::shared_ptr<sf::Texture> _ssAsteroids;
-
+	static const float PSI16; 
 	static std::map < unsigned int, std::vector<b2Vec2 >> _coords;
 
 };

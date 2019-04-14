@@ -1,17 +1,19 @@
 #include "asteroid_factory.h"
 
+const float  AsteroidFactory::PSI16 = Physics::physics_scale_inv * 16.0f;
+
 std::map < unsigned int, std::vector<b2Vec2 >> AsteroidFactory::_coords = {
 	// 11
 	{ 11,
 		{
-			{0.0f * Physics::physics_scale_inv, 96.0f * Physics::physics_scale_inv},
-			{-80.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv},
-			{-96.0f * Physics::physics_scale_inv, -16.0f * Physics::physics_scale_inv},
-			{-80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
-			{0.0f * Physics::physics_scale_inv, -96.0f * Physics::physics_scale_inv},
-			{80.0f * Physics::physics_scale_inv, -64.0f * Physics::physics_scale_inv},
-			{96.0f * Physics::physics_scale_inv, 0.0f * Physics::physics_scale_inv},
-			{64.0f * Physics::physics_scale_inv, 64.0f * Physics::physics_scale_inv}
+			{0.0f * PSI16, 6.0f * PSI16},
+			{-5.0f * PSI16, 4.0f * PSI16},
+			{-6.0f * PSI16, -1.0f * PSI16},
+			{-5.0f * PSI16, -4.0f * PSI16},
+			{0.0f * PSI16, -6.0f * PSI16},
+			{5.0f * PSI16, -4.0f * PSI16},
+			{6.0f * PSI16, 0.0f * PSI16},
+			{4.0f * PSI16, 4.0f * PSI16}
 		}
 	}
 	
