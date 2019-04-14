@@ -71,7 +71,7 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 	entity->addComponent<ShipComponent>(20.0f, 2.0f, 0.5f);
 
 	// Destructible
-	entity->addComponent<DestructibleComponent>(100.0f);
+	entity->addComponent<DestructibleComponent>(5.0f, 1);
 
 
 	return entity;

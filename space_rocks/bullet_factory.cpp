@@ -62,7 +62,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 
 		//Destructible
 		{
-			auto des = bullet->addComponent<DestructibleComponent>(1.0f);
+			auto des = bullet->addComponent<DestructibleComponent>(1.0f, 0);
 		}
 
 		//Bullet Component
