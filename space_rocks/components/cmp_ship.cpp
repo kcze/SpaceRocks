@@ -30,10 +30,11 @@ void ShipComponent::rotate(bool right)
 
 void ShipComponent::shoot()
 {
+	std::cout << "_time = " << _time << std::endl;
 	if (_time > 0.0f)
 		return;
 
-	auto bullet = BulletFactory::makeBullet();
+	auto bullet = BulletFactory::makeBullet(24);
 	auto physics = bullet->get_components<PhysicsComponent>()[0];
 	physics->teleport(_parent->getPosition());
 	physics->setAngle(_physicsComponent->getFixture()->GetBody()->GetAngle());
