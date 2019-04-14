@@ -10,6 +10,7 @@ public:
   void Load() override;
 
   void SpawnAsteroid();
+  void createEdges();
 
   void Update(const double& dt) override;
 };
