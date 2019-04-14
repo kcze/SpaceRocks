@@ -1,11 +1,19 @@
 #include "cmp_destructible.h"
+#include "..\asteroid_factory.h"
 
-DestructibleComponent::DestructibleComponent(Entity* p, const float hp) : Component(p)
+//Contact Listener
+class ContactListener : public b2ContactListener
 {
-	// Setting hp values
-	_hp = hp;
-	_maxHp = hp;
-}
+	void BeginContact(b2Contact* contact)
+	{
+		contact->GetFixtureA()->GetBody();
+
+		if (true)
+		{
+
+		}
+	}
+};
 
 //Constructor
 DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id) : Component(p)
@@ -16,14 +24,20 @@ DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const un
 	_id = id;
 }
 
+//Update
+void DestructibleComponent::update(double dt) {}
+
+//Get  the HP of this destructible
 float DestructibleComponent::getHp() const { return _hp; }
 
+//Get the maximum HP of this destructible
 float DestructibleComponent::getMaxHp() const { return _maxHp; }
 
+//Damage this destructible, decreasing its HP by the given value
 void DestructibleComponent::damage(const float hp, const b2Vec2 coords)
 {
 	//Take damage
-		_hp -= hp;
+	_hp -= hp;
 
 	//Still alive
 	//if (hp > 0.0f)
@@ -42,6 +56,7 @@ void DestructibleComponent::damage(const float hp, const b2Vec2 coords)
 	spawnFragments(coords);
 }
 
+//Repair this destructible, increasing its HP by the given value
 void DestructibleComponent::repair(const float hp)
 {
 	if (hp > 0.0f)
