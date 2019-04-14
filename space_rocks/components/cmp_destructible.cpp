@@ -7,9 +7,13 @@ DestructibleComponent::DestructibleComponent(Entity* p, const float hp) : Compon
 	_maxHp = hp;
 }
 
-void DestructibleComponent::update(double dt)
+//Constructor
+DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id) : Component(p)
 {
-	//todo maybe check if hp<0
+	//Set properties
+	_hp = hp;
+	_maxHp = hp;
+	_id = id;
 }
 
 float DestructibleComponent::getHp() const { return _hp; }

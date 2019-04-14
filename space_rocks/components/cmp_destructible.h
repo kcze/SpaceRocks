@@ -20,4 +20,5 @@ public:
 protected:
 	float _hp;
 	float _maxHp;
+	unsigned int _id;
 };
