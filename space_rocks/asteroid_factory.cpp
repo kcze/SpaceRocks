@@ -1,7 +1,5 @@
 #include "asteroid_factory.h"
 
-
-
 const float  AsteroidFactory::PSI16 = Physics::physics_scale_inv * 16.0f;
 
 std::map < unsigned int, ObjectData> AsteroidFactory::_objectData = 
@@ -27,7 +25,6 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 			}
 		}
 	},
-
 	//121
 	{121,
 		{

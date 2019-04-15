@@ -26,7 +26,6 @@ public:
 protected:
 	AsteroidFactory() {}
 
-	//std::shared_ptr<sf::Texture> _ssAsteroids;
 	static const float PSI16; 
 	static std::map < unsigned int, ObjectData> _objectData;
 
