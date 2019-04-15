@@ -114,7 +114,7 @@ void MenuScene::Load() {
 	// Menu
 	menu = makeEntity();
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
-	menuPanel = menu->addComponent<PanelComponent>(96.0f);
+	menuPanel = menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 	menuPanel->addButton("Start", []() { Engine::ChangeScene(&gameScene); });
 	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});

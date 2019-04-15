@@ -31,18 +31,11 @@ float PSI = Physics::physics_scale_inv;
 void GameScene::Load() {
 	cout << "Game Scene Load \n";
 	{
-		//Score text
-		/*auto txt = makeEntity();
-		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
-		txtcmp->setAnchor(sf::Vector2f(0.0f, 0.5f));
-		txt->setPosition(sf::Vector2f(16.0f, 16.0f));*/
-
 		// Game panel
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(144.0f, 32.0f));
-		gamePanel = game->addComponent<PanelComponent>(0.0f);
-		//todo testing text	
-		gamePanel->addText("Time: ", []() -> std::string { time_t now = time(0); return std::ctime(&now); });
+		game->setPosition(sf::Vector2f(16.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
+		gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 	}
 
 	// Load spritesheets

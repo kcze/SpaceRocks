@@ -4,8 +4,8 @@
 #include <vector>
 #include <iterator>
 
-PanelComponent::PanelComponent(Entity* const p, const float interval)
-	: Component(p), _interval(interval) {
+PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const float interval)
+	: Component(p), _anchor(anchor), _interval(interval) {
 
 	_panelScene = Engine::getActiveScene();
 	// Create and hide button pointer
@@ -44,11 +44,12 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	_buttons.push_back(button);
 }
 
-std::shared_ptr<Entity> PanelComponent::addText(const std::string text) {
+std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const float size) {
 
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
 	auto txt = entity->addComponent<TextComponent>(text);
-	txt->setSize(32);
+	txt->setSize(size);
+	txt->setAnchor(_anchor);
 
 	_elements.push_back(entity);
 
@@ -57,11 +58,12 @@ std::shared_ptr<Entity> PanelComponent::addText(const std::string text) {
 	return entity;
 }
 
-std::shared_ptr<Entity> PanelComponent::addText(const std::string text, std::function<std::string()> function) {
+std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> function, const float size) {
 
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
-	auto txt = entity->addComponent<TextComponent>(text);
-	txt->setSize(32);
+	auto txt = entity->addComponent<TextComponent>("");
+	txt->setSize(size);
+	txt->setAnchor(_anchor);
 
 	// Create ui component
 	auto ui = entity->addComponent<UiComponent>();
