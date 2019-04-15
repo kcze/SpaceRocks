@@ -65,7 +65,6 @@ void GameScene::SpawnAsteroid()
 {
 	//asteroids.shrink_to_fit(); //TODO: Ensure list is shrunk when asteroid is destroyed...
 	
-	auto asteroid = AsteroidFactory::makeAsteroid(11);
 
 	// Generate random position off screen
 	float rx = distrib(randomGenerator);
@@ -77,7 +76,7 @@ void GameScene::SpawnAsteroid()
 	//calculate center of screen
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
-	asteroid->get_components<PhysicsComponent>()[0]->teleport(center + dir * 800.0f);
+	auto asteroid = AsteroidFactory::makeAsteroid(11, Physics::sv2_to_bv2(center + dir * 800.0f));
 
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.

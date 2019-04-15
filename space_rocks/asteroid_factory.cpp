@@ -179,10 +179,18 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 };
 
 
-std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id) 
+std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, b2Vec2 coords)
 {
 	//Make entity
 	auto asteroid = gameScene.makeEntity();
+	asteroid->setPosition(Physics::bv2_to_sv2(coords));
+
+	// Sprite
+	{
+		auto spr = asteroid->addComponent<SpriteComponent>();
+		spr->setTextureRect(_objectData[id]._texRect);
+		spr->setTexure(_objectData[id]._tex);
+	}
 
 	// Physics
 	{
@@ -201,12 +209,6 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id)
 		phys->setFixtureDef(fixtureDef);
 	}
 
-	// Sprite
-	{
-		auto spr = asteroid->addComponent<SpriteComponent>();
-		spr->setTextureRect(_objectData[id]._texRect);
-		spr->setTexure(_objectData[id]._tex);
-	}
 	// Destructible
 	{
 		if(id == 11)

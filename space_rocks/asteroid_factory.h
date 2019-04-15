@@ -15,7 +15,7 @@
 
 class AsteroidFactory : Factory {
 public:
-	static std::shared_ptr<Entity> makeAsteroid(unsigned int id);
+	static std::shared_ptr<Entity> makeAsteroid(unsigned int id, b2Vec2 coords);
 
 protected:
 	AsteroidFactory() {}

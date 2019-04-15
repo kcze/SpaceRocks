@@ -74,24 +74,24 @@ void DestructibleComponent::spawnFragments(const b2Vec2 coords)
 		//11+: Asteroids
 		//11: Asteroid 1, Size 1
 		case 11:
-			AsteroidFactory::makeAsteroid(11);
-			AsteroidFactory::makeAsteroid(122);
-			AsteroidFactory::makeAsteroid(123);
+			AsteroidFactory::makeAsteroid(121, coords);
+			AsteroidFactory::makeAsteroid(122, coords);
+			AsteroidFactory::makeAsteroid(123, coords);
 			break;
 		//121: Asteroid 1, Size 2, No. 1
 		case 121:
-			AsteroidFactory::makeAsteroid(1311);
-			AsteroidFactory::makeAsteroid(1312);
+			AsteroidFactory::makeAsteroid(1311, coords);
+			AsteroidFactory::makeAsteroid(1312, coords);
 			break;
 		//122: Asteroid 1, Size 2, No. 2
 		case 122:
-			AsteroidFactory::makeAsteroid(1321);
-			AsteroidFactory::makeAsteroid(1322);
+			AsteroidFactory::makeAsteroid(1321, coords);
+			AsteroidFactory::makeAsteroid(1322, coords);
 			break;
 		//131: Asteroid 1, Size 2, No. 3
 		case 123:
-			AsteroidFactory::makeAsteroid(1331);
-			AsteroidFactory::makeAsteroid(1332);
+			AsteroidFactory::makeAsteroid(1331, coords);
+			AsteroidFactory::makeAsteroid(1332, coords);
 			break;
 		default:
 			std::cout << "Trying to spawn fragments that don't exist." << std::endl;
