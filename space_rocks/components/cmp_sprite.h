@@ -23,7 +23,6 @@ public:
 
   sf::Sprite& getSprite() const;
 
-
   void setTexure(std::shared_ptr<sf::Texture> tex);
   void setTextureRect(sf::IntRect);
   void setOrigin(const sf::Vector2f origin);

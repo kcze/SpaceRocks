@@ -2,6 +2,7 @@
 #include <list>
 #include <SFML/Window.hpp>
 #include <map>
+#include "engine.h"
 
 using namespace sf;
 
@@ -9,6 +10,7 @@ class InputEvents;
 
 class Input {
 	friend class InputEvents;
+	friend class Engine;
 
 public:
 	enum KeyCode {
@@ -20,7 +22,7 @@ public:
 
 	static std::map<Input::KeyCode, Keyboard::Key> keys;
 
-	static bool isKeyPressed(Keyboard::Keyboard::Key key);
+	static bool isKeyPressed(Keyboard::Key key);
 	static bool isKeyReleased(Keyboard::Key key);
 	static bool isMousePressed(Mouse::Button button);
 	static bool isMouseReleased(Mouse::Button button);
@@ -75,9 +77,9 @@ class InputEvents {
 public:
 	InputEvents() { Input::registerHandler(this); }
 
-	virtual void onKeyPressed(Keyboard::Keyboard::Key key) {}
-	virtual void onKeyReleased(Keyboard::Keyboard::Key key) {}
-	virtual void onKey(Keyboard::Keyboard::Key key) {}
+	virtual void onKeyPressed(Keyboard::Key key) {}
+	virtual void onKeyReleased(Keyboard::Key key) {}
+	virtual void onKey(Keyboard::Key key) {}
 	virtual void onMousePressed(Mouse::Button button) {}
 	virtual void onMouseReleased(Mouse::Button button) {}
 	virtual void onMouse(Mouse::Button button) {}

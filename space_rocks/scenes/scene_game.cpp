@@ -1,7 +1,4 @@
 #include "scene_game.h"
-#include "../components/cmp_text.h"
-#include "../components/cmp_sprite.h"
-#include "../components/cmp_physics.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
@@ -16,12 +13,15 @@
 #include "Box2D/Box2D.h"
 #include "system_physics.h"
 #include "..\asteroid_factory.h"
+#include "..\components\components.h"
+#include <ctime>
 #include "..\ContactListener.h"
-
 
 using namespace std;
 using namespace sf;
 
+std::shared_ptr<Entity> game;
+std::shared_ptr<PanelComponent> gamePanel;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::shared_ptr<sf::Texture> ssAsteroids;
@@ -34,12 +34,11 @@ myContactListener contactListenerInstance;
 void GameScene::Load() {
 	cout << "Game Scene Load \n";	
 	{
-		//Score text
-		auto txt = makeEntity();
-		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
-		txtcmp->SetAnchor(sf::Vector2f(0.0f, 0.5f));
-		txt->setPosition(sf::Vector2f(16.0f, 16.0f));
-
+		// Game panel
+		game = makeEntity();
+		game->setPosition(sf::Vector2f(16.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
+		gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 	}
 
 	// Load spritesheets
