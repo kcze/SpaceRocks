@@ -1,26 +1,6 @@
 #include "cmp_destructible.h"
 #include "..\asteroid_factory.h"
 
-//Contact Listener
-class ContactListener : public b2ContactListener
-{
-	void BeginContact(b2Contact* contact)
-	{
-		b2Filter filterA = contact->GetFixtureA()->GetFilterData();
-		b2Filter filterB = contact->GetFixtureB()->GetFilterData();
-		const b2Vec2 posA = contact->GetFixtureA()->GetBody()->GetPosition();
-		const b2Vec2 posB = contact->GetFixtureB()->GetBody()->GetPosition();
-		contact->GetFixtureB()->GetBody();
-
-
-		//Bullet collisions
-		if (filterA.groupIndex == 1)
-		{
-			spawnFragments(posA);
-		}
-	}
-};
-
 //Constructor
 DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id) : Component(p)
 {
@@ -53,13 +33,13 @@ void DestructibleComponent::damage(const float hp, const b2Vec2 coords)
 	//Destroied
 	if (_hp <= 0.0f)
 	{
+		//Spawn impact fragments
+		spawnFragments(coords);
+
 		_parent->setAlive(false);
 		_parent->setVisible(false);
 		_parent->setForDelete();
 	}
-
-	//Spawn impact fragments
-	spawnFragments(coords);
 }
 
 //Repair this destructible, increasing its HP by the given value

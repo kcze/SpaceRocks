@@ -36,5 +36,6 @@ public:
   void dump();
   void setLinearDampening(float f);
   void setAngularDampening(float f);
+  b2Body* getBody();
   ~PhysicsComponent() override;
 };

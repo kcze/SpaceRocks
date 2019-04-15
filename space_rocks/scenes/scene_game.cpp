@@ -16,6 +16,7 @@
 #include "Box2D/Box2D.h"
 #include "system_physics.h"
 #include "..\asteroid_factory.h"
+#include "..\ContactListener.h"
 
 
 using namespace std;
@@ -29,13 +30,14 @@ uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physics_scale_inv;
 
 void GameScene::Load() {
-	cout << "Game Scene Load \n";
+	cout << "Game Scene Load \n";	
 	{
 		//Score text
 		auto txt = makeEntity();
 		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
 		txtcmp->SetAnchor(sf::Vector2f(0.0f, 0.5f));
 		txt->setPosition(sf::Vector2f(16.0f, 16.0f));
+
 	}
 
 	// Load spritesheets
@@ -45,7 +47,15 @@ void GameScene::Load() {
 	auto player = ShipFactory::makePlayer();
 	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
+	//Creat edges
 	createEdges();
+
+	//Set contact listener
+	myContactListener contactListenerInstance;
+	auto body = player->get_components<PhysicsComponent>()[0]->getBody();
+	auto world = body->GetWorld();
+	world->SetContactListener(&contactListenerInstance);
+
 
 	setLoaded(true);
 }
