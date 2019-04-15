@@ -24,5 +24,16 @@ void myContactListener::BeginContact(b2Contact* contact)
 			entityA->get_components<DestructibleComponent>()[0]->damage(10.0f, posA);
 		}
 	}
+	else if (filterB.groupIndex == 1)
+	{
+		//Bullet x Asteroid
+		if (filterA.categoryBits == ASTEROIDS)
+		{
+			//Damage asteroid by 1														TODO: Set damage to bullet damage value
+			entityA->get_components<DestructibleComponent>()[0]->damage(1.0f, posA);
+			//Destroy bullet
+			entityB->get_components<DestructibleComponent>()[0]->damage(10.0f, posB);
+		}
+	}
 
 }

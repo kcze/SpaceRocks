@@ -43,7 +43,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 			fixtureDef.filter.maskBits = ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
 			b2PolygonShape shape;
 			//Set collider to sensor
-			fixtureDef.isSensor = false;
+			fixtureDef.isSensor = true;
 			//Assign vertices to shape
 			shape.Set(&_objectData[24]._coords.front(), _objectData[24]._coords.size());
 			//Assign shape to fixtureDef

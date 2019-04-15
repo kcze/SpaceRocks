@@ -28,6 +28,8 @@ std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physics_scale_inv;
+myContactListener contactListenerInstance;
+
 
 void GameScene::Load() {
 	cout << "Game Scene Load \n";	
@@ -51,7 +53,6 @@ void GameScene::Load() {
 	createEdges();
 
 	//Set contact listener
-	myContactListener contactListenerInstance;
 	auto body = player->get_components<PhysicsComponent>()[0]->getBody();
 	auto world = body->GetWorld();
 	world->SetContactListener(&contactListenerInstance);
