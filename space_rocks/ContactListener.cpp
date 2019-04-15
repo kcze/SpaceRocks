@@ -19,9 +19,9 @@ void myContactListener::BeginContact(b2Contact* contact)
 		if (filterB.categoryBits == ASTEROIDS)
 		{
 			//Damage asteroid by 1														TODO: Set damage to bullet damage value
-			entityB->get_components<DestructibleComponent>()[0]->damage(1.0f, posB);
+			entityB->get_components<DestructibleComponent>()[0]->damage(1.0f);
 			//Destroy bullet
-			entityA->get_components<DestructibleComponent>()[0]->damage(10.0f, posA);
+			entityA->get_components<DestructibleComponent>()[0]->damage(10.0f);
 		}
 	}
 	else if (filterB.groupIndex == 1)
@@ -30,9 +30,9 @@ void myContactListener::BeginContact(b2Contact* contact)
 		if (filterA.categoryBits == ASTEROIDS)
 		{
 			//Damage asteroid by 1														TODO: Set damage to bullet damage value
-			entityA->get_components<DestructibleComponent>()[0]->damage(1.0f, posA);
+			entityA->get_components<DestructibleComponent>()[0]->damage(1.0f);
 			//Destroy bullet
-			entityB->get_components<DestructibleComponent>()[0]->damage(10.0f, posB);
+			entityB->get_components<DestructibleComponent>()[0]->damage(10.0f);
 		}
 	}
 

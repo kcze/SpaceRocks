@@ -13,9 +13,9 @@ public:
 	void update(double dt) override;
 	float getHp() const;
 	float getMaxHp() const;
-	void damage(const float hp, const b2Vec2 coords);
+	void damage(const float hp);
 	void repair(const float hp);
-	void spawnFragments(const b2Vec2 coords);
+	void spawnFragments(const sf::Vector2f coords);
 
 	~DestructibleComponent() override = default;
 
@@ -23,4 +23,5 @@ protected:
 	float _hp;
 	float _maxHp;
 	unsigned int _id;
+	b2Vec2 _spawnCoords;
 };
