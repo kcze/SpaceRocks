@@ -17,7 +17,7 @@ void DestructibleComponent::update(double dt) {
 	if (_hp <= 0.0f)
 	{
 		//Spawn impact fragments
-		spawnFragments(_spawnCoords);
+		spawnFragments(_parent->getPosition());
 
 		_parent->setForDelete();
 
@@ -31,11 +31,10 @@ float DestructibleComponent::getHp() const { return _hp; }
 float DestructibleComponent::getMaxHp() const { return _maxHp; }
 
 //Damage this destructible, decreasing its HP by the given value
-void DestructibleComponent::damage(const float hp, const b2Vec2 coords)
+void DestructibleComponent::damage(const float hp)
 {
 	//Take damage
 	_hp -= hp;
-	_spawnCoords = coords;
 	//Still alive
 	//if (hp > 0.0f)
 	//{
@@ -53,7 +52,7 @@ void DestructibleComponent::repair(const float hp)
 }
 
 //Spawn the fragments relevent to the type of collision at the given coords
-void DestructibleComponent::spawnFragments(const b2Vec2 coords) 
+void DestructibleComponent::spawnFragments(const sf::Vector2f coords) 
 {
 	switch (_id)
 	{
