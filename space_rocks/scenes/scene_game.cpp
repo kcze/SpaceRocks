@@ -34,7 +34,7 @@ void GameScene::Load() {
 		//Score text
 		auto txt = makeEntity();
 		auto txtcmp = txt->addComponent<TextComponent>("Score: ");
-		txtcmp->SetAnchor(sf::Vector2f(0.0f, 0.5f));
+		txtcmp->setAnchor(sf::Vector2f(0.0f, 0.5f));
 		txt->setPosition(sf::Vector2f(16.0f, 16.0f));
 	}
 
