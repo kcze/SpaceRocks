@@ -1,7 +1,5 @@
 #include "bullet_factory.h"
 
-const float BulletFactory::PSI4 = Physics::physics_scale_inv * 4.0f;
-
 //Key is colRow starting topleft: 11
 std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 {

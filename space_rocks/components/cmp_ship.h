@@ -2,6 +2,9 @@
 
 #include "ecm.h"
 #include "cmp_physics.h"
+#include "maths.h"
+#include <Box2D\Dynamics\b2Fixture.h>
+#include "..\bullet_factory.h"
 
 class ShipComponent : public Component {
 

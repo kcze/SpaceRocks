@@ -12,15 +12,9 @@
 #include "Box2D/Box2D.h"
 #include <string>
 #include "system_physics.h"
+#include "factory.h"
 
-struct ObjectData
-{
-	std::vector<b2Vec2 > _coords;
-	std::shared_ptr<sf::Texture> _tex;
-	sf::IntRect _texRect;
-};
-
-class ShipFactory {
+class ShipFactory : Factory {
 public:
 	static std::shared_ptr<Entity> makePlayer();
 	static std::shared_ptr<Entity> makeEnemy(unsigned int type);
@@ -29,7 +23,4 @@ public:
 private:
 	ShipFactory() {}
 	static std::map < unsigned int, ObjectData> _objectData;
-	static const float PSI8;
 };
-
-const float  ShipFactory::PSI8 = Physics::physics_scale_inv * 16.0f;

@@ -135,7 +135,7 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 
 	//Add components
 	entity->addComponent<PhysicsComponent>(true, sf::Vector2f(192.0f, 192.0f));
-	entity->addComponent<ShipComponent>(20.0f, 2.0f, 0.5f);
+	entity->addComponent<ShipComponent>(20.0f, 3.0f, 0.5f);
 
 	return entity;
 }
