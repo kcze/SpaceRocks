@@ -6,6 +6,7 @@
 #include <vector>
 #include "../input.h"
 #include "system_renderer.h"
+#include <functional>
 
 using namespace std;
 using namespace sf;
@@ -114,11 +115,11 @@ void MenuScene::Load() {
 	menu = makeEntity();
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	menuPanel = menu->addComponent<PanelComponent>(96.0f);
-	menuPanel->addButton("Start");
-	menuPanel->addButton("Load");
-	menuPanel->addButton("High Scores");
-	menuPanel->addButton("Settings");
-	menuPanel->addButton("Exit");
+	menuPanel->addButton("Start", []() { Engine::ChangeScene(&gameScene); });
+	menuPanel->addButton("Load", []() {});
+	menuPanel->addButton("High Scores", []() {});
+	menuPanel->addButton("Settings", []() {});
+	menuPanel->addButton("Exit", []() {});
 
 	UpdateScaling();
 	setLoaded(true);
@@ -131,8 +132,7 @@ void MenuScene::onKeyPressed(Keyboard::Key key)
 	else if (key == Keyboard::Down)
 		menuPanel->pointerNext();
 	else if (key == Keyboard::Enter)
-		Engine::ChangeScene(&gameScene);
-
+		menuPanel->executeButton();
 }
 
 void MenuScene::Update(const double& dt) {

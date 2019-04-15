@@ -5,10 +5,11 @@
 #include <iterator>
 
 PanelComponent::PanelComponent(Entity* const p, const float interval)
-	: Component(p), _interval(interval)
-{ 
+	: Component(p), _interval(interval) {
+
+	_panelScene = Engine::getActiveScene();
 	// Create and hide button pointer
-	_buttonPointer = menuScene.makeEntity();
+	_buttonPointer = _panelScene->makeEntity();
 	auto spr = _buttonPointer->addComponent<SpriteComponent>();
 	spr->setTextureRect(sf::IntRect(0, 96, 256, 96));
 	spr->setTexure(Resources::load<sf::Texture>("button.png"));
@@ -19,9 +20,7 @@ PanelComponent::~PanelComponent() { }
 
 void PanelComponent::update(double dt) { }
 
-void PanelComponent::render() { }
-
-void PanelComponent::addButton(const std::string text) {
+void PanelComponent::addButton(const std::string text, std::function<void()> function) {
 
 	// Create text for the button
 	auto button = addText(text);
@@ -30,6 +29,10 @@ void PanelComponent::addButton(const std::string text) {
 	auto frame = button->addComponent<SpriteComponent>();
 	frame->setTextureRect(sf::IntRect(0, 0, 256, 96));
 	frame->setTexure(Resources::load<sf::Texture>("button.png"));
+
+	// Create ui component
+	auto ui = button->addComponent<UiComponent>();
+	ui->buttonExecute = function;
 	
 	// Set button pointer
 	if (_currentButton == NULL)
@@ -43,7 +46,7 @@ void PanelComponent::addButton(const std::string text) {
 
 std::shared_ptr<Entity> PanelComponent::addText(const std::string text) {
 
-	std::shared_ptr<Entity> entity = menuScene.makeEntity();
+	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
 	auto txt = entity->addComponent<TextComponent>(text);
 	txt->setSize(32);
 
@@ -52,6 +55,29 @@ std::shared_ptr<Entity> PanelComponent::addText(const std::string text) {
 	updatePositions();
 
 	return entity;
+}
+
+std::shared_ptr<Entity> PanelComponent::addText(const std::string text, std::function<std::string()> function) {
+
+	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
+	auto txt = entity->addComponent<TextComponent>(text);
+	txt->setSize(32);
+
+	// Create ui component
+	auto ui = entity->addComponent<UiComponent>();
+	ui->textUpdate = function;
+
+	_elements.push_back(entity);
+
+	updatePositions();
+
+	return entity;
+}
+
+void PanelComponent::executeButton()
+{
+	if (_currentButton != NULL)
+		_currentButton->get_components<UiComponent>()[0]->buttonExecute();
 }
 
 void PanelComponent::pointerPrevious()

@@ -9,15 +9,15 @@ public:
 	explicit PanelComponent(Entity* p, const float interval);
 
 	void update(double dt) override;
-	void render() override;
+	void render() override { }
 
-	void addButton(const std::string text);
+	void addButton(const std::string text, std::function<void()> function);
 	std::shared_ptr<Entity> addText(const std::string text);
+	std::shared_ptr<Entity> addText(const std::string text, std::function<std::string()>);
+	void executeButton();
 	void pointerPrevious();
 	void pointerNext();
 	void updatePositions();
-
-	//todo executing button
 
 	~PanelComponent();
 
@@ -27,8 +27,7 @@ private:
 	std::vector<std::shared_ptr<Entity>> _buttons;
 	std::vector<std::shared_ptr<Entity>> _elements;
 
-	//todo somehow handle current scene
-	//todo focused - not needed? handle that in scene
+	Scene* _panelScene;
 
 	float _interval;
 };

@@ -8,3 +8,4 @@
 #include "cmp_ship.h"
 #include "cmp_sprite.h"
 #include "cmp_text.h"
+#include "cmp_ui.h"
