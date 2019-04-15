@@ -181,46 +181,41 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 
 std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id) 
 {
-	switch (id)
+	//Make entity
+	auto asteroid = gameScene.makeEntity();
+
+	// Physics
 	{
-	case 11:
-		//Make entity
-		auto asteroid = gameScene.makeEntity();
-		
-		// Physics
-		{
-			auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
-			//Collider
-			//Create fixturedef and shape
-			b2FixtureDef fixtureDef;
-			fixtureDef.filter.categoryBits = ASTEROIDS;
-			fixtureDef.filter.maskBits = PLAYER_BULLET | PLAYER_SHIP | ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
-			b2PolygonShape shape;
-			//Assign vertices to shape
-			shape.Set(&_objectData[11]._coords.front(), _objectData[11]._coords.size());
-			//Assign shape to fixtureDef
-			fixtureDef.shape = &shape;
-			//Assign fixtureDef to physics component
-			phys->setFixtureDef(fixtureDef);
-		}
-
-		// Sprite
-		{
-			auto spr = asteroid->addComponent<SpriteComponent>();
-			spr->setTextureRect(_objectData[11]._texRect);
-			spr->setTexure(_objectData[11]._tex);
-		}
-
-		// Destructible
-		{
-			//3 hp
-			auto des = asteroid->addComponent<DestructibleComponent>(3.0f, 11);
-		}
-
-		return asteroid;
-		break;
+		auto phys = asteroid->addComponent<PhysicsComponent>(true, sf::Vector2f(10.0f, 10.0f));
+		//Collider
+		//Create fixturedef and shape
+		b2FixtureDef fixtureDef;
+		fixtureDef.filter.categoryBits = ASTEROIDS;
+		fixtureDef.filter.maskBits = PLAYER_BULLET | PLAYER_SHIP | ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
+		b2PolygonShape shape;
+		//Assign vertices to shape
+		shape.Set(&_objectData[id]._coords.front(), _objectData[id]._coords.size());
+		//Assign shape to fixtureDef
+		fixtureDef.shape = &shape;
+		//Assign fixtureDef to physics component
+		phys->setFixtureDef(fixtureDef);
 	}
 
-	std::cout << "Invalid ID" << std::endl;
-	return NULL;
+	// Sprite
+	{
+		auto spr = asteroid->addComponent<SpriteComponent>();
+		spr->setTextureRect(_objectData[id]._texRect);
+		spr->setTexure(_objectData[id]._tex);
+	}
+	// Destructible
+	{
+		if(id == 11)
+			auto des = asteroid->addComponent<DestructibleComponent>(3.0f, id); //3 hp
+		else if (id == 121 || 122 || 123)
+			auto des = asteroid->addComponent<DestructibleComponent>(2.0f, id); //2 hp
+		else
+			auto des = asteroid->addComponent<DestructibleComponent>(1.0f, id); //1 hp
+	}
+
+	return asteroid;
 }

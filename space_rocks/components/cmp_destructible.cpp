@@ -73,7 +73,7 @@ void DestructibleComponent::spawnFragments(const b2Vec2 coords)
 		//11+: Asteroids
 		//11: Asteroid 1, Size 1
 		case 11:
-			AsteroidFactory::makeAsteroid(121);
+			AsteroidFactory::makeAsteroid(11);
 			AsteroidFactory::makeAsteroid(122);
 			AsteroidFactory::makeAsteroid(123);
 			break;
