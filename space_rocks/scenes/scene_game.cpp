@@ -44,9 +44,13 @@ void GameScene::Load() {
 	// Load spritesheets
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
-	// Test ship
+	// Player ship
 	auto player = ShipFactory::makePlayer();
 	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+
+	//Test Enemy
+	auto test = ShipFactory::makeEnemy(2);
+	test->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 2));
 
 	//Creat edges
 	createEdges();

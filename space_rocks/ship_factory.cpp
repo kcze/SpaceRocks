@@ -82,6 +82,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	return player;
 }
 
+//Make enemy ship.
+//Vaild IDs: 2 through 5 inclusive
 std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 {
 	auto enemy = makeShip();
@@ -95,7 +97,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		b2PolygonShape Shape;
 
 		//Assign collision vertices to shape
-		Shape.Set(&_objectData[2]._coords.front(), _objectData[2]._coords.size());
+		Shape.Set(&_objectData[type]._coords.front(), _objectData[type]._coords.size());
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
@@ -103,22 +105,17 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		enemy->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
 	}
 
-	//Variations
-	switch (type)
+	//Destructible
 	{
-	case 1:
-		//Destructible
-		{
-			//ID 2, 2hp
-			enemy->addComponent<DestructibleComponent>(2.0f, 2);
-		}
+		//HP governed by ID, so ID 2 = 2hp
+		enemy->addComponent<DestructibleComponent>(type, 2);
+	}
 
-		//Sprite
-		{
-			auto sprite = enemy->addComponent<SpriteComponent>();
-			sprite->setTexure(_objectData[2]._tex);
-		}
-		break;
+	//Sprite
+	{
+		auto sprite = enemy->addComponent<SpriteComponent>();
+		sprite->setTexure(_objectData[type]._tex);
+		sprite->setTextureRect(_objectData[type]._texRect);
 	}
 
 	return enemy;
