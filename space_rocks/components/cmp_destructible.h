@@ -23,4 +23,5 @@ protected:
 	float _hp;
 	float _maxHp;
 	unsigned int _id;
+	b2Vec2 _spawnCoords;
 };

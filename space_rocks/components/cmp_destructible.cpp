@@ -11,7 +11,18 @@ DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const un
 }
 
 //Update
-void DestructibleComponent::update(double dt) {}
+void DestructibleComponent::update(double dt) {
+
+	//Destroied
+	if (_hp <= 0.0f)
+	{
+		//Spawn impact fragments
+		spawnFragments(_spawnCoords);
+
+		_parent->setForDelete();
+
+	}
+}
 
 //Get  the HP of this destructible
 float DestructibleComponent::getHp() const { return _hp; }
@@ -24,22 +35,12 @@ void DestructibleComponent::damage(const float hp, const b2Vec2 coords)
 {
 	//Take damage
 	_hp -= hp;
-
+	_spawnCoords = coords;
 	//Still alive
 	//if (hp > 0.0f)
 	//{
 	//}
-	
-	//Destroied
-	if (_hp <= 0.0f)
-	{
-		//Spawn impact fragments
-		spawnFragments(coords);
 
-		_parent->setAlive(false);
-		_parent->setVisible(false);
-		_parent->setForDelete();
-	}
 }
 
 //Repair this destructible, increasing its HP by the given value
@@ -92,5 +93,7 @@ void DestructibleComponent::spawnFragments(const b2Vec2 coords)
 			AsteroidFactory::makeAsteroid(1331);
 			AsteroidFactory::makeAsteroid(1332);
 			break;
+		default:
+			std::cout << "Trying to spawn fragments that don't exist." << std::endl;
 	}
 }
