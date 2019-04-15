@@ -6,11 +6,17 @@ class ContactListener : public b2ContactListener
 {
 	void BeginContact(b2Contact* contact)
 	{
-		contact->GetFixtureA()->GetBody();
+		b2Filter filterA = contact->GetFixtureA()->GetFilterData();
+		b2Filter filterB = contact->GetFixtureB()->GetFilterData();
+		const b2Vec2 posA = contact->GetFixtureA()->GetBody()->GetPosition();
+		const b2Vec2 posB = contact->GetFixtureB()->GetBody()->GetPosition();
+		contact->GetFixtureB()->GetBody();
 
-		if (true)
+
+		//Bullet collisions
+		if (filterA.groupIndex == 1)
 		{
-
+			spawnFragments(posA);
 		}
 	}
 };

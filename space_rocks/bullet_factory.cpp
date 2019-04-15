@@ -1,9 +1,9 @@
 #include "bullet_factory.h"
 
-//Key is colRow starting topleft: 11
+//Key is ColRow starting top left: 11
 std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 {
-	//2,4
+	//2,4: Player Bullet
 	{24,
 		{
 			{
@@ -22,11 +22,12 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 	}
 };
 
-
+//Make a bullet of the corresponding type
 std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 {
 	switch (id)
 	{
+	//2,4: Player Bullet
 	case 24:
 		//Make entity
 		std::shared_ptr<Entity> bullet = gameScene.makeEntity();
@@ -37,6 +38,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 			//Collider
 			//Create fixturedef and shape
 			b2FixtureDef fixtureDef;
+			fixtureDef.filter.groupIndex = 1;
 			fixtureDef.filter.categoryBits = PLAYER_BULLET;
 			fixtureDef.filter.maskBits = ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
 			b2PolygonShape shape;
@@ -65,6 +67,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(unsigned int id)
 
 		//Bullet Component
 		{
+			//5 seconds lifetime
 			auto des = bullet->addComponent<BulletComponent>(5.0f);		
 		}
 
