@@ -62,10 +62,7 @@ void GameScene::Load() {
 }
 
 void GameScene::SpawnAsteroid()
-{
-	//asteroids.shrink_to_fit(); //TODO: Ensure list is shrunk when asteroid is destroyed...
-	
-
+{	
 	// Generate random position off screen
 	float rx = distrib(randomGenerator);
 	float ry = distrib(randomGenerator);
@@ -127,6 +124,15 @@ void GameScene::createEdges()
 void GameScene::Update(const double& dt) {
 	 
 	//If less than 5 total asteroids, spawn another big asteroid.
+	for (int i = 0; i < asteroids.size(); i++)
+	{
+		if (!asteroids[i]->isAlive())
+		{
+			asteroids.erase(asteroids.begin() + i);
+			asteroids.shrink_to_fit();
+		}
+	}
+	
 	if (asteroids.size() < 5)
 	{
 		SpawnAsteroid();
