@@ -1,31 +1,28 @@
 #include "ContactListener.h"
 
 //Contact Listener
-class myContactListener : public b2ContactListener
+void myContactListener::BeginContact(b2Contact* contact)
 {
-	void BeginContact(b2Contact* contact)
+	b2Filter filterA = contact->GetFixtureA()->GetFilterData();
+	b2Filter filterB = contact->GetFixtureB()->GetFilterData();
+
+	const b2Vec2 posA = contact->GetFixtureA()->GetBody()->GetPosition();
+	const b2Vec2 posB = contact->GetFixtureB()->GetBody()->GetPosition();
+
+	auto entityA = static_cast<Entity*> (contact->GetFixtureA()->GetBody()->GetUserData());
+	auto entityB = static_cast<Entity*> (contact->GetFixtureB()->GetBody()->GetUserData());
+
+	//Bullet collisions
+	if (filterA.groupIndex == 1)
 	{
-		b2Filter filterA = contact->GetFixtureA()->GetFilterData();
-		b2Filter filterB = contact->GetFixtureB()->GetFilterData();
-
-		const b2Vec2 posA = contact->GetFixtureA()->GetBody()->GetPosition();
-		const b2Vec2 posB = contact->GetFixtureB()->GetBody()->GetPosition();
-
-		auto entityA = static_cast<Entity*> (contact->GetFixtureA()->GetBody()->GetUserData());
-		auto entityB = static_cast<Entity*> (contact->GetFixtureB()->GetBody()->GetUserData());
-
-		//Bullet collisions
-		if (filterA.groupIndex == 1)
+		//Bullet x Asteroid
+		if (filterB.categoryBits == ASTEROIDS)
 		{
-			//Bullet x Asteroid
-			if (filterB.categoryBits == ASTEROIDS)
-			{
-				//Damage asteroid by 1														TODO: Set damage to bullet damage value
-				entityB->get_components<DestructibleComponent>()[0]->damage(1.0f, posB);
-				//Destroy bullet
-				entityA->get_components<DestructibleComponent>()[0]->damage(10.0f, posA);
-			}
+			//Damage asteroid by 1														TODO: Set damage to bullet damage value
+			entityB->get_components<DestructibleComponent>()[0]->damage(1.0f, posB);
+			//Destroy bullet
+			entityA->get_components<DestructibleComponent>()[0]->damage(10.0f, posA);
 		}
-
 	}
-};
+
+}
