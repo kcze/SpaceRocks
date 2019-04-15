@@ -65,7 +65,6 @@ void SpriteComponent::render() {
 		Renderer::queue(_sprite.get());
 }
 
-
 // Shape
 void ShapeComponent::update(double dt) {
 	sf::FloatRect bounds = _shape->getLocalBounds();

@@ -16,7 +16,7 @@
 #include "..\components\components.h"
 #include <ctime>
 #include "..\ContactListener.h"
-
+#include "..\debug_draw.h"
 using namespace std;
 using namespace sf;
 
@@ -28,8 +28,9 @@ std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physics_scale_inv;
-myContactListener contactListenerInstance;
 
+myContactListener contactListenerInstance;
+DebugDraw debugDrawInstance;
 
 void GameScene::Load() {
 	cout << "Game Scene Load \n";	
@@ -60,6 +61,9 @@ void GameScene::Load() {
 	auto world = body->GetWorld();
 	world->SetContactListener(&contactListenerInstance);
 
+	//Set Debug Draw
+	world->SetDebugDraw(&debugDrawInstance);
+	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
 	setLoaded(true);
 }
@@ -141,6 +145,9 @@ void GameScene::Update(const double& dt) {
 		SpawnAsteroid();
 	}
 
+	//TODO: Less hacky way of getting world, similar is also used in load
+	auto world = asteroids[0]->get_components<PhysicsComponent>()[0]->getBody()->GetWorld();
+	world->DrawDebugData();
 	Scene::Update(dt);
 }
 
