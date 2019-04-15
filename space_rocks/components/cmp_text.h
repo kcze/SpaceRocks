@@ -13,10 +13,15 @@ public:
 
   ~TextComponent() override = default;
 
-  void SetText(const std::string& str);
+  void setText(const std::string& str);
+  void TextComponent::setAnchor(sf::Vector2f vec);
+  sf::Vector2f TextComponent::getAnchoredPosition();
+
+  void TextComponent::setSize(unsigned int size);
 
 protected:
   std::shared_ptr<sf::Font> _font;
   std::string _string;
   sf::Text _text;
+  sf::Vector2f _anchor;
 };
