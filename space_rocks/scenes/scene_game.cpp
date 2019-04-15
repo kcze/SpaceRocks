@@ -15,6 +15,7 @@
 #include "..\asteroid_factory.h"
 #include "..\components\components.h"
 #include <ctime>
+#include "..\ContactListener.h"
 
 using namespace std;
 using namespace sf;
@@ -27,9 +28,11 @@ std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physics_scale_inv;
+myContactListener contactListenerInstance;
+
 
 void GameScene::Load() {
-	cout << "Game Scene Load \n";
+	cout << "Game Scene Load \n";	
 	{
 		// Game panel
 		game = makeEntity();
@@ -45,7 +48,14 @@ void GameScene::Load() {
 	auto player = ShipFactory::makePlayer();
 	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
+	//Creat edges
 	createEdges();
+
+	//Set contact listener
+	auto body = player->get_components<PhysicsComponent>()[0]->getBody();
+	auto world = body->GetWorld();
+	world->SetContactListener(&contactListenerInstance);
+
 
 	setLoaded(true);
 }
@@ -56,7 +66,6 @@ void GameScene::SpawnAsteroid()
 	
 	auto asteroid = AsteroidFactory::makeAsteroid(11);
 
-	// -----------------KEEP-------------------------------
 	// Generate random position off screen
 	float rx = distrib(randomGenerator);
 	float ry = distrib(randomGenerator);
@@ -67,21 +76,14 @@ void GameScene::SpawnAsteroid()
 	//calculate center of screen
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
-	asteroid->setPosition(center + dir*800.0f);
-	// -----------------------------------------------------
-	
-	// -----------------KEEP-------------------------------
+	asteroid->get_components<PhysicsComponent>()[0]->teleport(center + dir * 800.0f);
+
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
 	asteroid->get_components<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
-	// -----------------------------------------------------
 
-
-	// -----------------KEEP-------------------------------
 	//Add to collection
 	asteroids.push_back(asteroid);
-	// -----------------------------------------------------
-
 }
 
 void GameScene::createEdges()

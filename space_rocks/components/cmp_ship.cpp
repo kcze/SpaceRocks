@@ -1,7 +1,4 @@
 #include "cmp_ship.h"
-#include "maths.h"
-#include <Box2D\Dynamics\b2Fixture.h>
-#include "..\bullet_factory.h"
 
 ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSpeed, const float reload) : Component(p)
 {
@@ -11,7 +8,7 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_time = 0.0f;
 	//_bullet = bullet;
 	_physicsComponent = _parent->get_components<PhysicsComponent>()[0];
-	_thrusterSpriteComponent = _parent->get_components<SpriteComponent>()[1];
+	_thrusterSpriteComponent = _parent->get_components<SpriteComponent>()[0];
 	_thrusterSpriteComponent->setDraw(false);
 	_physicsComponent->setLinearDampening(3.0f);
 	_physicsComponent->setAngularDampening(5.0f);
@@ -30,10 +27,11 @@ void ShipComponent::rotate(bool right)
 
 void ShipComponent::shoot()
 {
+	std::cout << "_time = " << _time << std::endl;
 	if (_time > 0.0f)
 		return;
 
-	auto bullet = BulletFactory::makeBullet();
+	auto bullet = BulletFactory::makeBullet(24);
 	auto physics = bullet->get_components<PhysicsComponent>()[0];
 	physics->teleport(_parent->getPosition());
 	physics->setAngle(_physicsComponent->getFixture()->GetBody()->GetAngle());

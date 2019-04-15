@@ -8,18 +8,18 @@
 #include "engine.h"
 #include "components\cmp_sprite.h"
 #include "components\cmp_physics.h"
+#include "components\cmp_destructible.h"
 #include "system_resources.h"
 #include <string>
+#include "factory.h"
 
-class AsteroidFactory {
+class AsteroidFactory : Factory {
 public:
 	static std::shared_ptr<Entity> makeAsteroid(unsigned int id);
 
 protected:
 	AsteroidFactory() {}
 
-	//std::shared_ptr<sf::Texture> _ssAsteroids;
-
-	static std::map < unsigned int, std::vector<b2Vec2 >> _coords;
+	static std::map < unsigned int, ObjectData> _objectData;
 
 };

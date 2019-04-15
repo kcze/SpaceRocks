@@ -26,6 +26,7 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
   // Is Dynamic(moving), or static(Stationary)
   BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
   BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+  BodyDef.userData = _parent;
 
   // Create the body
   _body = Physics::GetWorld()->CreateBody(&BodyDef);
@@ -76,13 +77,18 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
   */
 }
 
+b2Body*  PhysicsComponent::getBody()
+{
+	return _body;
+}
+
 void PhysicsComponent::setFixtureDef(b2FixtureDef fix)
 {
 	//set properties
 	//fix.density = _dynamic ? 10.f : 0.f;
 	fix.friction = _dynamic ? 0.1f : 0.8f;
 	fix.restitution = .2;
-
+	_body->SetSleepingAllowed(false);
 	//Attach to body
 	_fixture = _body->CreateFixture(&fix);
 }
