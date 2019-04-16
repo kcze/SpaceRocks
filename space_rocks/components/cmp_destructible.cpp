@@ -1,5 +1,5 @@
 #include "cmp_destructible.h"
-#include "..\asteroid_factory.h"
+#include <random>
 
 //Constructor
 DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id, const float lifeTime) : Component(p)
@@ -64,11 +64,32 @@ void DestructibleComponent::repair(const float hp)
 //Spawn the fragments relevent to the type of collision at the given coords
 void DestructibleComponent::spawnFragments(const sf::Vector2f coords) 
 {
+	//random
+	std::default_random_engine randomGenerator((int)time(NULL));
+	std::uniform_real_distribution<float> dF(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> dFV(0.5f, 1.0f);
+	std::uniform_int_distribution<int> dI(1, 4);
+
 	switch (_id)
 	{
 		//0: Bullet (Any)
 		case 0:
-			//TODO: Spawn bullet particles for all bullet impacts, regardless if they kill
+			//Spawn bullet particles for all bullet impacts, regardless if they kill
+			for (unsigned int i = 0; i < 5; i++) {
+				auto p = ParticleFactory::makeParticle(dI(randomGenerator));
+				p->get_components<PhysicsComponent>()[0]->teleport(coords);
+
+				// Velocity
+				//rand gen
+				float rx = dF(randomGenerator);
+				float ry = dF(randomGenerator);
+				float rv = dFV(randomGenerator);
+				//get normalised direction from random values
+				sf::Vector2f dir = sf::Vector2f(rx, ry);
+				dir = sf::normalize<float>(dir);
+				p->get_components<PhysicsComponent>()[0]->setVelocity(dir * rv * 40.0f);
+				p->get_components<PhysicsComponent>()[0]->setAngularVelocity(rv * 30.0f);
+			}
 			break;
 		//1: Player
 		case 1:

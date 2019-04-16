@@ -2,6 +2,9 @@
 
 #include "ecm.h"
 #include "Box2D/Box2D.h"
+#include "..\asteroid_factory.h"
+#include "..\particle_factory.h"
+#include "time.h"
 
 class DestructibleComponent : public Component {
 
@@ -16,7 +19,7 @@ public:
 	void damage(const float hp);
 	void repair(const float hp);
 	void spawnFragments(const sf::Vector2f coords);
-
+	
 	~DestructibleComponent() override = default;
 
 protected:
