@@ -45,6 +45,9 @@ void GameScene::load() {
 	// Load spritesheets
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
+	//Load test sound
+	//Resources::load<Sound>("");
+
 	// Player ship
 	auto player = ShipFactory::makePlayer();
 	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
