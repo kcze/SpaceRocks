@@ -68,13 +68,13 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 
 	//Destructible
 	{
-		auto des = bullet->addComponent<DestructibleComponent>(1.0f, 0);
+		auto des = bullet->addComponent<DestructibleComponent>(1.0f, 0, 5.0f);
 	}
 
 	//Bullet Component
 	{
 		//5 seconds lifetime
-		auto des = bullet->addComponent<BulletComponent>(5.0f, b._damage);
+		auto des = bullet->addComponent<BulletComponent>(b._damage);
 	}
 	return bullet;
 }
