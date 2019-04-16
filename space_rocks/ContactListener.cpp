@@ -47,4 +47,9 @@ void myContactListener::BeginContact(b2Contact* contact)
 			return;
 
 		//Particle burst to show where collision has happened and inform them of damage
+		//entityA->get_components<DestructibleComponent>()[0]->addToCallList(std::bind(&DestructibleComponent::particleBurst, entityA->getPosition(), 5, 30.0f));		//TODO: Fix exception caused by spawning from callback
+		//Damage player
+		entityA->get_components<DestructibleComponent>()[0]->damage(1.0f);
+	}
+
 }

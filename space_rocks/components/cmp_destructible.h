@@ -20,6 +20,7 @@ public:
 	void repair(const float hp);
 	void spawnFragments(const sf::Vector2f coords);
 	void particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude);
+	void addToCallList(std::function<void()>);
 	
 	~DestructibleComponent() override = default;
 
@@ -30,4 +31,5 @@ protected:
 	b2Vec2 _spawnCoords;
 	bool _timed;
 	float _lifetime;
+	std::vector<std::function<void()> > _toCall;
 };
