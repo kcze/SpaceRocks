@@ -30,4 +30,21 @@ void myContactListener::BeginContact(b2Contact* contact)
 		//Destroy bullet
 		entityA->get_components<DestructibleComponent>()[0]->damage(10.0f);
 	}
+
+	//Player x Object Collisions
+	if (filterA.categoryBits == PLAYER_SHIP ^ filterB.categoryBits == PLAYER_SHIP)
+	{
+		//Make player ship always A
+		if (filterB.categoryBits == PLAYER_SHIP)
+		{
+			std::swap(filterA, filterB);
+			std::swap(posA, posB);
+			std::swap(entityA, entityB);
+		}
+
+		//If bullet, do nothing (as bullet impact already creates particles)
+		if (filterB.groupIndex == 1)
+			return;
+
+		//Particle burst to show where collision has happened and inform them of damage
 }
