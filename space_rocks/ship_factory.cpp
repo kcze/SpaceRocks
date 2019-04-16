@@ -171,6 +171,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		auto sprite = enemy->addComponent<SpriteComponent>();
 		sprite->setTextureRect(_objectData[type]._texRect);
 		sprite->setTexure(_objectData[type]._tex);
+		sprite->setColor(sf::Color(255, 0, 0, 255));
 	}
 
 	return enemy;

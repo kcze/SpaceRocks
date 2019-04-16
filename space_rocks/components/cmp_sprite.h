@@ -27,6 +27,7 @@ public:
   void setTextureRect(sf::IntRect);
   void setOrigin(const sf::Vector2f origin);
   void setDraw(bool draw);
+  void setColor(sf::Color color);
 };
 
 // Shape
