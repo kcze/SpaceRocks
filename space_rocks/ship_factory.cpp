@@ -118,8 +118,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
-		player->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
-		player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+		player->getComponents<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+		player->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);
 	}
 
 	//Destructible
@@ -156,8 +156,8 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
-		enemy->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
-		enemy->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
+		enemy->getComponents<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+		enemy->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
 	}
 
 	//Destructible

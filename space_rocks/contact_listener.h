@@ -7,9 +7,9 @@
 #include "components/cmp_bullet.h"
 #include "Box2D/Box2D.h"
 
-class myContactListener : public b2ContactListener {
+class MyContactListener : public b2ContactListener {
 public:
-	myContactListener() {};
+	MyContactListener() {};
 protected:
 	void BeginContact(b2Contact* contact);
 

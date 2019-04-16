@@ -15,7 +15,7 @@
 #include "..\asteroid_factory.h"
 #include "..\components\components.h"
 #include <ctime>
-#include "..\ContactListener.h"
+#include "..\contact_listener.h"
 #include "..\debug_draw.h"
 using namespace std;
 using namespace sf;
@@ -27,12 +27,12 @@ std::vector<std::shared_ptr<Entity>> asteroids;
 std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
-float PSI = Physics::physics_scale_inv;
+float PSI = Physics::physicsScaleInv;
 
-myContactListener contactListenerInstance;
+MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
 
-void GameScene::Load() {
+void GameScene::load() {
 	cout << "Game Scene Load \n";	
 	{
 		// Game panel
@@ -47,24 +47,24 @@ void GameScene::Load() {
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
-	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
 	//Test Enemies
 	auto test1 = ShipFactory::makeEnemy(2);
-	test1->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 4));
+	test1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 4));
 	auto test2 = ShipFactory::makeEnemy(3);
-	test2->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, 3*(GAMEY / 4)));
+	test2->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, 3*(GAMEY / 4)));
 	auto test3 = ShipFactory::makeEnemy(4);
-	test3->get_components<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), GAMEY / 4));
+	test3->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), GAMEY / 4));
 	auto test4 = ShipFactory::makeEnemy(5);
-	test4->get_components<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), 3*(GAMEY / 4)));
+	test4->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), 3*(GAMEY / 4)));
 
 
 	//Creat edges
 	createEdges();
 
 	//Set contact listener
-	auto body = player->get_components<PhysicsComponent>()[0]->getBody();
+	auto body = player->getComponents<PhysicsComponent>()[0]->getBody();
 	auto world = body->GetWorld();
 	world->SetContactListener(&contactListenerInstance);
 
@@ -75,7 +75,7 @@ void GameScene::Load() {
 	setLoaded(true);
 }
 
-void GameScene::SpawnAsteroid()
+void GameScene::spawnAsteroid()
 {	
 	// Generate random position off screen
 	float rx = distrib(randomGenerator);
@@ -91,7 +91,7 @@ void GameScene::SpawnAsteroid()
 
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	asteroid->get_components<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
+	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
 
 	//Add to collection
 	asteroids.push_back(asteroid);
@@ -135,7 +135,7 @@ void GameScene::createEdges()
 
 }
 
-void GameScene::Update(const double& dt) {
+void GameScene::update(const double& dt) {
 	 
 	//If less than 5 total asteroids, spawn another big asteroid.
 	for (int i = 0; i < asteroids.size(); i++)
@@ -149,12 +149,12 @@ void GameScene::Update(const double& dt) {
 	
 	if (asteroids.size() < 5)
 	{
-		SpawnAsteroid();
+		spawnAsteroid();
 	}
 
 	//TODO: Less hacky way of getting world, similar is also used in load
-	auto world = asteroids[0]->get_components<PhysicsComponent>()[0]->getBody()->GetWorld();
+	auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
 	world->DrawDebugData();
-	Scene::Update(dt);
+	Scene::update(dt);
 }
 

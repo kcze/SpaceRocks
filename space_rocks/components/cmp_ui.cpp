@@ -5,6 +5,6 @@ UiComponent::UiComponent(Entity* const p)
 
 void UiComponent::update(double dt) { 
 	if (textUpdate != NULL)
-		_parent->get_components<TextComponent>()[0]->setText(textUpdate());
+		_parent->getComponents<TextComponent>()[0]->setText(textUpdate());
 }
 

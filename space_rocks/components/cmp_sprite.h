@@ -15,7 +15,7 @@ protected:
 public:
   SpriteComponent() = delete;
 
-  void SpriteComponent::SetAnchor(sf::Vector2f vec);
+  void SpriteComponent::setAnchor(sf::Vector2f vec);
 
   explicit SpriteComponent(Entity* p);
   void update(double dt) override;
@@ -41,7 +41,7 @@ public:
 
   explicit ShapeComponent(Entity* p);
 
-  void ShapeComponent::SetAnchor(sf::Vector2f vec);
+  void ShapeComponent::setAnchor(sf::Vector2f vec);
 
   void update(double dt) override;
   

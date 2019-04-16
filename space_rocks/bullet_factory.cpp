@@ -63,7 +63,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 		auto sprite = bullet->addComponent<SpriteComponent>();
 		sprite->setTexure(_objectData[b._id]._tex);
 		sprite->setTextureRect(_objectData[b._id]._texRect);
-		sprite->SetAnchor(sf::Vector2f(0.5f, 0.5f));
+		sprite->setAnchor(sf::Vector2f(0.5f, 0.5f));
 	}
 
 	//Destructible
