@@ -14,6 +14,8 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_physicsComponent->setAngularDampening(50.0f);
 }
 
+void ShipComponent::setBullet(float damage, unsigned int id) {_bullet = { damage, id }; }
+
 void ShipComponent::thrust(double dt)
 {
 	_physicsComponent->impulseRelative(sf::Vector2f(0.0f, -_speed * dt));
@@ -31,7 +33,7 @@ void ShipComponent::shoot()
 	if (_time > 0.0f)
 		return;
 
-	auto bullet = BulletFactory::makeBullet(24);
+	auto bullet = BulletFactory::makeBullet(_bullet);
 	auto physics = bullet->get_components<PhysicsComponent>()[0];
 	physics->teleport(_parent->getPosition());
 	physics->setAngle(_physicsComponent->getFixture()->GetBody()->GetAngle());
