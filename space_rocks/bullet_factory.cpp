@@ -3,7 +3,141 @@
 //Key is ColRow starting top left: 11
 std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 {
-	//2,4: Player Bullet
+	//1,2
+	{12,
+		{
+			{
+				{0.0f * PSI4, 1.0f * PSI4},
+				{-1.0f * PSI4, 0.0f * PSI4},
+				{0.0f * PSI4, -1.0f * PSI4},
+				{1.0f * PSI4, 0.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(0, 64, 64, 64)
+			}
+		}
+	},
+
+	//2,2
+	{22,
+		{
+			{
+				{0.0f * PSI4, 2.0f * PSI4},
+				{-2.0f * PSI4, 0.0f * PSI4},
+				{0.0f * PSI4, -2.0f * PSI4},
+				{2.0f * PSI4, 0.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(64, 64, 64, 64)
+			}
+		}
+	},
+
+	//3,2
+	{32,
+		{
+			{
+				{0.0f * PSI4, 3.0f * PSI4},
+				{-3.0f * PSI4, 0.0f * PSI4},
+				{0.0f * PSI4, -3.0f * PSI4},
+				{3.0f * PSI4, 0.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(128, 64, 64, 64)
+			}
+		}
+	},
+
+	//1,3
+	{13,
+		{
+			{
+				{0.0f * PSI4, 2.0f * PSI4},
+				{-1.0f * PSI4, 1.0f * PSI4},
+				{-1.0f * PSI4, -1.0f * PSI4},
+				{0.0f * PSI4, -2.0f * PSI4},
+				{1.0f * PSI4, -1.0f * PSI4},
+				{1.0f * PSI4, 1.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(0, 128, 64, 64)
+			}
+		}
+	},
+
+	//2,3
+	{23,
+		{
+			{
+				{0.0f * PSI4, 3.0f * PSI4},
+				{-1.0f * PSI4, 1.0f * PSI4},
+				{-1.0f * PSI4, -1.0f * PSI4},
+				{0.0f * PSI4, -3.0f * PSI4},
+				{1.0f * PSI4, -1.0f * PSI4},
+				{1.0f * PSI4, 1.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(64, 128, 64, 64)
+			}
+		}
+	},
+
+	//3,3
+	{33,
+		{
+			{
+				{0.0f * PSI4, 4.0f * PSI4},
+				{-2.0f * PSI4, 2.0f * PSI4},
+				{-2.0f * PSI4, -2.0f * PSI4},
+				{0.0f * PSI4, -4.0f * PSI4},
+				{2.0f * PSI4, -2.0f * PSI4},
+				{2.0f * PSI4, 2.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(128, 128, 64, 64)
+			}
+		}
+	},
+
+	//Player Bullets:
+
+	//1,4
+	{14,
+		{
+			{
+				{0.0f * PSI4, 2.0f * PSI4},
+				{-1.0f * PSI4, 0.0f * PSI4},
+				{0.0f * PSI4, -4.0f * PSI4},
+				{1.0f * PSI4, 0.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(0, 192, 64, 64)
+			}
+		}
+	},
+
+	//2,4
 	{24,
 		{
 			{
@@ -17,6 +151,24 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 			},
 			{
 				sf::IntRect(64, 192, 64, 64)
+			}
+		}
+	},
+
+	//3,4
+	{ 24,
+		{
+			{
+				{0.0f * PSI4, 2.0f * PSI4},
+				{-2.0f * PSI4, 0.0f * PSI4},
+				{0.0f * PSI4, -6.0f * PSI4},
+				{2.0f * PSI4, 0.0f * PSI4}
+			},
+			{
+				Resources::load<sf::Texture>("projectiles.png")
+			},
+			{
+				sf::IntRect(128, 192, 64, 64)
 			}
 		}
 	}
