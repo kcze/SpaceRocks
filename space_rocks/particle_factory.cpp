@@ -12,7 +12,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				Resources::load<sf::Texture>("particles.png")
 			},
 			{
-				sf::IntRect(0, 0, 128, 128)
+				sf::IntRect(0, 0, 16, 16)
 			}
 		}
 	},
@@ -26,7 +26,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				Resources::load<sf::Texture>("particles.png")
 			},
 			{
-				sf::IntRect(128, 0, 128, 128)
+				sf::IntRect(16, 0, 16, 16)
 			}
 		}
 	},
@@ -40,7 +40,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				Resources::load<sf::Texture>("particles.png")
 			},
 			{
-				sf::IntRect(256, 0, 128, 128)
+				sf::IntRect(32, 0, 16, 16)
 			}
 		}
 	},
@@ -54,7 +54,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				Resources::load<sf::Texture>("particles.png")
 			},
 			{
-				sf::IntRect(384, 0, 128, 128)
+				sf::IntRect(48, 0, 16, 16)
 			}
 		}
 	}, 
