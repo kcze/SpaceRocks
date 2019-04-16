@@ -2,16 +2,26 @@
 #include "..\asteroid_factory.h"
 
 //Constructor
-DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id) : Component(p)
+DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const unsigned int id, const float lifeTime) : Component(p)
 {
 	//Set properties
 	_hp = hp;
 	_maxHp = hp;
 	_id = id;
+	_timed = lifeTime == 0.0f ?  0 : 1;
+	_lifetime = lifeTime;
 }
 
 //Update
 void DestructibleComponent::update(double dt) {
+	//Check for old age death if applicable
+	if (_timed)
+	{
+		_lifetime -= dt;
+		if (_lifetime <= 0.f) {
+			_parent->setForDelete();
+		}
+	}
 
 	//Destroied
 	if (_hp <= 0.0f)

@@ -8,13 +8,12 @@ struct Bullet {
 
 class BulletComponent : public Component {
 protected:
-  float _lifetime;
   float _damage;
 
 public:
   void update(double dt) override;
   void render() override {}
-  explicit BulletComponent(Entity* p, float lifetime, float damage);
+  explicit BulletComponent(Entity* p, float damage);
   float getDamage();
   BulletComponent() = delete;
 };
