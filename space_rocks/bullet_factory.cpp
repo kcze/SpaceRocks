@@ -175,7 +175,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 };
 
 //Make a bullet of the corresponding type 
-//i.e: 2,4 = Default Player Bullet
+//i.e: 14 = Default Player Bullet
 std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 {
 
@@ -189,7 +189,7 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 		//Create fixturedef and shape
 		b2FixtureDef fixtureDef;
 		fixtureDef.filter.groupIndex = 1;
-		if (b._id == 24)
+		if (b._id == 14 || b._id == 24 || b._id == 34)
 		{
 			fixtureDef.filter.categoryBits = PLAYER_BULLET;
 			fixtureDef.filter.maskBits = ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
