@@ -69,37 +69,41 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		//0: Bullet (Any)
 		case 0:
 			//Spawn bullet particles for all bullet impacts, regardless if they kill
-			particleBurst(coords, 5, 40.0f);
+			particleBurst(coords, 5, 35.0f);
 			break;
 		//1: Player
 		case 1:
-			//TODO: Player death explosion/particles
+			particleBurst(coords, 50, 100.0f);
 			break;
 		//2: Enemy (Any)
 		case 2:
-			//TODO: Enemy death explosion/particles
+			particleBurst(coords, 20, 100.0f);
 			break;
 		//3-10: Reserved for expansion
 		
 		//11+: Asteroids
 		//11: Asteroid 1, Size 1
 		case 11:
+			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(121, coords);
 			AsteroidFactory::makeAsteroid(122, coords);
 			AsteroidFactory::makeAsteroid(123, coords);
 			break;
 		//121: Asteroid 1, Size 2, No. 1
 		case 121:
+			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1311, coords);
 			AsteroidFactory::makeAsteroid(1312, coords);
 			break;
 		//122: Asteroid 1, Size 2, No. 2
 		case 122:
+			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1321, coords);
 			AsteroidFactory::makeAsteroid(1322, coords);
 			break;
 		//131: Asteroid 1, Size 2, No. 3
 		case 123:
+			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1331, coords);
 			AsteroidFactory::makeAsteroid(1332, coords);
 			break;
@@ -108,7 +112,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 	}
 }
 
-
+//TODO: Add lifetime as argument
 //Generates a particle burst at the given coords with the given properties
 void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude)
 {
