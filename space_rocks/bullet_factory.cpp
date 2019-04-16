@@ -37,8 +37,16 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 		//Create fixturedef and shape
 		b2FixtureDef fixtureDef;
 		fixtureDef.filter.groupIndex = 1;
-		fixtureDef.filter.categoryBits = PLAYER_BULLET;
-		fixtureDef.filter.maskBits = ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
+		if (b._id == 24)
+		{
+			fixtureDef.filter.categoryBits = PLAYER_BULLET;
+			fixtureDef.filter.maskBits = ENEMY_BULLET | ENEMY_SHIP | ASTEROIDS;
+		}
+		else
+		{
+			fixtureDef.filter.categoryBits = ENEMY_BULLET;
+			fixtureDef.filter.maskBits = PLAYER_BULLET | PLAYER_SHIP | ASTEROIDS;
+		}
 		b2PolygonShape shape;
 		//Set collider to sensor
 		fixtureDef.isSensor = true;
