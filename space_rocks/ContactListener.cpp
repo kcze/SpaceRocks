@@ -12,7 +12,7 @@ void myContactListener::BeginContact(b2Contact* contact)
 	auto entityA = static_cast<Entity*> (contact->GetFixtureA()->GetBody()->GetUserData());
 	auto entityB = static_cast<Entity*> (contact->GetFixtureB()->GetBody()->GetUserData());
 
-	//Bullet x X Collisions
+	//Bullet x Object Collisions
 	if (filterA.groupIndex == 1 ^ filterB.groupIndex == 1)
 	{
 		//Make bullet always A
@@ -23,15 +23,11 @@ void myContactListener::BeginContact(b2Contact* contact)
 			std::swap(entityA, entityB);
 		}
 
-		//Bullet x Asteroid
-		if (filterB.categoryBits == ASTEROIDS)
-		{
-			//Damage asteroid
-			entityB->get_components<DestructibleComponent>()[0]->damage(
-				entityA->get_components<BulletComponent>()[0]->getDamage()
-			);
-			//Destroy bullet
-			entityA->get_components<DestructibleComponent>()[0]->damage(10.0f);
-		}
+		//Damage object
+		entityB->get_components<DestructibleComponent>()[0]->damage(
+			entityA->get_components<BulletComponent>()[0]->getDamage()
+		);
+		//Destroy bullet
+		entityA->get_components<DestructibleComponent>()[0]->damage(10.0f);
 	}
 }
