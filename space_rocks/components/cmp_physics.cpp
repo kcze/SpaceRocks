@@ -14,7 +14,7 @@ void PhysicsComponent::update(double dt) {
 		setVelocity((_maxSpeed / currentSpeed) * getVelocity());
 
 
-  _parent->setPosition(invert_height(bv2_to_sv2(_body->GetPosition())));
+  _parent->setPosition(invertHeight(bv2ToSv2(_body->GetPosition())));
   _parent->setRotation((180 / b2_pi) * _body->GetAngle());
 }
 
@@ -25,11 +25,11 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
   b2BodyDef BodyDef;
   // Is Dynamic(moving), or static(Stationary)
   BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
-  BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+  BodyDef.position = sv2ToBv2(invertHeight(p->getPosition()));
   BodyDef.userData = _parent;
 
   // Create the body
-  _body = Physics::GetWorld()->CreateBody(&BodyDef);
+  _body = Physics::getWorld()->CreateBody(&BodyDef);
   _body->SetActive(true);
   //{
   //  // Create the fixture shape
@@ -98,7 +98,7 @@ void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
 void PhysicsComponent::setMass(float m) { _fixture->SetDensity(m); }
 
 void PhysicsComponent::teleport(const sf::Vector2f& v) {
-  _body->SetTransform(sv2_to_bv2(invert_height(v)), _body->GetAngle()); 
+  _body->SetTransform(sv2ToBv2(invertHeight(v)), _body->GetAngle()); 
 }
 
 void PhysicsComponent::setAngle(const float angle) {
@@ -107,10 +107,10 @@ void PhysicsComponent::setAngle(const float angle) {
 
 
 const sf::Vector2f PhysicsComponent::getVelocity() const {
-  return bv2_to_sv2(_body->GetLinearVelocity(), true);
+  return bv2ToSv2(_body->GetLinearVelocity(), true);
 }
 void PhysicsComponent::setVelocity(const sf::Vector2f& v) {
-  _body->SetLinearVelocity(sv2_to_bv2(v, true));
+  _body->SetLinearVelocity(sv2ToBv2(v, true));
 }
 
 void PhysicsComponent::setAngularVelocity(const float a) {
@@ -137,9 +137,9 @@ void PhysicsComponent::setAngularDampening(float f) {
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 
 PhysicsComponent::~PhysicsComponent() {
-  auto a = Physics::GetWorld();
+  auto a = Physics::getWorld();
   _body->SetActive(false);
-  Physics::GetWorld()->DestroyBody(_body);
+  Physics::getWorld()->DestroyBody(_body);
   // delete _body;
   _body = nullptr;
 }
@@ -173,7 +173,7 @@ bool PhysicsComponent::isTouching(const PhysicsComponent& pc) const {
 bool PhysicsComponent::isTouching(const PhysicsComponent& pc,
                                   b2Contact const* bc) const {
   const auto _otherFixture = pc.getFixture();
-  const auto& w = *Physics::GetWorld();
+  const auto& w = *Physics::getWorld();
   const auto contactList = w.GetContactList();
   const auto clc = w.GetContactCount();
   for (int32 i = 0; i < clc; i++) {

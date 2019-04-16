@@ -79,7 +79,7 @@ std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> fun
 void PanelComponent::executeButton()
 {
 	if (_currentButton != NULL)
-		_currentButton->get_components<UiComponent>()[0]->buttonExecute();
+		_currentButton->getComponents<UiComponent>()[0]->buttonExecute();
 }
 
 void PanelComponent::pointerPrevious()

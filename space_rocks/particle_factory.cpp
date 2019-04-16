@@ -76,7 +76,7 @@ std::shared_ptr<Entity> ParticleFactory::makeParticle(unsigned int type)
 		auto sprite = particle->addComponent<SpriteComponent>();
 		sprite->setTexure(_objectData[type]._tex);
 		sprite->setTextureRect(_objectData[type]._texRect);
-		sprite->SetAnchor(sf::Vector2f(0.5f, 0.5f));
+		sprite->setAnchor(sf::Vector2f(0.5f, 0.5f));
 	}
 
 	//Destructible

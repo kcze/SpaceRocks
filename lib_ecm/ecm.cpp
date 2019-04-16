@@ -4,7 +4,7 @@ using namespace std;
 
 Entity::Entity(Scene* const s)
     : _position({0, 0}), _rotation(0), _alive(true), _visible(true),
-      scene(s), _fordeletion(false) {}
+      scene(s), _forDeletion(false) {}
 
 void Entity::addTag(const std::string& t) { _tags.insert(t); }
 const std::set<std::string>& Entity::getTags() const { return _tags; }
@@ -14,7 +14,7 @@ void Entity::update(double dt) {
     return;
   }
   for (size_t i = 0; i < _components.size(); i++) {
-    if (_components[i]->is_fordeletion()) {
+    if (_components[i]->isForDeletion()) {
       _components.erase(_components.begin() + i);
       --i;
     }
@@ -22,7 +22,7 @@ void Entity::update(double dt) {
   }
 }
 
-bool Entity::is_fordeletion() const { return _fordeletion; }
+bool Entity::isForDeletion() const { return _forDeletion; }
 
 void Entity::render() {
   if (!_visible) {
@@ -48,7 +48,7 @@ bool Entity::isAlive() const { return _alive; }
 void Entity::setAlive(bool _alive) { Entity::_alive = _alive; }
 
 void Entity::setForDelete() {
-  _fordeletion = true;
+  _forDeletion = true;
   _alive = false;
   _visible = false;
 }
@@ -57,7 +57,7 @@ bool Entity::isVisible() const { return _visible; }
 
 void Entity::setVisible(bool _visible) { Entity::_visible = _visible; }
 
-Component::Component(Entity* const p) : _parent(p), _fordeletion(false) {}
+Component::Component(Entity* const p) : _parent(p), _forDeletion(false) {}
 
 Entity::~Entity() {
   // Components can inter-depend on each other, so deleting them may take
@@ -82,11 +82,11 @@ Entity::~Entity() {
 
 Component::~Component() {}
 
-bool Component::is_fordeletion() const { return _fordeletion; }
+bool Component::isForDeletion() const { return _forDeletion; }
 
 void EntityManager::update(double dt) {
   for (size_t i = 0; i < list.size(); i++) {
-    if (list[i]->is_fordeletion()) {
+    if (list[i]->isForDeletion()) {
       list.erase(list.begin() + i);
       --i;
       continue;

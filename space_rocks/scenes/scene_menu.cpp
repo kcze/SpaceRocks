@@ -86,7 +86,7 @@ void UpdateScaling()
 	const sf::Vector2u screensize(1280, 720);
 	const sf::Vector2u gamesize(GAMEX, GAMEY);
 	//set View as normal
-	Engine::GetWindow().setSize(screensize);
+	Engine::getWindow().setSize(screensize);
 	sf::FloatRect visibleArea(0.f, 0.f, gamesize.x, gamesize.y);
 	auto v = sf::View(visibleArea);
 	// figure out how to scale and maintain aspect;
@@ -99,10 +99,10 @@ void UpdateScaling()
 	}
 	//set!
 	v.setViewport(viewport);
-	Engine::GetWindow().setView(v);
+	Engine::getWindow().setView(v);
 }
 
-void MenuScene::Load() {
+void MenuScene::load() {
 	cout << "Menu Load \n";
 	
 	// Title
@@ -115,7 +115,7 @@ void MenuScene::Load() {
 	menu = makeEntity();
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	menuPanel = menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	menuPanel->addButton("Start", []() { Engine::ChangeScene(&gameScene); });
+	menuPanel->addButton("Start", []() { Engine::changeScene(&gameScene); });
 	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});
 	menuPanel->addButton("Settings", []() {});
@@ -135,7 +135,7 @@ void MenuScene::onKeyPressed(Keyboard::Key key)
 		menuPanel->executeButton();
 }
 
-void MenuScene::Update(const double& dt) {
+void MenuScene::update(const double& dt) {
   
-  Scene::Update(dt);
+  Scene::update(dt);
 }

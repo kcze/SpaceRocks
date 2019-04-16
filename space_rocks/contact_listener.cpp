@@ -1,7 +1,7 @@
-#include "ContactListener.h"
+#include "contact_listener.h"
 
 //Contact Listener
-void myContactListener::BeginContact(b2Contact* contact)
+void MyContactListener::BeginContact(b2Contact* contact)
 {
 	b2Filter filterA = contact->GetFixtureA()->GetFilterData();
 	b2Filter filterB = contact->GetFixtureB()->GetFilterData();
@@ -24,11 +24,11 @@ void myContactListener::BeginContact(b2Contact* contact)
 		}
 
 		//Damage object
-		entityB->get_components<DestructibleComponent>()[0]->damage(
-			entityA->get_components<BulletComponent>()[0]->getDamage()
+		entityB->getComponents<DestructibleComponent>()[0]->damage(
+			entityA->getComponents<BulletComponent>()[0]->getDamage()
 		);
 		//Destroy bullet
-		entityA->get_components<DestructibleComponent>()[0]->damage(10.0f);
+		entityA->getComponents<DestructibleComponent>()[0]->damage(10.0f);
 	}
 
 	//Player x Object Collisions
@@ -47,9 +47,9 @@ void myContactListener::BeginContact(b2Contact* contact)
 			return;
 
 		//Particle burst to show where collision has happened and inform them of damage
-		//entityA->get_components<DestructibleComponent>()[0]->addToCallList(std::bind(&DestructibleComponent::particleBurst, entityA->getPosition(), 5, 30.0f));		//TODO: Fix exception caused by spawning from callback
+		//entityA->getComponents<DestructibleComponent>()[0]->addToCallList(std::bind(&DestructibleComponent::particleBurst, entityA->getPosition(), 5, 30.0f));		//TODO: Fix exception caused by spawning from callback
 		//Damage player
-		entityA->get_components<DestructibleComponent>()[0]->damage(1.0f);
+		entityA->getComponents<DestructibleComponent>()[0]->damage(1.0f);
 	}
 
 }
