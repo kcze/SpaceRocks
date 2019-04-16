@@ -19,6 +19,7 @@ public:
 	void damage(const float hp);
 	void repair(const float hp);
 	void spawnFragments(const sf::Vector2f coords);
+	void particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude);
 	
 	~DestructibleComponent() override = default;
 

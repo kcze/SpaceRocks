@@ -64,32 +64,12 @@ void DestructibleComponent::repair(const float hp)
 //Spawn the fragments relevent to the type of collision at the given coords
 void DestructibleComponent::spawnFragments(const sf::Vector2f coords) 
 {
-	//random
-	std::default_random_engine randomGenerator((int)time(NULL));
-	std::uniform_real_distribution<float> dF(-1.0f, 1.0f);
-	std::uniform_real_distribution<float> dFV(0.5f, 1.0f);
-	std::uniform_int_distribution<int> dI(1, 4);
-
 	switch (_id)
 	{
 		//0: Bullet (Any)
 		case 0:
 			//Spawn bullet particles for all bullet impacts, regardless if they kill
-			for (unsigned int i = 0; i < 5; i++) {
-				auto p = ParticleFactory::makeParticle(dI(randomGenerator));
-				p->get_components<PhysicsComponent>()[0]->teleport(coords);
-
-				// Velocity
-				//rand gen
-				float rx = dF(randomGenerator);
-				float ry = dF(randomGenerator);
-				float rv = dFV(randomGenerator);
-				//get normalised direction from random values
-				sf::Vector2f dir = sf::Vector2f(rx, ry);
-				dir = sf::normalize<float>(dir);
-				p->get_components<PhysicsComponent>()[0]->setVelocity(dir * rv * 40.0f);
-				p->get_components<PhysicsComponent>()[0]->setAngularVelocity(rv * 30.0f);
-			}
+			particleBurst(coords, 5, 40.0f);
 			break;
 		//1: Player
 		case 1:
@@ -125,5 +105,33 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			break;
 		default:
 			std::cout << "Trying to spawn fragments that don't exist." << std::endl;
+	}
+}
+
+
+//Generates a particle burst at the given coords with the given properties
+void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude)
+{
+	//random
+	std::default_random_engine randomGenerator((int)time(NULL));
+	std::uniform_real_distribution<float> dF(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> dFV(0.5f, 1.0f);
+	std::uniform_int_distribution<int> dI(1, 4);
+
+	for (unsigned int i = 0; i < noParticles; i++)
+	{
+		auto p = ParticleFactory::makeParticle(dI(randomGenerator));
+		p->get_components<PhysicsComponent>()[0]->teleport(coords);
+
+		// Velocity
+		//rand gen
+		float rx = dF(randomGenerator);
+		float ry = dF(randomGenerator);
+		float rv = dFV(randomGenerator);
+		//get normalised direction from random values
+		sf::Vector2f dir = sf::Vector2f(rx, ry);
+		dir = sf::normalize<float>(dir);
+		p->get_components<PhysicsComponent>()[0]->setVelocity(dir * rv * magnitude);
+		p->get_components<PhysicsComponent>()[0]->setAngularVelocity(rv * magnitude * 0.75f);
 	}
 }
