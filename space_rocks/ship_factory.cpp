@@ -59,7 +59,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 	{4,
 		{
 			{
-				{-4.0f * PSI8, -5.0f * PSI8},
+				{-4.0f * PSI8, 5.0f * PSI8},
 				{5.0f * PSI8, 0.0f * PSI8},
 				{4.0f * PSI8, -4.0f * PSI8},
 				{4.0f * PSI8, -4.0f * PSI8},
