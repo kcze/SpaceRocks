@@ -137,7 +137,7 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	return player;
 }
 
-//Make enemy ship.
+//Make Enemy ship.
 //Vaild IDs: 2 through 5 inclusive
 std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 {
@@ -162,8 +162,8 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 
 	//Destructible
 	{
-		//HP governed by ID, so ID 2 = 2hp
-		enemy->addComponent<DestructibleComponent>(type, 2);
+		//HP governed by ID, so ID 2 = 1hp, ID 3 = 2 hp, etc.
+		enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
 	}
 
 	//Sprite
