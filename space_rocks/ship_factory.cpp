@@ -6,7 +6,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 	{1,
 		{
 			{
-				{0.0f * PSI8, 3.0f * PSI8},
+				{0.0f * PSI8, 4.0f * PSI8},
 				{-2.0f * PSI8, -2.0f * PSI8},
 				{2.0f * PSI8, 2.0f * PSI8}
 			},
@@ -26,7 +26,6 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{0.0f * PSI8, 3.0f * PSI8},
 				{-2.0f * PSI8, 1.0f * PSI8},
 				{-4.0f * PSI8, -4.0f * PSI8},				
-				{0.0f * PSI8, -2.0f * PSI8},
 				{4.0f * PSI8, -4.0f * PSI8},
 				{2.0f * PSI8, 1.0f * PSI8}
 			},
@@ -35,6 +34,62 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 			},
 			{
 				sf::IntRect(0, 0, 128, 128)
+			}
+		}
+	},
+	//Enemy 2
+	{3,
+		{
+			{
+				{0.0f * PSI8, 5.0f * PSI8},
+				{-3.0f * PSI8, 1.0f * PSI8},
+				{-4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{3.0f * PSI8, 1.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(128, 0, 128, 128)
+			}
+		}
+	},
+	//Enemy 3
+	{4,
+		{
+			{
+				{-4.0f * PSI8, -5.0f * PSI8},
+				{5.0f * PSI8, 0.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{5.0f * PSI8, 0.0f * PSI8},
+				{4.0f * PSI8, 5.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(256, 0, 128, 128)
+			}
+		}
+	},
+	//Enemy 4
+	{5,
+		{
+			{
+				{-2.0f * PSI8, 5.0f * PSI8},
+				{-5.0f * PSI8, 2.0f * PSI8},
+				{-4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{5.0f * PSI8, 2.0f * PSI8},
+				{2.0f * PSI8, 5.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(384, 0, 128, 128)
 			}
 		}
 	}
@@ -114,8 +169,8 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 	//Sprite
 	{
 		auto sprite = enemy->addComponent<SpriteComponent>();
-		sprite->setTexure(_objectData[type]._tex);
 		sprite->setTextureRect(_objectData[type]._texRect);
+		sprite->setTexure(_objectData[type]._tex);
 	}
 
 	return enemy;
