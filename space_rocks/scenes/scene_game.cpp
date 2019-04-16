@@ -49,9 +49,16 @@ void GameScene::Load() {
 	auto player = ShipFactory::makePlayer();
 	player->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 
-	//Test Enemy
-	auto test = ShipFactory::makeEnemy(2);
-	test->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 2));
+	//Test Enemies
+	auto test1 = ShipFactory::makeEnemy(2);
+	test1->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 4));
+	auto test2 = ShipFactory::makeEnemy(3);
+	test2->get_components<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, 3*(GAMEY / 4)));
+	auto test3 = ShipFactory::makeEnemy(4);
+	test3->get_components<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), GAMEY / 4));
+	auto test4 = ShipFactory::makeEnemy(5);
+	test4->get_components<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), 3*(GAMEY / 4)));
+
 
 	//Creat edges
 	createEdges();
