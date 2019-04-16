@@ -15,12 +15,11 @@ DestructibleComponent::DestructibleComponent(Entity* p, const float hp, const un
 //Update
 void DestructibleComponent::update(double dt) {
 	//Check call list
-	//while(!_toCall.empty)
-	//{
-	//	std::function<void()> call = _toCall.pop_back();
-	//	(call)();
-
-	//}
+	if(_toCall)
+	{
+		(_toCall)();
+		_toCall = NULL;
+	}
 
 	//Check for old age death if applicable
 	if (_timed)
@@ -149,4 +148,4 @@ void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned in
 }
 
 //Adds a method call to the call list, which will be called next tick of Update
-void DestructibleComponent::addToCallList(std::function<void()> call){ _toCall.push_back(call); }
+void DestructibleComponent::setToCall(std::function<void()> call){ _toCall = call; }
