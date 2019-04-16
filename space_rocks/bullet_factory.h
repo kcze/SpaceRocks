@@ -15,7 +15,7 @@
 
 class BulletFactory : Factory {
 public:
-	static std::shared_ptr<Entity> makeBullet(unsigned int id);
+	static std::shared_ptr<Entity> makeBullet(Bullet b);
 
 private:
 	BulletFactory() {}
