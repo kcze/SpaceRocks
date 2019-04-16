@@ -132,7 +132,7 @@ void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned in
 	for (unsigned int i = 0; i < noParticles; i++)
 	{
 		auto p = ParticleFactory::makeParticle(dI(randomGenerator));
-		p->get_components<PhysicsComponent>()[0]->teleport(coords);
+		p->getComponents<PhysicsComponent>()[0]->teleport(coords);
 
 		// Velocity
 		//rand gen
@@ -142,8 +142,8 @@ void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned in
 		//get normalised direction from random values
 		sf::Vector2f dir = sf::Vector2f(rx, ry);
 		dir = sf::normalize<float>(dir);
-		p->get_components<PhysicsComponent>()[0]->setVelocity(dir * rv * magnitude);
-		p->get_components<PhysicsComponent>()[0]->setAngularVelocity(rv * magnitude * 0.75f);
+		p->getComponents<PhysicsComponent>()[0]->setVelocity(dir * rv * magnitude);
+		p->getComponents<PhysicsComponent>()[0]->setAngularVelocity(rv * magnitude * 0.75f);
 	}
 }
 

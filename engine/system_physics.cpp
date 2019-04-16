@@ -23,25 +23,25 @@ void update(const double& dt) {
   world->Step((float)dt, velocityIterations, positionIterations);
 }
 
-std::shared_ptr<b2World> GetWorld() { return world; }
+std::shared_ptr<b2World> getWorld() { return world; }
 
-const Vector2f bv2_to_sv2(const b2Vec2& in, bool scale) {
+const Vector2f bv2ToSv2(const b2Vec2& in, bool scale) {
   if (scale) {
-    return Vector2f((in.x * physics_scale), (in.y * physics_scale));
+    return Vector2f((in.x * physicsScale), (in.y * physicsScale));
   } else {
     return Vector2f(in.x, in.y);
   }
 }
 
-const b2Vec2 sv2_to_bv2(const Vector2f& in, bool scale) {
+const b2Vec2 sv2ToBv2(const Vector2f& in, bool scale) {
   if (scale) {
-    return b2Vec2((in.x * physics_scale_inv), (in.y * physics_scale_inv));
+    return b2Vec2((in.x * physicsScaleInv), (in.y * physicsScaleInv));
   } else {
     return b2Vec2(in.x, in.y);
   }
 }
 
-const Vector2f invert_height(const Vector2f& in) {
+const Vector2f invertHeight(const Vector2f& in) {
   return Vector2f(in.x, 720 - in.y);
 }
 } // namespace Physics
