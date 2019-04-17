@@ -81,6 +81,9 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		//1: Player
 		case 1:
 			particleBurst(coords, 50, 100.0f);
+			audioManager.playSound("player_death");
+			//TODO: Play after delay with death screen.
+			//audioManager.playSound("game_over");
 			break;
 		//2: Enemy (Any)
 		case 2:
