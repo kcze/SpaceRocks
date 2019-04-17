@@ -156,7 +156,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 	},
 
 	//3,4
-	{ 24,
+	{ 34,
 		{
 			{
 				{0.0f * PSI4, 2.0f * PSI4},
@@ -208,6 +208,8 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 		fixtureDef.shape = &shape;
 		//Assign fixtureDef to physics component
 		phys->setFixtureDef(fixtureDef);
+		// Setting max speed
+		phys->setMaxSpeed(400.0f);
 	}
 
 	// Sprite
@@ -216,6 +218,8 @@ std::shared_ptr<Entity> BulletFactory::makeBullet(Bullet b)
 		sprite->setTexure(_objectData[b._id]._tex);
 		sprite->setTextureRect(_objectData[b._id]._texRect);
 		sprite->setAnchor(sf::Vector2f(0.5f, 0.5f));
+		if (b._id != 14 && b._id != 24 && b._id != 34)
+			sprite->setColor(sf::Color(255, 0, 0, 255));
 	}
 
 	//Destructible
