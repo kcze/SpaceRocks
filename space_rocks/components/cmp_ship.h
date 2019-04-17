@@ -27,7 +27,7 @@ protected:
 	float _angularSpeed;
 	float _reload;
 	float _time;
-	Bullet _bullet = {1.0f, 24};
+	Bullet _bullet = {1.0f, 14};
 
 	std::shared_ptr<PhysicsComponent> _physicsComponent;
 	std::shared_ptr<SpriteComponent> _thrusterSpriteComponent;
