@@ -33,6 +33,15 @@ void ShipComponent::shoot()
 	if (_time > 0.0f)
 		return;
 
+	//Play one of two light weapon shots
+	//TODO: Add variation for medium and heavy weapons
+	std::default_random_engine r((int)time(NULL));
+	std::uniform_int_distribution<int> dI(0, 1);
+	if(dI(r))
+		audioManager.playSound("gun_light_1");
+	else
+		audioManager.playSound("gun_light_2");
+
 	auto bullet = BulletFactory::makeBullet(_bullet);
 	auto physics = bullet->getComponents<PhysicsComponent>()[0];
 	physics->teleport(_parent->getPosition());

@@ -47,6 +47,7 @@ void GameScene::load() {
 	// Load spritesheets
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
+	//Test Sound
 	audioManager.playSound("wave_approaching");
 
 	// Player ship
