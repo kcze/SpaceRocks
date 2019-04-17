@@ -1,6 +1,6 @@
 #include "audio_manager.h"
 
-std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffer =
+std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 {
 	{
 		"wave_approaching",
@@ -80,12 +80,13 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffer =
 	}
 };
 
-
+sf::Sound AudioManager::_sounds[10] = { sf::Sound()};
 
 void AudioManager::playSound(std::string name) { 
-
-	testSound.setBuffer(_soundBuffer[name]);
-	testSound.play();
+	_soundIndex = _soundIndex > 9 ? 0 : _soundIndex;
+	_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
+	_sounds[_soundIndex].play();
+	_soundIndex++;
 }
 
 AudioManager audioManager;

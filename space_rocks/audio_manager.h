@@ -13,6 +13,8 @@ public:
 
 private:
 
-	static std::map<std::string, sf::SoundBuffer> _soundBuffer;
-	sf::Sound testSound;
+	static std::map<std::string, sf::SoundBuffer> _soundBuffers;
+	static sf::Sound _sounds[10];
+	unsigned int _soundIndex = 0;
+
 };
