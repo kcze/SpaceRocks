@@ -34,10 +34,6 @@ float PSI = Physics::physicsScaleInv;
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
 
-std::shared_ptr<SoundBuffer> testBuffer;
-sf::Sound testSound;
-
-
 void GameScene::load() {
 	cout << "Game Scene Load \n";	
 	{
@@ -51,10 +47,7 @@ void GameScene::load() {
 	// Load spritesheets
 	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
 
-	//Load test sound
-	testBuffer = Resources::get<SoundBuffer>("game_over.wav");
-	testSound.setBuffer(*testBuffer);
-	testSound.play();
+	audioManager.playSound("wave_approaching");
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
