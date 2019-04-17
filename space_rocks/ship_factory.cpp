@@ -100,6 +100,9 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	//Make Generic Ship
 	auto player = makeShip();
 
+	// Add tag
+	player->addTag("Player");
+
 	//Player Component
 	{
 		player->addComponent<PlayerComponent>(1);
@@ -172,6 +175,16 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		sprite->setTextureRect(_objectData[type]._texRect);
 		sprite->setTexure(_objectData[type]._tex);
 		sprite->setColor(sf::Color(255, 0, 0, 255));
+	}
+
+	// AI
+	{
+		auto ai = enemy->addComponent<AiComponent>();
+	}
+
+	// Change bullet
+	{
+		enemy->getComponents<ShipComponent>()[0]->setBullet(1.0f, std::min(((int)type - 1) * 10 + 2, 23));
 	}
 
 	return enemy;

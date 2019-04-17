@@ -9,3 +9,4 @@
 #include "cmp_sprite.h"
 #include "cmp_text.h"
 #include "cmp_ui.h"
+#include "cmp_ai.h"
