@@ -44,27 +44,27 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffer =
 	},
 	{
 		"laser_heavy",
-		*Resources::get<sf::SoundBuffer>("pickup_health.wav")
+		*Resources::get<sf::SoundBuffer>("laser_heavy.wav")
 	},
 	{
 		"gun_medium",
-		*Resources::get<sf::SoundBuffer>("pickup_coin.wav")
+		*Resources::get<sf::SoundBuffer>("gun_medium.wav")
 	},
 	{
 		"gun_light_2",
-		*Resources::get<sf::SoundBuffer>("pickup_health.wav")
+		*Resources::get<sf::SoundBuffer>("gun_light_2.wav")
 	},
 	{
 		"gun_light_1",
-		*Resources::get<sf::SoundBuffer>("pickup_coin.wav")
+		*Resources::get<sf::SoundBuffer>("gun_light_1.wav")
 	}, 
 	{
 		"gun_heavy",
-		*Resources::get<sf::SoundBuffer>("pickup_health.wav")
+		*Resources::get<sf::SoundBuffer>("gun_heavy.wav")
 	},
 	{
 		"game_over",
-		*Resources::get<sf::SoundBuffer>("pickup_coin.wav")
+		*Resources::get<sf::SoundBuffer>("game_over.wav")
 	},
 	{
 		"enemy_death",
