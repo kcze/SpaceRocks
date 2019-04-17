@@ -77,6 +77,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		case 0:
 			//Spawn bullet particles for all bullet impacts, regardless if they kill
 			particleBurst(coords, 5, 35.0f);
+			audioManager.playSound("bullet_impact_light");
 			break;
 		//1: Player
 		case 1:
@@ -87,6 +88,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			break;
 		//2: Enemy (Any)
 		case 2:
+			audioManager.playSound("enemy_death");
 			particleBurst(coords, 20, 100.0f);
 			break;
 		//3-10: Reserved for expansion
