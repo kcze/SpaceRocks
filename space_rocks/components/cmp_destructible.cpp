@@ -96,6 +96,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		//11+: Asteroids
 		//11: Asteroid 1, Size 1
 		case 11:
+			audioManager.playSound("asteroid_broken");
 			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(121, coords);
 			AsteroidFactory::makeAsteroid(122, coords);
@@ -103,18 +104,21 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			break;
 		//121: Asteroid 1, Size 2, No. 1
 		case 121:
+			audioManager.playSound("asteroid_broken");
 			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1311, coords);
 			AsteroidFactory::makeAsteroid(1312, coords);
 			break;
 		//122: Asteroid 1, Size 2, No. 2
 		case 122:
+			audioManager.playSound("asteroid_broken");
 			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1321, coords);
 			AsteroidFactory::makeAsteroid(1322, coords);
 			break;
 		//131: Asteroid 1, Size 2, No. 3
 		case 123:
+			audioManager.playSound("asteroid_broken");
 			particleBurst(coords, 5, 100.0f);
 			AsteroidFactory::makeAsteroid(1331, coords);
 			AsteroidFactory::makeAsteroid(1332, coords);

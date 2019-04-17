@@ -49,7 +49,11 @@ void MyContactListener::BeginContact(b2Contact* contact)
 		//Particle burst to show where collision has happened and inform them of damage
 		//std::function<void()> toCall = std::bind(&entityA->get_components<DestructibleComponent>()[0]->particleBurst, entityA->getPosition(), 5, 30.0f);
 		//entityA->get_components<DestructibleComponent>()[0]->setToCall(toCall);
+
 		//Damage player
 		entityA->getComponents<DestructibleComponent>()[0]->damage(1.0f);
+
+		//Play audio
+		audioManager.playSound("player_hurt");
 	}
 }

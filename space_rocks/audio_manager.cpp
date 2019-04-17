@@ -77,6 +77,18 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 	{
 		"bullet_impact_heavy",
 		*Resources::get<sf::SoundBuffer>("bullet_impact_heavy.wav")
+	},
+	{
+		"menu_cycle",
+		*Resources::get<sf::SoundBuffer>("menu_cycle.wav")
+	},
+	{
+		"menu_select",
+		*Resources::get<sf::SoundBuffer>("menu_select.wav")
+	},
+	{
+		"asteroid_broken",
+		*Resources::get<sf::SoundBuffer>("asteroid_broken.wav")
 	}
 };
 
