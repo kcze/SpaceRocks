@@ -1,11 +1,10 @@
 #include "scene_menu.h"
-#include "../components/components.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <vector>
-#include "../input.h"
 #include "system_renderer.h"
+#include "..\components\components.h"
 #include <functional>
 
 using namespace std;
@@ -15,8 +14,10 @@ using namespace sf;
 std::shared_ptr<Entity> txtTitle;
 
 std::shared_ptr<Entity> menu;
+std::shared_ptr<Entity> settings;
 std::shared_ptr<PanelComponent> menuPanel;
-
+std::shared_ptr<PanelComponent> settingsPanel;
+PanelComponent* currentPanel;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -89,6 +90,19 @@ void UpdateScaling()
 	//set!
 	v.setViewport(viewport);
 	Engine::getWindow().setView(v);
+
+	Engine::getWindow().;
+	
+}
+
+
+void switchPanel(PanelComponent* panel)
+{
+	if (currentPanel != NULL)
+		currentPanel->setVisible(false);
+
+	currentPanel = panel;
+	currentPanel->setVisible(true);
 }
 
 void MenuScene::load() {
@@ -107,8 +121,18 @@ void MenuScene::load() {
 	menuPanel->addButton("Start", []() { Engine::changeScene(&gameScene); });
 	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});
-	menuPanel->addButton("Settings", []() {});
+	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
 	menuPanel->addButton("Exit", []() {});
+	menuPanel->setVisible(true);
+	switchPanel(menuPanel.get());
+	
+	// Settings
+	settings = makeEntity();
+	settings->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
+	settingsPanel = settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	settingsPanel->addText("Settings", 48.0f);
+	settingsPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
+	settingsPanel->setVisible(false);
 
 	UpdateScaling();
 	setLoaded(true);
@@ -120,15 +144,15 @@ void MenuScene::onKeyPressed(Keyboard::Key key)
 	{
 		if (key == Keyboard::Up)
 		{
-			menuPanel->pointerPrevious();
+			currentPanel->pointerPrevious();
 		}
 		else if (key == Keyboard::Down)
 		{	
-			menuPanel->pointerNext();
+			currentPanel->pointerNext();
 		}
 		else if (key == Keyboard::Enter)
 		{	
-			menuPanel->executeButton();
+			currentPanel->executeButton();
 		}
 	}
 }
