@@ -45,11 +45,6 @@ void GameScene::load() {
 		gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 	}
 
-	// Load spritesheets
-	ssAsteroids = Resources::load<Texture>("asteroid-1.png");
-
-	//Test Sound
-	//audioManager.playSound("wave_approaching");
 	gameScene.roundStart();
 
 	// Player ship
