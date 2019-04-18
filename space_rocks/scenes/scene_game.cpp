@@ -51,6 +51,8 @@ void GameScene::load() {
 	// Player ship
 	auto player = ShipFactory::makePlayer();
 	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	//DEBUG SUPER BULLET
+	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
 	//Test Enemies
 	auto test1 = ShipFactory::makeEnemy(2);
@@ -163,7 +165,7 @@ void GameScene::update(const double& dt) {
 	if (asteroidsSoFar == maxAsteroidsTotal && asteroids.size() == 0)
 	{
 		//Reset
-		maxAsteroidPop = 1;
+		maxAsteroidPop = 0;
 		asteroidsSoFar = 0;
 		//Start next round
 		gameScene.roundStart();
