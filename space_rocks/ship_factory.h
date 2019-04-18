@@ -3,11 +3,7 @@
 #include "ecm.h"
 #include "engine.h"
 #include "game.h"
-#include "components\cmp_sprite.h"
-#include "components\cmp_physics.h"
-#include "components\cmp_ship.h"
-#include "components\cmp_destructible.h"
-#include "components\cmp_player.h"
+#include "components\components.h"
 #include "system_resources.h"
 #include "Box2D/Box2D.h"
 #include <string>

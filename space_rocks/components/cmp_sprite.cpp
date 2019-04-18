@@ -23,6 +23,8 @@ void SpriteComponent::setOrigin(const sf::Vector2f origin)
 
 void SpriteComponent::setDraw(bool draw) { _draw = draw; }
 
+void SpriteComponent::setColor(sf::Color color) { _sprite->setColor(color); }
+
 SpriteComponent::SpriteComponent(Entity* p)
     : Component(p), _sprite(make_shared<sf::Sprite>()), _draw(true) {}
 

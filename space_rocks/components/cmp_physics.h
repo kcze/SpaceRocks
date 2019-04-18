@@ -24,6 +24,7 @@ public:
   void setRestitution(float r);
   void setFriction(float r);
   void setMass(float m);
+  void setMaxSpeed(float maxSpeed) { _maxSpeed = maxSpeed; }
   void update(double dt) override;
   void render() override;
   void impulse(const sf::Vector2f& i);

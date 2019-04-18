@@ -56,13 +56,13 @@ void GameScene::load() {
 
 	//Test Enemies
 	auto test1 = ShipFactory::makeEnemy(2);
-	test1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, GAMEY / 4));
+	test1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, 0));
 	auto test2 = ShipFactory::makeEnemy(3);
-	test2->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 4, 3*(GAMEY / 4)));
+	test2->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, 0));
 	auto test3 = ShipFactory::makeEnemy(4);
-	test3->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), GAMEY / 4));
+	test3->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, GAMEY));
 	auto test4 = ShipFactory::makeEnemy(5);
-	test4->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(3*(GAMEX / 4), 3*(GAMEY / 4)));
+	test4->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, GAMEY));
 
 
 	//Creat edges
