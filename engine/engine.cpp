@@ -18,6 +18,7 @@ static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
+static bool windowed;
 
 void Loading_update(float dt, const Scene* const scn) {
 	//  cout << "Eng: Loading Screen\n";
@@ -88,6 +89,7 @@ void Engine::start(unsigned int width, unsigned int height,
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
+	windowed = true;
 	Renderer::initialise(window);
 	Physics::initialise();
 	changeScene(scn);
@@ -119,6 +121,7 @@ void Engine::start(unsigned int width, unsigned int height,
 	}
 	window.close();
 	Physics::shutdown();
+	//todo why is it commented out?
 	// Render::shutdown();
 }
 
@@ -129,6 +132,19 @@ std::shared_ptr<Entity> Scene::makeEntity() {
 }
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
+
+void Engine::switchWindowMode()
+{
+	windowed = !windowed;
+	if (windowed)
+	{
+		_window->create(VideoMode(1280, 720), _gameName);
+	}
+	else
+	{
+		_window->create(VideoMode::getFullscreenModes()[0], _gameName, sf::Style::Fullscreen);
+	}
+}
 
 void Engine::changeScene(Scene* s) {
 	cout << "Eng: changing scene: " << s << endl;
