@@ -427,7 +427,7 @@ void roundStartThread()
 		curWave = 1;
 		maxAsteroidPop = 0;
 		asteroidsSoFar = 0;
-		//TODO: Destroy all asteroid fragments
+		//TODO: Damage to death all asteroid and bullet fragments
 
 		//Countdown
 		audioManager.playSound("voice_3");
