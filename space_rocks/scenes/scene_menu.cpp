@@ -1,24 +1,27 @@
 #include "scene_menu.h"
-#include "../components/cmp_text.h"
-#include "../components/cmp_sprite.h"
+#include "../components/components.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <vector>
 #include "../input.h"
 #include "system_renderer.h"
+#include <functional>
 
 using namespace std;
 using namespace sf;
 
 //Entities
 std::shared_ptr<Entity> txtTitle;
-std::shared_ptr<Entity> txtNewGame;
+/*std::shared_ptr<Entity> txtNewGame;
 std::shared_ptr<Entity> txtLoad;
 std::shared_ptr<Entity> txtHighScores;
 std::shared_ptr<Entity> txtOptions;
 std::shared_ptr<Entity> txtExit;
-std::shared_ptr<Entity> menuCursor;
+std::shared_ptr<Entity> menuCursor;*/
+
+std::shared_ptr<Entity> menu;
+std::shared_ptr<PanelComponent> menuPanel;
 
 unsigned int cursorOffset = 100.0f;
 unsigned int target = 1;
@@ -83,7 +86,7 @@ void UpdateScaling()
 	const sf::Vector2u screensize(1280, 720);
 	const sf::Vector2u gamesize(GAMEX, GAMEY);
 	//set View as normal
-	Engine::GetWindow().setSize(screensize);
+	Engine::getWindow().setSize(screensize);
 	sf::FloatRect visibleArea(0.f, 0.f, gamesize.x, gamesize.y);
 	auto v = sf::View(visibleArea);
 	// figure out how to scale and maintain aspect;
@@ -96,125 +99,55 @@ void UpdateScaling()
 	}
 	//set!
 	v.setViewport(viewport);
-	Engine::GetWindow().setView(v);
+	Engine::getWindow().setView(v);
 }
 
-void MenuScene::Load() {
+void MenuScene::load() {
 	cout << "Menu Load \n";
-	{
-		// Title
-		txtTitle = makeEntity();
-		auto txt = txtTitle->addComponent<TextComponent>("SPACE ROCKS");
-		txt->SetSize(64);
-		txtTitle->setPosition(Vector2f(640.0f, 32.0f));
+	
+	// Title
+	txtTitle = makeEntity();
+	auto txt = txtTitle->addComponent<TextComponent>("SPACE ROCKS");
+	txt->setSize(64);
+	txtTitle->setPosition(Vector2f(640.0f, 64.0f));
+	
+	// Menu
+	menu = makeEntity();
+	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
+	menuPanel = menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	menuPanel->addButton("Start", []() { Engine::changeScene(&gameScene); });
+	menuPanel->addButton("Load", []() {});
+	menuPanel->addButton("High Scores", []() {});
+	menuPanel->addButton("Settings", []() {});
+	menuPanel->addButton("Exit", []() {});
 
-		// Menu Options
-		//New Game
-		txtNewGame = makeEntity();
-		txt = txtNewGame->addComponent<TextComponent>("New Game");
-		txt->SetSize(32);
-		txtNewGame->setPosition(Vector2f(640.0f, 192.0f));
-		//Load
-		txtLoad = makeEntity();
-		txt = txtLoad->addComponent<TextComponent>("Load");
-		txtLoad->setPosition(Vector2f(640.0f, 240.0f));
-		txt->SetSize(32);
-		//HighScores
-		txtHighScores = makeEntity();
-		txt = txtHighScores->addComponent<TextComponent>("HighScores");
-		txtHighScores->setPosition(Vector2f(640.0f, 288.0f));
-		txt->SetSize(32);
-		//Options
-		txtOptions = makeEntity();
-		txt = txtOptions->addComponent<TextComponent>("Options");
-		txtOptions->setPosition(Vector2f(640.0f, 336.0f));
-		txt->SetSize(32);
-		//Exit
-		txtExit = makeEntity(); 
-		txt = txtExit->addComponent<TextComponent>("Exit");
-		txtExit->setPosition(Vector2f(640.0f, 384.0f));
-		txt->SetSize(32);
-
-		// Cursor
-		menuCursor = makeEntity();
-		auto img = menuCursor->addComponent<ShapeComponent>();
-		img->setShape<sf::CircleShape>(10.0f);
-		img->SetAnchor(sf::Vector2f(0.5f, 0.3f));
-	}
 	UpdateScaling();
 	setLoaded(true);
 }
 
-void MenuCursorUpdate() {
-	switch (target) {
-	case 1:
-		menuCursor->setPosition(sf::Vector2f(
-			txtNewGame->getPosition().x - cursorOffset,
-			txtNewGame->getPosition().y
-		));
-		break;
-	case 2:
-		menuCursor->setPosition(sf::Vector2f(
-			txtLoad->getPosition().x - cursorOffset,
-			txtLoad->getPosition().y
-		));
-		break;	
-	case 3:
-		menuCursor->setPosition(sf::Vector2f(
-			txtHighScores->getPosition().x - cursorOffset,
-			txtHighScores->getPosition().y
-		));
-		break;
-	case 4:
-		menuCursor->setPosition(sf::Vector2f(
-			txtOptions->getPosition().x - cursorOffset,
-			txtOptions->getPosition().y
-		));
-		break;
-	case 5:
-		menuCursor->setPosition(sf::Vector2f(
-			txtExit->getPosition().x - cursorOffset,
-			txtExit->getPosition().y
-		));
-		break;
-	}
-}
-
 void MenuScene::onKeyPressed(Keyboard::Key key)
 {
-	if(key == Keyboard::Up)
-		target == 1 ? target = numOptions : target--;
-	else if (key == Keyboard::Down)
-		target == numOptions ? target = 1 : target++;
-	else if (key == Keyboard::Enter)
+	if (!gameScene.isLoaded())
 	{
-		switch (target)
+		if (key == Keyboard::Up)
 		{
-			//New Game
-		case 1:
-			cout << "Changing level...\n";
-			Engine::ChangeScene(&gameScene);
-			break;
-			//Load
-		case 2:
-			break;
-			//HighScore
-		case 3:
-			break;
-			//Options
-		case 4:
-			break;
-			//Exit
-		case 5:
-			break;
+			audioManager.playSound("menu_cycle");
+			menuPanel->pointerPrevious();
+		}
+		else if (key == Keyboard::Down)
+		{
+			audioManager.playSound("menu_cycle");
+			menuPanel->pointerNext();
+		}
+		else if (key == Keyboard::Enter)
+		{
+			audioManager.playSound("menu_select");
+			menuPanel->executeButton();
 		}
 	}
 }
 
-void MenuScene::Update(const double& dt) {
-
-  Scene::Update(dt);
-  MenuCursorUpdate();
+void MenuScene::update(const double& dt) {
+  
+  Scene::update(dt);
 }
-
-

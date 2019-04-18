@@ -7,9 +7,13 @@ public:
 	GameScene() = default;
   ~GameScene() override = default;
 
-  void Load() override;
+  void load() override;
 
-  void SpawnAsteroid();
+  void spawnAsteroid();
+  void createEdges();
+  void playerDeath();
+  void roundStart();
 
-  void Update(const double& dt) override;
+  void update(const double& dt) override;
+
 };

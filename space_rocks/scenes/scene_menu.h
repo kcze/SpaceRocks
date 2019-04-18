@@ -5,12 +5,12 @@
 
 class MenuScene : public Scene, public InputEvents {
 public:
-  MenuScene() = default;
-  ~MenuScene() override = default;
+	MenuScene() = default;
+	~MenuScene() override = default;
 
-  void Load() override;
+	void load() override;
 
-  void onKeyPressed(Keyboard::Key key) override;
+	void onKeyPressed(Keyboard::Key key) override;
 
-  void Update(const double& dt) override;
+	void update(const double& dt) override;
 };

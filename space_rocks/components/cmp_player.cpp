@@ -5,7 +5,7 @@
 PlayerComponent::PlayerComponent(Entity* p, const int player) : Component(p)
 {
 	_player = player;
-	_shipComponent = _parent->get_components<ShipComponent>()[0];
+	_shipComponent = _parent->getComponents<ShipComponent>()[0];
 }
 
 void PlayerComponent::update(double dt)
@@ -21,5 +21,9 @@ void PlayerComponent::update(double dt)
 	if (Input::isKeyDown(Input::KeyCode::P1_RIGHT))
 	{
 		_shipComponent->rotate(true);
+	}
+	if (Input::isKeyDown(Input::KeyCode::P1_FIRE))
+	{
+		_shipComponent->shoot();
 	}
 }

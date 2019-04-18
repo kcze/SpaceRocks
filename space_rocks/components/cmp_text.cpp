@@ -7,7 +7,7 @@ void TextComponent::update(double dt) {
 	sf::FloatRect bounds = _text.getLocalBounds();
 	
 	//Position
-	_text.setPosition(GetAnchoredPosition());
+	_text.setPosition(getAnchoredPosition());
 }
 
 void TextComponent::render() { Renderer::queue(&_text); }
@@ -20,7 +20,7 @@ TextComponent::TextComponent(Entity* const p, const std::string& str)
   _anchor = sf::Vector2f(0.5f, 0.5f);
 }
 
-void TextComponent::SetText(const std::string& str) {
+void TextComponent::setText(const std::string& str) {
   _string = str;
   _text.setString(_string);
 }
@@ -30,7 +30,7 @@ void TextComponent::SetText(const std::string& str) {
 // 0.5, 0.5	= center
 // 1.0, 1.0	= bottom right
 // Values outside of this range will be rounded to closest edge
-void TextComponent::SetAnchor(sf::Vector2f vec)
+void TextComponent::setAnchor(sf::Vector2f vec)
 {
 	//Inforce limits
 	vec.x = vec.x < 0.0f ? 0.0f : vec.x;
@@ -42,7 +42,7 @@ void TextComponent::SetAnchor(sf::Vector2f vec)
 }
 
 //Returns the anchor
-sf::Vector2f TextComponent::GetAnchoredPosition()
+sf::Vector2f TextComponent::getAnchoredPosition()
 {
 	sf::FloatRect bounds = _text.getLocalBounds();
 
@@ -54,7 +54,7 @@ sf::Vector2f TextComponent::GetAnchoredPosition()
 
 
 //Set character size in pixels
-void TextComponent::SetSize(unsigned int size)
+void TextComponent::setSize(unsigned int size)
 {
 	_text.setCharacterSize(size);
 }

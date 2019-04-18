@@ -10,11 +10,11 @@ class Scene {
 public:
   Scene() = default;
   virtual ~Scene();
-  virtual void Load() = 0;
-  virtual void LoadAsync();
-  virtual void UnLoad();
-  virtual void Update(const double& dt);
-  virtual void Render();
+  virtual void load() = 0;
+  virtual void loadAsync();
+  virtual void unLoad();
+  virtual void update(const double& dt);
+  virtual void render();
   bool isLoaded() const;
   std::shared_ptr<Entity> makeEntity();
 
@@ -24,25 +24,26 @@ protected:
   void setLoaded(bool);
 private:
   mutable bool _loaded;
-  mutable std::future<void> _loaded_future;
-  mutable std::mutex _loaded_mtx;
+  mutable std::future<void> _loadedFuture;
+  mutable std::mutex _loadedMtx;
 };
 
 class Engine {
 public:
   Engine() = delete;
-  static void Start(unsigned int width, unsigned int height,
+  static void start(unsigned int width, unsigned int height,
                     const std::string& gameName, Scene* scn);
-  static void ChangeScene(Scene*);
-  static sf::RenderWindow& GetWindow();
+  static void changeScene(Scene*);
+  static Scene* getActiveScene() { return _activeScene; }
+  static sf::RenderWindow& getWindow();
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
 
 private:
   static Scene* _activeScene;
   static std::string _gameName;
-  static void Update();
-  static void Render(sf::RenderWindow& window);
+  static void update();
+  static void render(sf::RenderWindow& window);
 };
 
 namespace timing {

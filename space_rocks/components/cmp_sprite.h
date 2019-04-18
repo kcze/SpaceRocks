@@ -9,8 +9,13 @@ class SpriteComponent : public Component {
 protected:
   std::shared_ptr<sf::Sprite> _sprite;
   std::shared_ptr<sf::Texture> _texture;
+  sf::Vector2f _anchor;
+  bool _draw;
+
 public:
   SpriteComponent() = delete;
+
+  void SpriteComponent::setAnchor(sf::Vector2f vec);
 
   explicit SpriteComponent(Entity* p);
   void update(double dt) override;
@@ -18,10 +23,11 @@ public:
 
   sf::Sprite& getSprite() const;
 
-
   void setTexure(std::shared_ptr<sf::Texture> tex);
   void setTextureRect(sf::IntRect);
   void setOrigin(const sf::Vector2f origin);
+  void setDraw(bool draw);
+  void setColor(sf::Color color);
 };
 
 // Shape
@@ -36,7 +42,7 @@ public:
 
   explicit ShapeComponent(Entity* p);
 
-  void ShapeComponent::SetAnchor(sf::Vector2f vec);
+  void ShapeComponent::setAnchor(sf::Vector2f vec);
 
   void update(double dt) override;
   
