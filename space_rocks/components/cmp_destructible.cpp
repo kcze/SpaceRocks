@@ -83,8 +83,8 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		case 1:
 			particleBurst(coords, 50, 100.0f);
 			audioManager.playSound("player_death");
-			//TODO: Play after delay with death screen.
-			//audioManager.playSound("game_over");
+			gameScene.playerDeath();
+			
 			break;
 		//2: Enemy (Any)
 		case 2:
@@ -127,6 +127,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			std::cout << "Trying to spawn fragments that don't exist." << std::endl;
 	}
 }
+
 
 //TODO: Add lifetime as argument
 //Generates a particle burst at the given coords with the given properties

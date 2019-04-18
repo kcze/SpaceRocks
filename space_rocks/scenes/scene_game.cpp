@@ -34,6 +34,7 @@ float PSI = Physics::physicsScaleInv;
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
 
+
 void GameScene::load() {
 	cout << "Game Scene Load \n";	
 	{
@@ -49,6 +50,7 @@ void GameScene::load() {
 
 	//Test Sound
 	//audioManager.playSound("wave_approaching");
+	gameScene.roundStart();
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
@@ -163,3 +165,34 @@ void GameScene::update(const double& dt) {
 	Scene::update(dt);
 }
 
+void pDThread()
+{
+	sf::sleep(sf::milliseconds(2000));
+	audioManager.playSound("game_over");
+} sf::Thread pdthread(&pDThread);
+
+
+void GameScene::playerDeath()
+{
+	pdthread.launch();
+	return;
+}
+
+void roundStartThread()
+{
+	audioManager.playSound("voice_3");
+	sf::sleep(sf::milliseconds(1000));
+	audioManager.playSound("voice_2");
+	sf::sleep(sf::milliseconds(1000));
+	audioManager.playSound("voice_1");
+	sf::sleep(sf::milliseconds(1000));
+	audioManager.playSound("wave_approaching");
+
+} sf::Thread rst(&roundStartThread);
+
+
+void GameScene::roundStart()
+{
+	rst.launch();
+	return;
+}

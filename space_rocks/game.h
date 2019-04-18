@@ -20,4 +20,3 @@ enum _collisionFlags
 	ENEMY_BULLET	= 0x0010,
 	ASTEROIDS		= 0x0020,
 };
-

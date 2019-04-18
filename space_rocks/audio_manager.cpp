@@ -8,11 +8,11 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 	},
 	{
 		"voice_3",
-		*Resources::get<sf::SoundBuffer>("voice_5.wav")
+		*Resources::get<sf::SoundBuffer>("voice_3.wav")
 	},
 	{
 		"voice_2",
-		*Resources::get<sf::SoundBuffer>("voice_5.wav")
+		*Resources::get<sf::SoundBuffer>("voice_2.wav")
 	}, 
 	{
 		"voice_1",
