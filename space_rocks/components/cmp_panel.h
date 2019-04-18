@@ -12,12 +12,13 @@ public:
 	void render() override { }
 
 	void addButton(const std::string text, std::function<void()> function);
-	std::shared_ptr<Entity> addText(const std::string text, const float size = 32.0f);
-	std::shared_ptr<Entity> addText(std::function<std::string()>, const float size = 32.0f);
+	std::shared_ptr<Entity> addText(const std::string text, const float size = 40.0f);
+	std::shared_ptr<Entity> addText(std::function<std::string()>, const float size = 40.0f);
 	void executeButton();
 	void pointerPrevious();
 	void pointerNext();
 	void updatePositions();
+	void setVisible(bool visible);
 
 	~PanelComponent();
 
