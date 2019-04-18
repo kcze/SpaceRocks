@@ -127,12 +127,24 @@ void MenuScene::load() {
 
 void MenuScene::onKeyPressed(Keyboard::Key key)
 {
-	if (key == Keyboard::Up)
-		menuPanel->pointerPrevious();
-	else if (key == Keyboard::Down)
-		menuPanel->pointerNext();
-	else if (key == Keyboard::Enter)
-		menuPanel->executeButton();
+	if (!gameScene.isLoaded())
+	{
+		if (key == Keyboard::Up)
+		{
+			audioManager.playSound("menu_cycle");
+			menuPanel->pointerPrevious();
+		}
+		else if (key == Keyboard::Down)
+		{
+			audioManager.playSound("menu_cycle");
+			menuPanel->pointerNext();
+		}
+		else if (key == Keyboard::Enter)
+		{
+			audioManager.playSound("menu_select");
+			menuPanel->executeButton();
+		}
+	}
 }
 
 void MenuScene::update(const double& dt) {

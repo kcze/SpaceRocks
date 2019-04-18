@@ -11,6 +11,9 @@ public:
 
   void spawnAsteroid();
   void createEdges();
+  void playerDeath();
+  void roundStart();
 
   void update(const double& dt) override;
+
 };

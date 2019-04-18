@@ -6,6 +6,7 @@
 #include <Box2D\Dynamics\b2Fixture.h>
 #include "..\bullet_factory.h"
 #include "cmp_bullet.h"
+#include <random>
 
 class ShipComponent : public Component {
 

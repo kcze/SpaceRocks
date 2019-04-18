@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+#define SOUND
+
 namespace Resources {
 
 template <typename T> std::shared_ptr<T> load(const std::string& name) {
