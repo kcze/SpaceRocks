@@ -29,7 +29,6 @@ void ShipComponent::rotate(bool right)
 
 void ShipComponent::shoot()
 {
-	std::cout << "_time = " << _time << std::endl;
 	if (_time > 0.0f)
 		return;
 

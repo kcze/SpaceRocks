@@ -1,6 +1,7 @@
 #include "cmp_ai.h"
 #include "maths.h"
 
+// Controls enemy behaviour
 AiComponent::AiComponent(Entity* p) : Component(p) {
 	
 	_shipComponent = _parent->getComponents<ShipComponent>()[0];
@@ -9,7 +10,7 @@ AiComponent::AiComponent(Entity* p) : Component(p) {
 
 void AiComponent::update(double dt) {
 
-	// Break if there's no players alive
+	// Return if there's no players alive
 	if (_players.size() == 0)
 		return;
 
@@ -30,17 +31,16 @@ void AiComponent::update(double dt) {
 				_target = player;
 			}
 		}
+	
 	}
 	
-	//todo maybe move to a method
+	// Calculating angle to player
 	float distance = length(position - _target->getPosition());
 	Vector2f direction = _target->getPosition() - position;
 	float targetAngle = rad2deg(std::atan2f(direction.y, direction.x)) + 90.0f;
 
-	std::cout << "Angle difference: " << (_parent->getRotation() - targetAngle) << std::endl;
-
 	_shipComponent->rotate(_parent->getRotation() < targetAngle ? true : false);
-
+	
 	// Too far away
 	if (distance > 512)
 	{
@@ -48,7 +48,8 @@ void AiComponent::update(double dt) {
 	}
 	else
 	{
+		//todo shoot only if is aiming at player
 		_shipComponent->shoot();
 	}
-
+	
 }
