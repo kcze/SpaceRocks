@@ -30,6 +30,9 @@ std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physicsScaleInv;
+unsigned int maxAsteroidPop = 0;
+unsigned int maxAsteroidsTotal = 5;
+unsigned int asteroidsSoFar = 0;
 
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
@@ -44,8 +47,6 @@ void GameScene::load() {
 		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
 		gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 	}
-
-	gameScene.roundStart();
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
@@ -74,6 +75,9 @@ void GameScene::load() {
 	world->SetDebugDraw(&debugDrawInstance);
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
+	//Start Round 1
+	gameScene.roundStart();
+
 	setLoaded(true);
 }
 
@@ -93,7 +97,7 @@ void GameScene::spawnAsteroid()
 
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -25.0f);
+	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -75.0f);
 
 	//Add to collection
 	asteroids.push_back(asteroid);
@@ -148,15 +152,26 @@ void GameScene::update(const double& dt) {
 			asteroids.shrink_to_fit();
 		}
 	}
-	
-	if (asteroids.size() < 5)
+	//Spawn Asteroid
+	if (asteroids.size() < maxAsteroidPop && asteroidsSoFar < maxAsteroidsTotal)
 	{
 		spawnAsteroid();
+		asteroidsSoFar++;
+	}
+
+	//Round Complete
+	if (asteroidsSoFar == maxAsteroidsTotal && asteroids.size() == 0)
+	{
+		//Reset
+		maxAsteroidPop = 1;
+		asteroidsSoFar = 0;
+		//Start next round
+		gameScene.roundStart();
 	}
 
 	//TODO: Less hacky way of getting world, similar is also used in load
-	auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
-	world->DrawDebugData();
+	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
+	//world->DrawDebugData();
 	Scene::update(dt);
 }
 
@@ -175,6 +190,7 @@ void GameScene::playerDeath()
 
 void roundStartThread()
 {
+	//Countdown
 	audioManager.playSound("voice_3");
 	sf::sleep(sf::milliseconds(1000));
 	audioManager.playSound("voice_2");
@@ -182,6 +198,14 @@ void roundStartThread()
 	audioManager.playSound("voice_1");
 	sf::sleep(sf::milliseconds(1000));
 	audioManager.playSound("wave_approaching");
+	//TODO: Show and Flash Enemy approaching indicator
+
+	//Initiate Round!
+	maxAsteroidPop++;
+	sf::sleep(sf::milliseconds(1000));
+	maxAsteroidPop++;
+	sf::sleep(sf::milliseconds(1000));
+	maxAsteroidPop++;
 
 } sf::Thread rst(&roundStartThread);
 
