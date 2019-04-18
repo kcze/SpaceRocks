@@ -38,6 +38,7 @@ public:
   static sf::RenderWindow& getWindow();
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
+  static void switchWindowMode();
 
 private:
   static Scene* _activeScene;

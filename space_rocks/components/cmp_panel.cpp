@@ -89,7 +89,7 @@ void PanelComponent::pointerPrevious()
 {
 	if (_buttons.size() < 2)
 		return;
-
+	
 	if (_currentButton == _buttons.front())
 		_currentButton = _buttons.back();
 	else

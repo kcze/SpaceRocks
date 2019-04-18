@@ -73,7 +73,7 @@ sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
 
 void UpdateScaling()
 {
-	const sf::Vector2u screensize(1280, 720);
+	const sf::Vector2u screensize = Engine::getWindowSize();	
 	const sf::Vector2u gamesize(GAMEX, GAMEY);
 	//set View as normal
 	Engine::getWindow().setSize(screensize);
@@ -90,8 +90,6 @@ void UpdateScaling()
 	//set!
 	v.setViewport(viewport);
 	Engine::getWindow().setView(v);
-
-	Engine::getWindow().;
 	
 }
 
@@ -131,6 +129,7 @@ void MenuScene::load() {
 	settings->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	settingsPanel = settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 	settingsPanel->addText("Settings", 48.0f);
+	settingsPanel->addButton("Window Mode", []() { Engine::switchWindowMode(); UpdateScaling(); });
 	settingsPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
 	settingsPanel->setVisible(false);
 
