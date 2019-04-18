@@ -42,6 +42,7 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	}
 
 	_buttons.push_back(button);
+	updatePositions();
 }
 
 std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const float size) {
@@ -49,10 +50,9 @@ std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const fl
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
 	auto txt = entity->addComponent<TextComponent>(text);
 	txt->setSize(size);
-	txt->setAnchor(_anchor);
+	txt->setAnchor(_anchor + sf::Vector2f(0.0f, 0.1f));
 
 	_elements.push_back(entity);
-
 	updatePositions();
 
 	return entity;
@@ -63,14 +63,13 @@ std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> fun
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
 	auto txt = entity->addComponent<TextComponent>("");
 	txt->setSize(size);
-	txt->setAnchor(_anchor);
+	txt->setAnchor(_anchor + sf::Vector2f(0.0f, 0.1f));
 
 	// Create ui component
 	auto ui = entity->addComponent<UiComponent>();
 	ui->textUpdate = function;
 
 	_elements.push_back(entity);
-
 	updatePositions();
 
 	return entity;
@@ -79,14 +78,18 @@ std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> fun
 void PanelComponent::executeButton()
 {
 	if (_currentButton != NULL)
-		_currentButton->get_components<UiComponent>()[0]->buttonExecute();
+	{
+		_currentButton->getComponents<UiComponent>()[0]->buttonExecute();
+		audioManager.playSound("menu_select");
+	}
+
 }
 
 void PanelComponent::pointerPrevious()
 {
 	if (_buttons.size() < 2)
 		return;
-
+	
 	if (_currentButton == _buttons.front())
 		_currentButton = _buttons.back();
 	else
@@ -100,7 +103,7 @@ void PanelComponent::pointerPrevious()
 			}
 		}
 	}
-
+	audioManager.playSound("menu_cycle");
 	updatePositions();
 }
 
@@ -128,7 +131,7 @@ void PanelComponent::pointerNext()
 			}
 		}
 	}
-
+	audioManager.playSound("menu_cycle");
 	updatePositions();
 }
 
@@ -150,4 +153,16 @@ void PanelComponent::updatePositions()
 	if (_currentButton != NULL)
 		_buttonPointer->setPosition(_currentButton->getPosition());
 
+}
+
+void PanelComponent::setVisible(bool visible)
+{
+	// Hide or expose all elements in the panel
+	for (std::shared_ptr<Entity> element : _elements)
+	{
+		element->setVisible(visible);
+		element->setAlive(visible);
+	}
+	_buttonPointer->setVisible(visible);
+	_buttonPointer->setAlive(visible);
 }

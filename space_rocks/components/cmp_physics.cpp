@@ -14,7 +14,7 @@ void PhysicsComponent::update(double dt) {
 		setVelocity((_maxSpeed / currentSpeed) * getVelocity());
 
 
-  _parent->setPosition(invert_height(bv2_to_sv2(_body->GetPosition())));
+  _parent->setPosition(invertHeight(bv2ToSv2(_body->GetPosition())));
   _parent->setRotation((180 / b2_pi) * _body->GetAngle());
 }
 
@@ -25,56 +25,15 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
   b2BodyDef BodyDef;
   // Is Dynamic(moving), or static(Stationary)
   BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
-  BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+  BodyDef.position = sv2ToBv2(invertHeight(p->getPosition()));
   BodyDef.userData = _parent;
 
   // Create the body
-  _body = Physics::GetWorld()->CreateBody(&BodyDef);
+  _body = Physics::getWorld()->CreateBody(&BodyDef);
   _body->SetActive(true);
-  //{
-  //  // Create the fixture shape
-  //  b2PolygonShape Shape;
-  //  // SetAsBox box takes HALF-Widths!
-  //  Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-  //  b2FixtureDef FixtureDef;
-  //  // Fixture properties
-  //  // FixtureDef.density = _dynamic ? 10.f : 0.f;
-  //  FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
-  //  FixtureDef.restitution = .2;
-  //  FixtureDef.shape = &Shape;
-  //  // Add to body
-  //  _fixture = _body->CreateFixture(&FixtureDef);
-  //  //_fixture->SetRestitution(.9)
-  //  FixtureDef.restitution = .2;
-  //}
 
-  _maxSpeed = 500.0f;
+  _maxSpeed = 350.0f;
 
-  // An ideal Pod/capusle shape should be used for hte player,
-  // this isn't built into B2d, but we can combine two shapes to do so.
-  // This would allwo the player to go up steps
-  /*
-    BodyDef.bullet = true;
-    b2PolygonShape shape1;
-    shape1.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-    {
-      b2PolygonShape poly ;
-      poly.SetAsBox(0.45f, 1.4f);
-      b2FixtureDef FixtureDefPoly;
-
-      FixtureDefPoly.shape = &poly;
-      _body->CreateFixture(&FixtureDefPoly);
-
-    }
-    {
-      b2CircleShape circle;
-      circle.m_radius = 0.45f;
-      circle.m_p.Set(0, -1.4f);
-      b2FixtureDef FixtureDefCircle;
-      FixtureDefCircle.shape = &circle;
-      _body->CreateFixture(&FixtureDefCircle);
-    }
-  */
 }
 
 b2Body*  PhysicsComponent::getBody()
@@ -98,7 +57,7 @@ void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
 void PhysicsComponent::setMass(float m) { _fixture->SetDensity(m); }
 
 void PhysicsComponent::teleport(const sf::Vector2f& v) {
-  _body->SetTransform(sv2_to_bv2(invert_height(v)), _body->GetAngle()); 
+  _body->SetTransform(sv2ToBv2(invertHeight(v)), _body->GetAngle()); 
 }
 
 void PhysicsComponent::setAngle(const float angle) {
@@ -107,10 +66,10 @@ void PhysicsComponent::setAngle(const float angle) {
 
 
 const sf::Vector2f PhysicsComponent::getVelocity() const {
-  return bv2_to_sv2(_body->GetLinearVelocity(), true);
+  return bv2ToSv2(_body->GetLinearVelocity(), true);
 }
 void PhysicsComponent::setVelocity(const sf::Vector2f& v) {
-  _body->SetLinearVelocity(sv2_to_bv2(v, true));
+  _body->SetLinearVelocity(sv2ToBv2(v, true));
 }
 
 void PhysicsComponent::setAngularVelocity(const float a) {
@@ -137,9 +96,9 @@ void PhysicsComponent::setAngularDampening(float f) {
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 
 PhysicsComponent::~PhysicsComponent() {
-  auto a = Physics::GetWorld();
+  auto a = Physics::getWorld();
   _body->SetActive(false);
-  Physics::GetWorld()->DestroyBody(_body);
+  Physics::getWorld()->DestroyBody(_body);
   // delete _body;
   _body = nullptr;
 }
@@ -173,7 +132,7 @@ bool PhysicsComponent::isTouching(const PhysicsComponent& pc) const {
 bool PhysicsComponent::isTouching(const PhysicsComponent& pc,
                                   b2Contact const* bc) const {
   const auto _otherFixture = pc.getFixture();
-  const auto& w = *Physics::GetWorld();
+  const auto& w = *Physics::getWorld();
   const auto contactList = w.GetContactList();
   const auto clc = w.GetContactCount();
   for (int32 i = 0; i < clc; i++) {

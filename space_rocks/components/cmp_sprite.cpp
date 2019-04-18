@@ -8,7 +8,7 @@ void SpriteComponent::setTexure(std::shared_ptr<sf::Texture> tex)
 {
   _texture = tex;
   _sprite->setTexture(*_texture);
-  SetAnchor(sf::Vector2f(0.5f, 0.5f));
+  setAnchor(sf::Vector2f(0.5f, 0.5f));
 }
 
 void SpriteComponent::setTextureRect(sf::IntRect rect)
@@ -23,6 +23,8 @@ void SpriteComponent::setOrigin(const sf::Vector2f origin)
 
 void SpriteComponent::setDraw(bool draw) { _draw = draw; }
 
+void SpriteComponent::setColor(sf::Color color) { _sprite->setColor(color); }
+
 SpriteComponent::SpriteComponent(Entity* p)
     : Component(p), _sprite(make_shared<sf::Sprite>()), _draw(true) {}
 
@@ -31,7 +33,7 @@ SpriteComponent::SpriteComponent(Entity* p)
 // 0.5, 0.5	= center
 // 1.0, 1.0	= bottom right
 // Values outside of this range will be rounded to closest edge
-void SpriteComponent::SetAnchor(sf::Vector2f vec) 
+void SpriteComponent::setAnchor(sf::Vector2f vec) 
 {
 	//Inforce limits
 	vec.x = vec.x < 0.0f ? 0.0f : vec.x;
@@ -65,7 +67,6 @@ void SpriteComponent::render() {
 		Renderer::queue(_sprite.get());
 }
 
-
 // Shape
 void ShapeComponent::update(double dt) {
 	sf::FloatRect bounds = _shape->getLocalBounds();
@@ -95,7 +96,7 @@ sf::Sprite& SpriteComponent::getSprite() const { return *_sprite; }
 // 0.5, 0.5	= center
 // 1.0, 1.0	= bottom right
 // Values outside of this range will be rounded to closest edge
-void ShapeComponent::SetAnchor(sf::Vector2f vec)
+void ShapeComponent::setAnchor(sf::Vector2f vec)
 {
 	//Inforce limits
 	vec.x = vec.x < 0.0f ? 0.0f : vec.x;

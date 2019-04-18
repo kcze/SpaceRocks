@@ -8,5 +8,5 @@ MenuScene menuScene;
 GameScene gameScene;
 
 int main() {
-	Engine::Start(GAMEX, GAMEY, "Space Rocks", &menuScene);
+	Engine::start(GAMEX, GAMEY, "Space Rocks", &menuScene);
 }
