@@ -22,6 +22,7 @@
 using namespace std;
 using namespace sf;
 
+std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
 std::shared_ptr<PanelComponent> gamePanel;
@@ -130,7 +131,6 @@ void GameScene::load() {
 	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
 	gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 
-	
 	// Show panel
 	shop = makeEntity();
 	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
@@ -144,6 +144,47 @@ void GameScene::load() {
 	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 	setShopVisible(true);
 
+	//Edge Arrows
+	{
+		//up
+		auto arrowUp = makeEntity();
+		arrowUp->setPosition(sf::Vector2f(GAMEX / 2, 64.0f));
+		auto arSprite = arrowUp->addComponent<SpriteComponent>();
+		arSprite->setTextureRect(IntRect(128, 0, 128, 128));
+		arSprite->setTexure(Resources::get<sf::Texture>("arrows.png"));
+		arSprite->setColor(sf::Color(255, 0, 0, 255));
+		arrowUp->setRotation(-90.0f);
+		//right
+		auto arrowRight = makeEntity();
+		arrowRight->setPosition(sf::Vector2f(GAMEX - 64.0f, GAMEY / 2));
+		arSprite = arrowRight->addComponent<SpriteComponent>();
+		arSprite->setTextureRect(IntRect(128, 0, 128, 128));
+		arSprite->setTexure(Resources::get<sf::Texture>("arrows.png"));
+		arSprite->setColor(sf::Color(255, 0, 0, 255));
+		//down
+		auto arrowDown = makeEntity();
+		arrowDown->setPosition(sf::Vector2f(GAMEX / 2, GAMEY - 64.0f));
+		arSprite = arrowDown->addComponent<SpriteComponent>();
+		arSprite->setTextureRect(IntRect(128, 0, 128, 128));
+		arSprite->setTexure(Resources::get<sf::Texture>("arrows.png"));
+		arSprite->setColor(sf::Color(255, 0, 0, 255));
+		arrowDown->setRotation(90.0f);
+		//left
+		auto arrowLeft = makeEntity();
+		arrowLeft->setPosition(sf::Vector2f(64.0f, GAMEY / 2));
+		arSprite = arrowLeft->addComponent<SpriteComponent>();
+		arSprite->setTextureRect(IntRect(128, 0, 128, 128));
+		arSprite->setTexure(Resources::get<sf::Texture>("arrows.png"));
+		arSprite->setColor(sf::Color(255, 0, 0, 255));
+		arrowLeft->setRotation(180.0f);
+		//Add to collection
+		arrows.push_back(arrowUp);
+		arrows.push_back(arrowRight);
+		arrows.push_back(arrowDown);
+		arrows.push_back(arrowLeft);
+		for (unsigned int i = 0; i < arrows.size(); i++)
+			arrows[i]->setVisible(false);
+	}
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
@@ -422,11 +463,10 @@ void GameScene::roundwaveStart()
 
 void GameScene::spawnWave() {
 
-	audioManager.playSound("wave_approaching");
-	//TODO: Show and Flash Enemy approaching indicator
 
 	//Get data for current wave
 	auto etData = _waveData[std::make_pair(curRound, curWave)];
+	std::vector <unsigned int> sides;
 
 	//For each squadron in wave
 	for (unsigned int i = 0; i < etData.size(); i++)
@@ -436,9 +476,26 @@ void GameScene::spawnWave() {
 		{
 			unsigned int id = std::get<1>(etData[i]);
 			unsigned int side = std::get<2>(etData[i]);
+			sides.push_back(side);
 			enemyQueue.push(std::make_pair(id, side));
 		}
 	}
+
+	//Sound
+	audioManager.playSound("wave_approaching");
+	//Arrow flashes. Eight flashes to match SFX
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		//On
+		for(unsigned int j = 0; j < sides.size(); j++)
+			arrows[sides[j]-1]->setVisible(true);
+		sf::sleep(sf::milliseconds(125));
+		//Off
+		for (unsigned int j = 0; j < sides.size(); j++)
+			arrows[sides[j] - 1]->setVisible(false);
+		sf::sleep(sf::milliseconds(125));
+	}
+
 
 	enemiesQueued = true;
 }
