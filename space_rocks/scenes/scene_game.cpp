@@ -130,12 +130,17 @@ void GameScene::load() {
 	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
 	gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 
+	
 	// Show panel
 	shop = makeEntity();
 	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
 	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 	shopPanel->addText("Shop", 48.0f);
-	shopPanel->addButton("Continue", []() { setShopVisible(false); });
+	shopPanel->addButton("Continue", []() { 
+		setShopVisible(false); 
+		//Start next round
+		gameScene.roundwaveStart();
+	});
 	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 	setShopVisible(true);
 
@@ -161,7 +166,7 @@ void GameScene::load() {
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
 	//Start Round 1
-	gameScene.roundwaveStart();
+	//gameScene.roundwaveStart();
 
 	setLoaded(true);
 }
@@ -348,9 +353,8 @@ void GameScene::update(const double& dt) {
 		else 
 		{
 			newRound = true;
-			//Start next round
-			//TODO: Go to shop
-			gameScene.roundwaveStart();
+			//Go to shop
+			setShopVisible(true);
 		}
 	}
 
