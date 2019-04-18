@@ -79,7 +79,11 @@ std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> fun
 void PanelComponent::executeButton()
 {
 	if (_currentButton != NULL)
+	{
 		_currentButton->getComponents<UiComponent>()[0]->buttonExecute();
+		audioManager.playSound("menu_select");
+	}
+
 }
 
 void PanelComponent::pointerPrevious()
@@ -100,7 +104,7 @@ void PanelComponent::pointerPrevious()
 			}
 		}
 	}
-
+	audioManager.playSound("menu_cycle");
 	updatePositions();
 }
 
@@ -128,7 +132,7 @@ void PanelComponent::pointerNext()
 			}
 		}
 	}
-
+	audioManager.playSound("menu_cycle");
 	updatePositions();
 }
 

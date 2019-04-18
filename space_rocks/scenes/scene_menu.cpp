@@ -13,21 +13,10 @@ using namespace sf;
 
 //Entities
 std::shared_ptr<Entity> txtTitle;
-/*std::shared_ptr<Entity> txtNewGame;
-std::shared_ptr<Entity> txtLoad;
-std::shared_ptr<Entity> txtHighScores;
-std::shared_ptr<Entity> txtOptions;
-std::shared_ptr<Entity> txtExit;
-std::shared_ptr<Entity> menuCursor;*/
 
 std::shared_ptr<Entity> menu;
 std::shared_ptr<PanelComponent> menuPanel;
 
-unsigned int cursorOffset = 100.0f;
-unsigned int target = 1;
-unsigned int numOptions = 5;
-bool newUpPress = true;
-bool newDownPress = true;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -131,17 +120,14 @@ void MenuScene::onKeyPressed(Keyboard::Key key)
 	{
 		if (key == Keyboard::Up)
 		{
-			audioManager.playSound("menu_cycle");
 			menuPanel->pointerPrevious();
 		}
 		else if (key == Keyboard::Down)
-		{
-			audioManager.playSound("menu_cycle");
+		{	
 			menuPanel->pointerNext();
 		}
 		else if (key == Keyboard::Enter)
-		{
-			audioManager.playSound("menu_select");
+		{	
 			menuPanel->executeButton();
 		}
 	}

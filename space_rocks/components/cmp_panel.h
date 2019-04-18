@@ -1,5 +1,5 @@
 #pragma once
-
+#include "..\game.h"
 #include "components.h"
 #include <ecm.h>
 
