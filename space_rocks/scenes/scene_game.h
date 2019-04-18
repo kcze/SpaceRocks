@@ -14,7 +14,8 @@ public:
   void createEdges();
   void playerDeath();
   void roundStart();
+  void spawnWave();
 
   void update(const double& dt) override;
-
 };
+
