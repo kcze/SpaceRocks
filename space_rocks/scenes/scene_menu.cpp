@@ -129,6 +129,8 @@ void MenuScene::load() {
 	settings->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	settingsPanel = settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 	settingsPanel->addText("Settings", 48.0f);
+	settingsPanel->addButton("1920x1080", []() { Engine::getWindow().setSize(sf::Vector2u(1920, 1080)); UpdateScaling(); });
+	settingsPanel->addButton("1280x720", []() { Engine::getWindow().setSize(sf::Vector2u(1280, 720)); UpdateScaling(); });
 	settingsPanel->addButton("Window Mode", []() { Engine::switchWindowMode(); UpdateScaling(); });
 	settingsPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
 	settingsPanel->setVisible(false);
