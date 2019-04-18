@@ -17,7 +17,7 @@
 #include <ctime>
 #include "..\contact_listener.h"
 #include "..\debug_draw.h"
-
+#include <queue>
 
 using namespace std;
 using namespace sf;
@@ -29,13 +29,87 @@ std::shared_ptr<PanelComponent> shopPanel;
 bool shopVisible;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
+std::vector<std::shared_ptr<Entity>> enemies;
+std::queue< std::pair<unsigned int, unsigned int> > enemyQueue;
+unsigned int maxEnemyPop = 0;
+
 std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
 float PSI = Physics::physicsScaleInv;
+
+//TODO: Convert asteroid spawning to que system?
 unsigned int maxAsteroidPop = 0;
 unsigned int maxAsteroidsTotal = 5;
 unsigned int asteroidsSoFar = 0;
+
+unsigned int curRound = 0;
+unsigned int curWave = 1;
+
+bool enemiesQueued = false;
+bool newRound = true;
+
+static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
+{
+	// ROUND 1 
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(1,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1) //squadron 1
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(1,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4) //squadron 1
+		}
+	},
+
+	// ROUND 2
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(2,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 3)	//squadron 2
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(2,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 4), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 2)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(2,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 1) //squadron 1
+		}
+	},
+
+	// ROUND 3
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(3,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 2)	//squadron 2
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(3,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 3, 1), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 4)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(3,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(3 , 2, 3) //squadron 1
+		}
+	}
+};
+
 
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
@@ -65,21 +139,13 @@ void GameScene::load() {
 	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 	setShopVisible(true);
 
+
 	// Player ship
 	auto player = ShipFactory::makePlayer();
 	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 	//DEBUG SUPER BULLET
 	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
-	//Test Enemies
-	auto test1 = ShipFactory::makeEnemy(2);
-	test1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, 0));
-	auto test2 = ShipFactory::makeEnemy(3);
-	test2->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, 0));
-	auto test3 = ShipFactory::makeEnemy(4);
-	test3->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, GAMEY));
-	auto test4 = ShipFactory::makeEnemy(5);
-	test4->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, GAMEY));
 
 
 	//Creat edges
@@ -95,7 +161,7 @@ void GameScene::load() {
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
 	//Start Round 1
-	gameScene.roundStart();
+	gameScene.roundwaveStart();
 
 	setLoaded(true);
 }
@@ -120,6 +186,46 @@ void GameScene::spawnAsteroid()
 
 	//Add to collection
 	asteroids.push_back(asteroid);
+}
+
+//Make enemy with given ID and spawn in scene from given direction
+//Valid IDs: 2-5
+//Directions: 1 = top, 2 = right, 3 = bottom, 4 = left
+void GameScene::spawnEnemy(unsigned int id, unsigned int dir)
+{	
+	//Random5
+	std::default_random_engine rG((int)time(NULL));
+	std::uniform_real_distribution<float> dSide(200.0f, GAMEY - 200.0f);
+	std::uniform_real_distribution<float> dLength(300.0f, GAMEX - 300.0f);
+
+	//Choose spawn position
+	sf::Vector2f pos;
+	switch(dir)
+	{ 
+	//top
+	case 1:
+		pos = sf::Vector2f(dLength(rG), -500.0f);
+		break;
+	//right
+	case 2:
+		pos = sf::Vector2f(GAMEX + 500.0f, dSide(rG));
+		break;
+	//down
+	case 3:
+		pos = sf::Vector2f(dLength(rG), GAMEY + 500.0f);
+		break;
+	//left
+	case 4:
+		pos = sf::Vector2f(-500.0f, dSide(rG));
+		break;
+	};
+
+	//Make Enemy
+	std::cout << "Enemy spawned at: " << pos << std::endl;
+	auto enemy = ShipFactory::makeEnemy(id);
+	enemy->getComponents<PhysicsComponent>()[0]->teleport(pos);
+	//Add to collection
+	enemies.push_back(enemy);
 }
 
 void GameScene::createEdges()
@@ -191,8 +297,8 @@ void GameScene::onKeyPressed(Keyboard::Key key)
 
 void GameScene::update(const double& dt) {
 	 
-	//If less than 5 total asteroids, spawn another big asteroid.
-	for (int i = 0; i < asteroids.size(); i++)
+	//Check for deleted asteroids
+	for (unsigned int i = 0; i < asteroids.size(); i++)
 	{
 		if (!asteroids[i]->isAlive())
 		{
@@ -200,21 +306,52 @@ void GameScene::update(const double& dt) {
 			asteroids.shrink_to_fit();
 		}
 	}
-	//Spawn Asteroid
+	//Check for deleted enemies
+	for (unsigned int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->isAlive())
+		{
+			enemies.erase(enemies.begin() + i);
+			enemies.shrink_to_fit();
+		}
+	}
+
+	//Spawn Asteroids
 	if (asteroids.size() < maxAsteroidPop && asteroidsSoFar < maxAsteroidsTotal)
 	{
 		spawnAsteroid();
 		asteroidsSoFar++;
 	}
 
-	//Round Complete
-	if (asteroidsSoFar == maxAsteroidsTotal && asteroids.size() == 0)
+	//Spawn Enemies
+	while (!enemyQueue.empty())
 	{
-		//Reset
-		maxAsteroidPop = 0;
-		asteroidsSoFar = 0;
-		//Start next round
-		gameScene.roundStart();
+		//Get next enemy from spawn queue
+		auto enemyData = enemyQueue.front();
+		enemyQueue.pop();
+		spawnEnemy(enemyData.first, enemyData.second);
+	}
+	//When all enemies are dead, Spawn next wave
+	if (enemiesQueued && enemies.empty())
+	{
+		curWave++;
+
+		//Set EQ to false before wave spawn to syncronise threads
+		enemiesQueued = false;
+
+		//If still more waves to come
+		if (_waveData.count(make_pair(curRound, curWave)))
+		{
+			gameScene.roundwaveStart();
+		}
+		//Else when all waves are complete, Round complete
+		else 
+		{
+			newRound = true;
+			//Start next round
+			//TODO: Go to shop
+			gameScene.roundwaveStart();
+		}
 	}
 
 	//TODO: Less hacky way of getting world, similar is also used in load
@@ -238,17 +375,32 @@ void GameScene::playerDeath()
 
 void roundStartThread()
 {
-	//Countdown
-	audioManager.playSound("voice_3");
-	sf::sleep(sf::milliseconds(1000));
-	audioManager.playSound("voice_2");
-	sf::sleep(sf::milliseconds(1000));
-	audioManager.playSound("voice_1");
-	sf::sleep(sf::milliseconds(1000));
-	audioManager.playSound("wave_approaching");
-	//TODO: Show and Flash Enemy approaching indicator
+	if (newRound)
+	{
+		//Initialise round
+		curRound++;
+		curWave = 1;
+		maxAsteroidPop = 0;
+		asteroidsSoFar = 0;
+		//TODO: Destroy all asteroid fragments
+
+		//Countdown
+		audioManager.playSound("voice_3");
+		sf::sleep(sf::milliseconds(1000));
+		audioManager.playSound("voice_2");
+		sf::sleep(sf::milliseconds(1000));
+		audioManager.playSound("voice_1");
+		sf::sleep(sf::milliseconds(1000));
+		newRound = false;
+	}
+	else
+		sf::sleep(sf::milliseconds(3000));
 
 	//Initiate Round!
+	//Enemies
+	gameScene.spawnWave();
+
+	//Asteroids
 	maxAsteroidPop++;
 	sf::sleep(sf::milliseconds(1000));
 	maxAsteroidPop++;
@@ -257,9 +409,32 @@ void roundStartThread()
 
 } sf::Thread rst(&roundStartThread);
 
-
-void GameScene::roundStart()
+void GameScene::roundwaveStart()
 {
+
 	rst.launch();
 	return;
+}
+
+void GameScene::spawnWave() {
+
+	audioManager.playSound("wave_approaching");
+	//TODO: Show and Flash Enemy approaching indicator
+
+	//Get data for current wave
+	auto etData = _waveData[std::make_pair(curRound, curWave)];
+
+	//For each squadron in wave
+	for (unsigned int i = 0; i < etData.size(); i++)
+	{
+		//For each enemy in squadron
+		for (unsigned int j = 0; j < std::get<0>(etData[i]); j++)
+		{
+			unsigned int id = std::get<1>(etData[i]);
+			unsigned int side = std::get<2>(etData[i]);
+			enemyQueue.push(std::make_pair(id, side));
+		}
+	}
+
+	enemiesQueued = true;
 }
