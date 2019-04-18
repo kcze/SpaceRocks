@@ -141,21 +141,22 @@ void MenuScene::load() {
 
 void MenuScene::onKeyPressed(Keyboard::Key key)
 {
-	if (!gameScene.isLoaded())
+	if (!menuScene.isLoaded())
+		return;
+
+	if (key == Keyboard::Up)
 	{
-		if (key == Keyboard::Up)
-		{
-			currentPanel->pointerPrevious();
-		}
-		else if (key == Keyboard::Down)
-		{	
-			currentPanel->pointerNext();
-		}
-		else if (key == Keyboard::Enter)
-		{	
-			currentPanel->executeButton();
-		}
+		currentPanel->pointerPrevious();
 	}
+	else if (key == Keyboard::Down)
+	{	
+		currentPanel->pointerNext();
+	}
+	else if (key == Keyboard::Enter)
+	{	
+		currentPanel->executeButton();
+	}
+
 }
 
 void MenuScene::update(const double& dt) {

@@ -23,7 +23,10 @@ using namespace std;
 using namespace sf;
 
 std::shared_ptr<Entity> game;
+std::shared_ptr<Entity> shop;
 std::shared_ptr<PanelComponent> gamePanel;
+std::shared_ptr<PanelComponent> shopPanel;
+bool shopVisible;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::shared_ptr<sf::Texture> ssAsteroids;
@@ -37,16 +40,30 @@ unsigned int asteroidsSoFar = 0;
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
 
+void setShopVisible(bool visible)
+{
+	suppressPlayerControl = visible;
+	shopVisible = visible;
+	shopPanel->setVisible(visible);
+}
 
 void GameScene::load() {
 	cout << "Game Scene Load \n";	
-	{
-		// Game panel
-		game = makeEntity();
-		game->setPosition(sf::Vector2f(16.0f, 16.0f));
-		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
-		gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
-	}
+
+	// Game panel
+	game = makeEntity();
+	game->setPosition(sf::Vector2f(16.0f, 16.0f));
+	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
+	gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
+
+	// Show panel
+	shop = makeEntity();
+	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
+	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	shopPanel->addText("Shop", 48.0f);
+	shopPanel->addButton("Continue", []() { setShopVisible(false); });
+	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+	setShopVisible(true);
 
 	// Player ship
 	auto player = ShipFactory::makePlayer();
@@ -140,6 +157,35 @@ void GameScene::createEdges()
 	edgeShape.Set(upRight, upLeft);
 	fixtureDef.shape = &edgeShape;
 	phys->setFixtureDef(fixtureDef);
+
+}
+
+void GameScene::onKeyPressed(Keyboard::Key key)
+{
+	if (!gameScene.isLoaded())
+		return;
+
+	//todo temporary
+	if (key == Keyboard::Tab)
+	{
+		setShopVisible(true);
+	}
+
+	if (!shopVisible)
+		return;
+
+	if (key == Keyboard::Up)
+	{
+		shopPanel->pointerPrevious();
+	}
+	else if (key == Keyboard::Down)
+	{
+		shopPanel->pointerNext();
+	}
+	else if (key == Keyboard::Enter)
+	{
+		shopPanel->executeButton();
+	}
 
 }
 

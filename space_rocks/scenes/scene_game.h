@@ -1,8 +1,9 @@
 #pragma once
 
 #include "engine.h"
+#include "..\input.h"
 
-class GameScene : public Scene {
+class GameScene : public Scene, public InputEvents {
 public:
 	GameScene() = default;
   ~GameScene() override = default;
@@ -13,6 +14,7 @@ public:
   void createEdges();
   void playerDeath();
   void roundStart();
+  void onKeyPressed(Keyboard::Key key) override;
 
   void update(const double& dt) override;
 

@@ -10,6 +10,9 @@ PlayerComponent::PlayerComponent(Entity* p, const int player) : Component(p)
 
 void PlayerComponent::update(double dt)
 {
+	if (suppressPlayerControl)
+		return;
+
 	if (Input::isKeyDown(Input::KeyCode::P1_THRUST))
 	{
 		_shipComponent->thrust(dt);
