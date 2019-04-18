@@ -26,6 +26,8 @@ std::shared_ptr<Entity> game;
 std::shared_ptr<PanelComponent> gamePanel;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
+std::vector<std::shared_ptr<Entity>> enemies;
+
 std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
@@ -39,7 +41,7 @@ DebugDraw debugDrawInstance;
 
 
 void GameScene::load() {
-	cout << "Game Scene Load \n";	
+	cout << "Game Scene Load \n";
 	{
 		// Game panel
 		game = makeEntity();
@@ -54,15 +56,6 @@ void GameScene::load() {
 	//DEBUG SUPER BULLET
 	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
-	//Test Enemies
-	auto test1 = ShipFactory::makeEnemy(2);
-	test1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, 0));
-	auto test2 = ShipFactory::makeEnemy(3);
-	test2->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, 0));
-	auto test3 = ShipFactory::makeEnemy(4);
-	test3->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(0, GAMEY));
-	auto test4 = ShipFactory::makeEnemy(5);
-	test4->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX, GAMEY));
 
 
 	//Creat edges
@@ -105,6 +98,45 @@ void GameScene::spawnAsteroid()
 	asteroids.push_back(asteroid);
 }
 
+//Make enemy with given ID and spawn in scene from given direction
+//Valid IDs: 2-5
+//Directions: 1 = top, 2 = right, 3 = bottom, 4 = left
+void GameScene::spawnEnemy(unsigned int id, unsigned int dir)
+{	
+	//Random5
+	std::default_random_engine rG((int)time(NULL));
+	std::uniform_real_distribution<float> dSide(200.0f, GAMEY - 200.0f);
+	std::uniform_real_distribution<float> dLength(300.0f, GAMEX - 300.0f);
+
+	//Choose spawn position
+	sf::Vector2f pos;
+	switch(dir)
+	{ 
+	//top
+	case 1:
+		pos = sf::Vector2f(dLength(rG), -50.0f);
+		break;
+	//right
+	case 2:
+		pos = sf::Vector2f(GAMEX + 50.0f, dSide(rG));
+		break;
+	//down
+	case 3:
+		pos = sf::Vector2f(dLength(rG), GAMEY + 50.0f);
+		break;
+	//left
+	case 4:
+		pos = sf::Vector2f(-50.0f, dSide(rG));
+		break;
+	};
+
+	//Make Enemy
+	auto test1 = ShipFactory::makeEnemy(id);
+	test1->getComponents<PhysicsComponent>()[0]->teleport(pos);
+	//Add to collection
+	enemies.push_back(test1);
+}
+
 void GameScene::createEdges()
 {
 	// Create entity
@@ -145,8 +177,8 @@ void GameScene::createEdges()
 
 void GameScene::update(const double& dt) {
 	 
-	//If less than 5 total asteroids, spawn another big asteroid.
-	for (int i = 0; i < asteroids.size(); i++)
+	//Check for deleted asteroids
+	for (unsigned int i = 0; i < asteroids.size(); i++)
 	{
 		if (!asteroids[i]->isAlive())
 		{
@@ -154,12 +186,29 @@ void GameScene::update(const double& dt) {
 			asteroids.shrink_to_fit();
 		}
 	}
-	//Spawn Asteroid
+	//Check for deleted enemies
+	for (unsigned int i = 0; i < enemies.size(); i++)
+	{
+		if (!enemies[i]->isAlive())
+		{
+			enemies.erase(enemies.begin() + i);
+			enemies.shrink_to_fit();
+		}
+	}
+
+	//Spawn Asteroids
 	if (asteroids.size() < maxAsteroidPop && asteroidsSoFar < maxAsteroidsTotal)
 	{
 		spawnAsteroid();
 		asteroidsSoFar++;
 	}
+
+	//Spawn Enemies
+	if (enemies.size() < 2)
+	{
+		spawnEnemy(2, 1);
+	}
+
 
 	//Round Complete
 	if (asteroidsSoFar == maxAsteroidsTotal && asteroids.size() == 0)
@@ -203,6 +252,9 @@ void roundStartThread()
 	//TODO: Show and Flash Enemy approaching indicator
 
 	//Initiate Round!
+	//Enemies
+
+	//Asteroids
 	maxAsteroidPop++;
 	sf::sleep(sf::milliseconds(1000));
 	maxAsteroidPop++;

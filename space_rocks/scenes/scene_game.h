@@ -10,6 +10,7 @@ public:
   void load() override;
 
   void spawnAsteroid();
+  void spawnEnemy(unsigned int id, unsigned int dir);
   void createEdges();
   void playerDeath();
   void roundStart();
