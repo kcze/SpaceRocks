@@ -144,7 +144,7 @@ void GameScene::load() {
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
 	//Start Round 1
-	gameScene.roundStart();
+	gameScene.roundwaveStart();
 
 	setLoaded(true);
 }
@@ -296,7 +296,7 @@ void GameScene::update(const double& dt) {
 		//If still more waves to come
 		if (_waveData.count(make_pair(curRound, curWave)))
 		{
-			gameScene.roundStart();
+			gameScene.roundwaveStart();
 		}
 		//Else when all waves are complete, Round complete
 		else 
@@ -304,7 +304,7 @@ void GameScene::update(const double& dt) {
 			newRound = true;
 			//Start next round
 			//TODO: Go to shop
-			gameScene.roundStart();
+			gameScene.roundwaveStart();
 		}
 	}
 
@@ -363,7 +363,7 @@ void roundStartThread()
 
 } sf::Thread rst(&roundStartThread);
 
-void GameScene::roundStart()
+void GameScene::roundwaveStart()
 {
 
 	rst.launch();

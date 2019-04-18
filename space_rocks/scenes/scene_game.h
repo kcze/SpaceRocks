@@ -13,7 +13,7 @@ public:
   void spawnEnemy(unsigned int id, unsigned int dir);
   void createEdges();
   void playerDeath();
-  void roundStart();
+  void roundwaveStart();
   void spawnWave();
 
   void update(const double& dt) override;
