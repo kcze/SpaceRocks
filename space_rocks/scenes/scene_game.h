@@ -17,6 +17,7 @@ public:
   void onKeyPressed(Keyboard::Key key) override;
   void roundwaveStart();
   void spawnWave();
+  void destroyAll();
 
   void update(const double& dt) override;
 };
