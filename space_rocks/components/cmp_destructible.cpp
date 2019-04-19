@@ -77,6 +77,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		case 0:
 			//Spawn bullet particles for all bullet impacts, regardless if they kill
 			particleBurst(coords, 5, 35.0f);
+			//TODO: vary depending on bullet type
 			audioManager.playSound("bullet_impact_light");
 			break;
 		//1: Player
