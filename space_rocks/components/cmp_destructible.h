@@ -21,7 +21,7 @@ public:
 	void spawnFragments(const sf::Vector2f coords);
 	void particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude);
 	void setToCall(std::function<void()>);
-	
+
 	~DestructibleComponent() override = default;
 
 protected:
@@ -30,6 +30,9 @@ protected:
 	unsigned int _id;
 	b2Vec2 _spawnCoords;
 	bool _timed;
+	bool _immune = false;
+	float _immuneTime;
 	float _lifetime;
+	float _flashTime;
 	std::function<void()> _toCall = NULL;
 };
