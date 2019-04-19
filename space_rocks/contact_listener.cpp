@@ -27,6 +27,12 @@ void MyContactListener::BeginContact(b2Contact* contact)
 		entityB->getComponents<DestructibleComponent>()[0]->damage(
 			entityA->getComponents<BulletComponent>()[0]->getDamage()
 		);
+
+		//If player, play sound
+		if(filterB.categoryBits == PLAYER_SHIP)
+			audioManager.playSound("player_hurt");
+
+
 		//Destroy bullet
 		entityA->getComponents<DestructibleComponent>()[0]->damage(10.0f);
 	}
