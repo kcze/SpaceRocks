@@ -1,0 +1,54 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+configuration:
+- Release
+- Debug
+
+cache:
+- build/lib -> appveyor.yml
+
+before_build:
+- cmd: >-
+
+    git submodule update --init --recursive
+    
+    if not exist build\ mkdir build
+
+    cd build
+    
+    cmake -G "Visual Studio 15 2017 Win64" ../
+    
+build:
+  project: build/PACKAGE.vcxproj
+  parallel: true
+  verbosity: minimal
+  
+after_build:
+- cmd: >-
+
+    7z a space-rocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/space-rocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
+    
+    cd ../build/installer/
+    
+    dir
+    
+    for %%a in (*.exe) do ren "%%~a" "%%~na_%CONFIGURATION%_win64%%~xa"
+    
+    dir
+    
+artifacts:
+  - path: build/*.zip
+    name: space-rocks_zip
+  - path: build/installer/*.exe
+    name: space-rocks_installer
+    
+deploy:
+- provider: GitHub
+  on:
+    appveyor_repo_tag: true
+    CONFIGURATION: Release
+  auth_token:
+    secure: ECVq3ge/gI4xSJEeoXNUiE3fq0samUls/hSKmaGeJmk3CAxEqr02LX2tcVenpINm
+  artifact: space-rocks_installer, space-rocks_zip
+  prerelease: true
