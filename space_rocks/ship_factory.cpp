@@ -6,7 +6,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 	{1,
 		{
 			{
-				{0.0f * PSI8, 3.0f * PSI8},
+				{0.0f * PSI8, 4.0f * PSI8},
 				{-2.0f * PSI8, -2.0f * PSI8},
 				{2.0f * PSI8, 2.0f * PSI8}
 			},
@@ -26,7 +26,6 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{0.0f * PSI8, 3.0f * PSI8},
 				{-2.0f * PSI8, 1.0f * PSI8},
 				{-4.0f * PSI8, -4.0f * PSI8},				
-				{0.0f * PSI8, -2.0f * PSI8},
 				{4.0f * PSI8, -4.0f * PSI8},
 				{2.0f * PSI8, 1.0f * PSI8}
 			},
@@ -37,6 +36,62 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				sf::IntRect(0, 0, 128, 128)
 			}
 		}
+	},
+	//Enemy 2
+	{3,
+		{
+			{
+				{0.0f * PSI8, 5.0f * PSI8},
+				{-3.0f * PSI8, 1.0f * PSI8},
+				{-4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{3.0f * PSI8, 1.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(128, 0, 128, 128)
+			}
+		}
+	},
+	//Enemy 3
+	{4,
+		{
+			{
+				{-4.0f * PSI8, 5.0f * PSI8},
+				{5.0f * PSI8, 0.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{5.0f * PSI8, 0.0f * PSI8},
+				{4.0f * PSI8, 5.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(256, 0, 128, 128)
+			}
+		}
+	},
+	//Enemy 4
+	{5,
+		{
+			{
+				{-2.0f * PSI8, 5.0f * PSI8},
+				{-5.0f * PSI8, 2.0f * PSI8},
+				{-4.0f * PSI8, -4.0f * PSI8},
+				{4.0f * PSI8, -4.0f * PSI8},
+				{5.0f * PSI8, 2.0f * PSI8},
+				{2.0f * PSI8, 5.0f * PSI8}
+			},
+			{
+				Resources::load<sf::Texture>("enemies.png")
+			},
+			{
+				sf::IntRect(384, 0, 128, 128)
+			}
+		}
 	}
 };
 
@@ -44,6 +99,9 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 {
 	//Make Generic Ship
 	auto player = makeShip();
+
+	// Add tag
+	player->addTag("Player");
 
 	//Player Component
 	{
@@ -63,8 +121,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
-		player->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
-		player->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);
+		player->getComponents<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+		player->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);
 	}
 
 	//Destructible
@@ -82,6 +140,8 @@ std::shared_ptr<Entity> ShipFactory::makePlayer()
 	return player;
 }
 
+//Make Enemy ship.
+//Vaild IDs: 2 through 5 inclusive
 std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 {
 	auto enemy = makeShip();
@@ -95,30 +155,36 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		b2PolygonShape Shape;
 
 		//Assign collision vertices to shape
-		Shape.Set(&_objectData[2]._coords.front(), _objectData[2]._coords.size());
+		Shape.Set(&_objectData[type]._coords.front(), _objectData[type]._coords.size());
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
-		enemy->get_components<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
-		enemy->get_components<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
+		enemy->getComponents<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
+		enemy->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
 	}
 
-	//Variations
-	switch (type)
+	//Destructible
 	{
-	case 1:
-		//Destructible
-		{
-			//ID 2, 2hp
-			enemy->addComponent<DestructibleComponent>(2.0f, 2);
-		}
+		//HP governed by ID, so ID 2 = 1hp, ID 3 = 2 hp, etc.
+		enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
+	}
 
-		//Sprite
-		{
-			auto sprite = enemy->addComponent<SpriteComponent>();
-			sprite->setTexure(_objectData[2]._tex);
-		}
-		break;
+	//Sprite
+	{
+		auto sprite = enemy->addComponent<SpriteComponent>();
+		sprite->setTextureRect(_objectData[type]._texRect);
+		sprite->setTexure(_objectData[type]._tex);
+		sprite->setColor(sf::Color(255, 0, 0, 255));
+	}
+
+	// AI
+	{
+		auto ai = enemy->addComponent<AiComponent>();
+	}
+
+	// Change bullet
+	{
+		enemy->getComponents<ShipComponent>()[0]->setBullet(1.0f, std::min(((int)type - 1) * 10 + 2, 23));
 	}
 
 	return enemy;
@@ -135,7 +201,7 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 
 	//Add components
 	entity->addComponent<PhysicsComponent>(true, sf::Vector2f(192.0f, 192.0f));
-	entity->addComponent<ShipComponent>(20.0f, 3.0f, 0.5f);
+	entity->addComponent<ShipComponent>(20.0f, 3.0f, 0.7f);
 
 	return entity;
 }

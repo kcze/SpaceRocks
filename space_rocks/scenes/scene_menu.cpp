@@ -1,11 +1,10 @@
 #include "scene_menu.h"
-#include "../components/components.h"
 #include "../game.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <vector>
-#include "../input.h"
 #include "system_renderer.h"
+#include "..\components\components.h"
 #include <functional>
 
 using namespace std;
@@ -13,21 +12,12 @@ using namespace sf;
 
 //Entities
 std::shared_ptr<Entity> txtTitle;
-/*std::shared_ptr<Entity> txtNewGame;
-std::shared_ptr<Entity> txtLoad;
-std::shared_ptr<Entity> txtHighScores;
-std::shared_ptr<Entity> txtOptions;
-std::shared_ptr<Entity> txtExit;
-std::shared_ptr<Entity> menuCursor;*/
 
 std::shared_ptr<Entity> menu;
+std::shared_ptr<Entity> settings;
 std::shared_ptr<PanelComponent> menuPanel;
-
-unsigned int cursorOffset = 100.0f;
-unsigned int target = 1;
-unsigned int numOptions = 5;
-bool newUpPress = true;
-bool newDownPress = true;
+std::shared_ptr<PanelComponent> settingsPanel;
+PanelComponent* currentPanel;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -83,10 +73,10 @@ sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
 
 void UpdateScaling()
 {
-	const sf::Vector2u screensize(1280, 720);
+	const sf::Vector2u screensize = Engine::getWindowSize();	
 	const sf::Vector2u gamesize(GAMEX, GAMEY);
 	//set View as normal
-	Engine::GetWindow().setSize(screensize);
+	Engine::getWindow().setSize(screensize);
 	sf::FloatRect visibleArea(0.f, 0.f, gamesize.x, gamesize.y);
 	auto v = sf::View(visibleArea);
 	// figure out how to scale and maintain aspect;
@@ -99,10 +89,21 @@ void UpdateScaling()
 	}
 	//set!
 	v.setViewport(viewport);
-	Engine::GetWindow().setView(v);
+	Engine::getWindow().setView(v);
+	
 }
 
-void MenuScene::Load() {
+
+void switchPanel(PanelComponent* panel)
+{
+	if (currentPanel != NULL)
+		currentPanel->setVisible(false);
+
+	currentPanel = panel;
+	currentPanel->setVisible(true);
+}
+
+void MenuScene::load() {
 	cout << "Menu Load \n";
 	
 	// Title
@@ -115,11 +116,24 @@ void MenuScene::Load() {
 	menu = makeEntity();
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	menuPanel = menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	menuPanel->addButton("Start", []() { Engine::ChangeScene(&gameScene); });
+	menuPanel->addButton("Start", []() { Engine::changeScene(&gameScene); });
 	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});
-	menuPanel->addButton("Settings", []() {});
+	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
 	menuPanel->addButton("Exit", []() {});
+	menuPanel->setVisible(true);
+	switchPanel(menuPanel.get());
+	
+	// Settings
+	settings = makeEntity();
+	settings->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
+	settingsPanel = settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	settingsPanel->addText("Settings", 48.0f);
+	settingsPanel->addButton("1920x1080", []() { Engine::getWindow().setSize(sf::Vector2u(1920, 1080)); UpdateScaling(); });
+	settingsPanel->addButton("1280x720", []() { Engine::getWindow().setSize(sf::Vector2u(1280, 720)); UpdateScaling(); });
+	settingsPanel->addButton("Window Mode", []() { Engine::switchWindowMode(); UpdateScaling(); });
+	settingsPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
+	settingsPanel->setVisible(false);
 
 	UpdateScaling();
 	setLoaded(true);
@@ -127,15 +141,25 @@ void MenuScene::Load() {
 
 void MenuScene::onKeyPressed(Keyboard::Key key)
 {
+	if (!menuScene.isLoaded())
+		return;
+
 	if (key == Keyboard::Up)
-		menuPanel->pointerPrevious();
+	{
+		currentPanel->pointerPrevious();
+	}
 	else if (key == Keyboard::Down)
-		menuPanel->pointerNext();
+	{	
+		currentPanel->pointerNext();
+	}
 	else if (key == Keyboard::Enter)
-		menuPanel->executeButton();
+	{	
+		currentPanel->executeButton();
+	}
+
 }
 
-void MenuScene::Update(const double& dt) {
+void MenuScene::update(const double& dt) {
   
-  Scene::Update(dt);
+  Scene::update(dt);
 }

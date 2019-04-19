@@ -14,13 +14,13 @@ class Component {
 
 protected:
   Entity* const _parent;
-  bool _fordeletion; // should be removed
+  bool _forDeletion; // should be removed
   explicit Component(Entity* const p);
 
 public:
   Component() = delete;
 
-  bool is_fordeletion() const;
+  bool isForDeletion() const;
 
   virtual void update(double dt) = 0;
 
@@ -47,7 +47,7 @@ protected:
   float _rotation;
   bool _alive;       // should be updated
   bool _visible;     // should be rendered
-  bool _fordeletion; // should be deleted
+  bool _forDeletion; // should be deleted
   std::set<std::string> _tags;
 
 public:
@@ -67,7 +67,7 @@ public:
 
   void setPosition(const sf::Vector2f& _position);
 
-  bool is_fordeletion() const;
+  bool isForDeletion() const;
 
   float getRotation() const;
 
@@ -92,7 +92,7 @@ public:
   }
 
   template <typename T>
-  const std::vector<std::shared_ptr<T>> get_components() const {
+  const std::vector<std::shared_ptr<T>> getComponents() const {
     static_assert(std::is_base_of<Component, T>::value, "T != component");
     std::vector<std::shared_ptr<T>> ret;
     for (const auto c : _components) {
@@ -105,7 +105,7 @@ public:
 
   // Will return a T component, or anything derived from a T component.
   template <typename T>
-  const std::vector<std::shared_ptr<T>> GetCompatibleComponent() {
+  const std::vector<std::shared_ptr<T>> getCompatibleComponent() {
     static_assert(std::is_base_of<Component, T>::value, "T != component");
     std::vector<std::shared_ptr<T>> ret;
     for (auto c : _components) {

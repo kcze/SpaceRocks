@@ -1,0 +1,20 @@
+#pragma once
+
+#include "ecm.h"
+#include "system_resources.h"
+#include "engine.h"
+
+class AudioManager {
+public:
+
+	void playSound(std::string name);
+	AudioManager() {}
+
+
+private:
+
+	static std::map<std::string, sf::SoundBuffer> _soundBuffers;
+	static sf::Sound _sounds[10];
+	unsigned int _soundIndex = 0;
+
+};

@@ -6,7 +6,8 @@ using namespace std;
 
 MenuScene menuScene;
 GameScene gameScene;
+bool suppressPlayerControl;
 
 int main() {
-	Engine::Start(GAMEX, GAMEY, "Space Rocks", &menuScene);
+	Engine::start(GAMEX, GAMEY, "Space Rocks", &menuScene);
 }

@@ -1,16 +1,23 @@
 #pragma once
 
 #include "engine.h"
+#include "..\input.h"
 
-class GameScene : public Scene {
+class GameScene : public Scene, public InputEvents {
 public:
 	GameScene() = default;
   ~GameScene() override = default;
 
-  void Load() override;
+  void load() override;
 
-  void SpawnAsteroid();
+  void spawnAsteroid();
+  void spawnEnemy(unsigned int id, unsigned int dir);
   void createEdges();
+  void playerDeath();
+  void onKeyPressed(Keyboard::Key key) override;
+  void roundwaveStart();
+  void spawnWave();
 
-  void Update(const double& dt) override;
+  void update(const double& dt) override;
 };
+

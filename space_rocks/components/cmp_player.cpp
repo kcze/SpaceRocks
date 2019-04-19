@@ -5,11 +5,17 @@
 PlayerComponent::PlayerComponent(Entity* p, const int player) : Component(p)
 {
 	_player = player;
-	_shipComponent = _parent->get_components<ShipComponent>()[0];
+	_shipComponent = _parent->getComponents<ShipComponent>()[0];
 }
 
 void PlayerComponent::update(double dt)
 {
+	if (suppressPlayerControl)
+	{
+		_parent->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(0.0f, 0.0f));
+		return;
+	}
+
 	if (Input::isKeyDown(Input::KeyCode::P1_THRUST))
 	{
 		_shipComponent->thrust(dt);

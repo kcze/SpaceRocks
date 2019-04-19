@@ -18,6 +18,7 @@ static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
+static bool windowed;
 
 void Loading_update(float dt, const Scene* const scn) {
 	//  cout << "Eng: Loading Screen\n";
@@ -47,7 +48,7 @@ void Loading_render() {
 float frametimes[256] = {};
 uint8_t ftc = 0;
 
-void Engine::Update() {
+void Engine::update() {
 	static sf::Clock clock;
 	float dt = clock.restart().asSeconds();
 	{
@@ -68,29 +69,30 @@ void Engine::Update() {
 	}
 	else if (_activeScene != nullptr) {
 		Physics::update(dt);
-		_activeScene->Update(dt);
+		_activeScene->update(dt);
 	}
 }
 
-void Engine::Render(RenderWindow& window) {
+void Engine::render(RenderWindow& window) {
 	if (loading) {
 		Loading_render();
 	}
 	else if (_activeScene != nullptr) {
-		_activeScene->Render();
+		_activeScene->render();
 	}
 
 	Renderer::render();
 }
 
-void Engine::Start(unsigned int width, unsigned int height,
+void Engine::start(unsigned int width, unsigned int height,
 	const std::string& gameName, Scene* scn) {
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
+	windowed = true;
 	Renderer::initialise(window);
 	Physics::initialise();
-	ChangeScene(scn);
+	changeScene(scn);
 	while (window.isOpen()) {
 		Event event;
 		while (window.pollEvent(event)) {
@@ -109,16 +111,17 @@ void Engine::Start(unsigned int width, unsigned int height,
 		}
 
 		window.clear();
-		Update();
-		Render(window);
+		update();
+		render(window);
 		window.display();
 	}
 	if (_activeScene != nullptr) {
-		_activeScene->UnLoad();
+		_activeScene->unLoad();
 		_activeScene = nullptr;
 	}
 	window.close();
 	Physics::shutdown();
+	//todo why is it commented out?
 	// Render::shutdown();
 }
 
@@ -130,37 +133,50 @@ std::shared_ptr<Entity> Scene::makeEntity() {
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
-void Engine::ChangeScene(Scene* s) {
+void Engine::switchWindowMode()
+{
+	windowed = !windowed;
+	if (windowed)
+	{
+		_window->create(VideoMode(1280, 720), _gameName);
+	}
+	else
+	{
+		_window->create(VideoMode::getFullscreenModes()[0], _gameName, sf::Style::Fullscreen);
+	}
+}
+
+void Engine::changeScene(Scene* s) {
 	cout << "Eng: changing scene: " << s << endl;
 	auto old = _activeScene;
 	_activeScene = s;
 
 	if (old != nullptr) {
-		old->UnLoad(); // todo: Unload Async
+		old->unLoad(); // todo: Unload Async
 	}
 
 	if (!s->isLoaded()) {
 		cout << "Eng: Entering Loading Screen\n";
 		loadingTime = 0;
-		_activeScene->LoadAsync();
+		_activeScene->loadAsync();
 		loading = true;
 	}
 }
 
-void Scene::Update(const double& dt) { ents.update(dt); }
+void Scene::update(const double& dt) { ents.update(dt); }
 
-void Scene::Render() { ents.render(); }
+void Scene::render() { ents.render(); }
 
 bool Scene::isLoaded() const {
 	{
-		std::lock_guard<std::mutex> lck(_loaded_mtx);
+		std::lock_guard<std::mutex> lck(_loadedMtx);
 		// Are we already loading asynchronously?
-		if (_loaded_future.valid() // yes
+		if (_loadedFuture.valid() // yes
 			&&                     // Has it finished?
-			_loaded_future.wait_for(chrono::seconds(0)) ==
+			_loadedFuture.wait_for(chrono::seconds(0)) ==
 			future_status::ready) {
 			// Yes
-			_loaded_future.get();
+			_loadedFuture.get();
 			_loaded = true;
 		}
 		return _loaded;
@@ -168,21 +184,21 @@ bool Scene::isLoaded() const {
 }
 void Scene::setLoaded(bool b) {
 	{
-		std::lock_guard<std::mutex> lck(_loaded_mtx);
+		std::lock_guard<std::mutex> lck(_loadedMtx);
 		_loaded = b;
 	}
 }
 
-void Scene::UnLoad() {
+void Scene::unLoad() {
 	ents.list.clear();
 	setLoaded(false);
 }
 
-void Scene::LoadAsync() { _loaded_future = std::async(&Scene::Load, this); }
+void Scene::loadAsync() { _loadedFuture = std::async(&Scene::load, this); }
 
 sf::Vector2u Engine::getWindowSize() { return _window->getSize(); }
 
-sf::RenderWindow& Engine::GetWindow() { return *_window; }
+sf::RenderWindow& Engine::getWindow() { return *_window; }
 
 namespace timing {
 	// Return time since Epoc
@@ -201,4 +217,4 @@ namespace timing {
 	}
 } // namespace timing
 
-Scene::~Scene() { UnLoad(); }
+Scene::~Scene() { unLoad(); }

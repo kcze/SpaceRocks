@@ -7,12 +7,14 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_reload = reload;
 	_time = 0.0f;
 	//_bullet = bullet;
-	_physicsComponent = _parent->get_components<PhysicsComponent>()[0];
-	_thrusterSpriteComponent = _parent->get_components<SpriteComponent>()[0];
+	_physicsComponent = _parent->getComponents<PhysicsComponent>()[0];
+	_thrusterSpriteComponent = _parent->getComponents<SpriteComponent>()[0];
 	_thrusterSpriteComponent->setDraw(false);
 	_physicsComponent->setLinearDampening(3.0f);
-	_physicsComponent->setAngularDampening(50.0f);
+	_physicsComponent->setAngularDampening(80.0f);
 }
+
+void ShipComponent::setBullet(float damage, unsigned int id) {_bullet = { damage, id }; }
 
 void ShipComponent::thrust(double dt)
 {
@@ -27,15 +29,23 @@ void ShipComponent::rotate(bool right)
 
 void ShipComponent::shoot()
 {
-	std::cout << "_time = " << _time << std::endl;
 	if (_time > 0.0f)
 		return;
 
-	auto bullet = BulletFactory::makeBullet(24);
-	auto physics = bullet->get_components<PhysicsComponent>()[0];
+	//Play one of two light weapon shots
+	//TODO: Add variation for medium and heavy weapons
+	std::default_random_engine r((int)time(NULL));
+	std::uniform_int_distribution<int> dI(0, 1);
+	if(dI(r))
+		audioManager.playSound("gun_light_1");
+	else
+		audioManager.playSound("gun_light_2");
+
+	auto bullet = BulletFactory::makeBullet(_bullet);
+	auto physics = bullet->getComponents<PhysicsComponent>()[0];
 	physics->teleport(_parent->getPosition());
 	physics->setAngle(_physicsComponent->getFixture()->GetBody()->GetAngle());
-	physics->impulseRelative(sf::Vector2f(0.0f, -10.0f));
+	physics->impulseRelative(sf::Vector2f(0.0f, -100.0f));
 	_time = _reload;
 }
 
