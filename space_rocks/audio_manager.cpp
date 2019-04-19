@@ -89,7 +89,11 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 	{
 		"asteroid_broken",
 		*Resources::get<sf::SoundBuffer>("asteroid_broken.wav")
-	}
+	},
+	{
+		"bullet_x_bullet",
+		*Resources::get<sf::SoundBuffer>("bullet_x_bullet.wav")
+	} 
 };
 
 sf::Sound AudioManager::_sounds[10] = { sf::Sound()};

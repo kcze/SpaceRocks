@@ -393,6 +393,8 @@ void GameScene::update(const double& dt) {
 		//Else when all waves are complete, Round complete
 		else 
 		{
+			//Damage to death all asteroid and bullet fragments
+			gameScene.destroyAll();
 			newRound = true;
 			//Go to shop
 			setShopVisible(true);
@@ -427,7 +429,6 @@ void roundStartThread()
 		curWave = 1;
 		maxAsteroidPop = 0;
 		asteroidsSoFar = 0;
-		//TODO: Damage to death all asteroid and bullet fragments
 
 		//Countdown
 		audioManager.playSound("voice_3");
@@ -498,4 +499,25 @@ void GameScene::spawnWave() {
 
 
 	enemiesQueued = true;
+}
+
+
+//Damage to death all non-player destructibles in the scene
+void GameScene::destroyAll()
+{
+	for (unsigned int i = 0; i < gameScene.ents.list.size(); i++)
+	{
+		std::shared_ptr<Entity> current = gameScene.ents.list[i];
+
+		//If Destructible and not player or particle, kill
+		if (!current->getComponents<DestructibleComponent>().empty() && current->getComponents<PlayerComponent>().empty() && current->getComponents<DestructibleComponent>()[0]->getHp() != 0.01f)
+		{
+			//If Asteroid, delete (as destroying too many objects causes lag, and asteroids spawn more fragments)
+			if (current->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
+				current->setForDelete();
+
+			//Else kill
+			current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
+		}
+	}
 }
