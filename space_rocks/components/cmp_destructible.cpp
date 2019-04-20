@@ -30,12 +30,15 @@ void DestructibleComponent::update(double dt) {
 		}
 	}
 
-	//Check asteroid drifted offscreen
-	if (_parent->getComponents<DestructibleComponent>()[0]->getHp() != 0.01f &&
-		_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS &&
-		sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 805.0f)
+	//Check asteroid drifted offscreen (or explosion occured offscreen
+	if (sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 805.0f)
 	{
-		_parent->setForDelete();
+		//If particle (Check first as particle doesn't have fixture.)
+		if (_parent->getComponents<DestructibleComponent>()[0]->getHp() == FLT_MIN)
+			_parent->setForDelete();
+
+		else if (_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
+			_parent->setForDelete();
 	}
 
 	//Decrement and unset immunity

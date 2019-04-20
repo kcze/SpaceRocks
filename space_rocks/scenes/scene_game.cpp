@@ -517,7 +517,8 @@ void GameScene::destroyAll()
 				current->setForDelete();
 
 			//Else kill
-			current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
+			else
+				current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
 		}
 	}
 }

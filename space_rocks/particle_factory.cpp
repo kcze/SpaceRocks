@@ -81,7 +81,7 @@ std::shared_ptr<Entity> ParticleFactory::makeParticle(unsigned int type)
 
 	//Destructible
 	{
-		auto des = particle->addComponent<DestructibleComponent>(0.01f, 0, 2.0f); //hp is identifier
+		auto des = particle->addComponent<DestructibleComponent>(FLT_MIN, 0, 2.0f); //hp is identifier
 	}
 
 	return particle;
