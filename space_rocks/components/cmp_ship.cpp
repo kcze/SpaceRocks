@@ -57,6 +57,4 @@ void ShipComponent::update(double dt)
 
 	if (_time > 0.0f)
 		_time -= dt;
-	else
-		_time = _reload;
 }
