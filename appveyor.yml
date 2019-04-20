@@ -20,14 +20,14 @@ before_build:
     cmake -G "Visual Studio 15 2017 Win64" ../
     
 build:
-  project: C:/projects/space-rocks/build/PACKAGE.vcxproj
+  project: C:/projects/SpaceRocks/build/PACKAGE.vcxproj
   parallel: true
   verbosity: minimal
   
 after_build:
 - cmd: >-
 
-    7z a space-rocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/space-rocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
+    7z a SpaceRocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/SpaceRocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
     
     cd ../build/installer/
     
@@ -39,9 +39,9 @@ after_build:
     
 artifacts:
   - path: build/*.zip
-    name: space-rocks_zip
+    name: SpaceRocks_zip
   - path: build/installer/*.exe
-    name: space-rocks_installer
+    name: SpaceRocks_installer
     
 deploy:
 - provider: GitHub
@@ -50,5 +50,5 @@ deploy:
     CONFIGURATION: Release
   auth_token:
     secure: ECVq3ge/gI4xSJEeoXNUiE3fq0samUls/hSKmaGeJmk3CAxEqr02LX2tcVenpINm
-  artifact: space-rocks_installer, space-rocks_zip
+  artifact: SpaceRocks_installer, SpaceRocks_zip
   prerelease: true
