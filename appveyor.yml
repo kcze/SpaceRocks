@@ -29,7 +29,7 @@ after_build:
 
     7z a SpaceRocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/SpaceRocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
     
-    cd ../build/installer/
+    cd C:/projects/spacerocks/build/installer/
     
     dir
     
