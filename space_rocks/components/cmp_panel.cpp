@@ -1,11 +1,12 @@
 #include "cmp_panel.h"
+#include "cmp_destructible.h"
 #include "..\game.h"
 #include "system_resources.h"
 #include <vector>
 #include <iterator>
 
-PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const float interval)
-	: Component(p), _anchor(anchor), _interval(interval) {
+PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const float interval, const bool horizontal)
+	: Component(p), _anchor(anchor), _interval(interval), _horizontal(horizontal) {
 
 	_panelScene = Engine::getActiveScene();
 	// Create and hide button pointer
@@ -146,7 +147,10 @@ void PanelComponent::updatePositions()
 	// Placing entities vertically
 	for (int i = 0; i < size; i++)
 	{
-		_elements[i]->setPosition(sf::Vector2f(center.x, center.y - (size / 2.0f) * _interval + i * _interval));
+		if(_horizontal)
+			_elements[i]->setPosition(sf::Vector2f(center.x - (size / 2.0f) * _interval + i * _interval, center.y));
+		else
+			_elements[i]->setPosition(sf::Vector2f(center.x, center.y - (size / 2.0f) * _interval + i * _interval));
 	}
 
 	// Setting position for button pointer

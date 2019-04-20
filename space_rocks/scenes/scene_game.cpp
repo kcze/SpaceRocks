@@ -50,6 +50,10 @@ unsigned int curWave = 1;
 bool enemiesQueued = false;
 bool newRound = true;
 
+std::shared_ptr<Entity> player;
+std::shared_ptr<DestructibleComponent> playerDestructible;
+std::string str;
+
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
 	// ROUND 1 
@@ -125,13 +129,7 @@ void setShopVisible(bool visible)
 void GameScene::load() {
 	cout << "Game Scene Load \n";	
 
-	// Game panel
-	game = makeEntity();
-	game->setPosition(sf::Vector2f(16.0f, 16.0f));
-	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
-	gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
-
-	// Show panel
+	// Shop panel
 	shop = makeEntity();
 	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
 	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
@@ -187,12 +185,23 @@ void GameScene::load() {
 	}
 
 	// Player ship
-	auto player = ShipFactory::makePlayer();
+	player = ShipFactory::makePlayer();
 	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 	//DEBUG SUPER BULLET
 	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
+	playerDestructible = player->getComponents<DestructibleComponent>()[0];
 
+	// Game panel
+	game = makeEntity();
+	game->setPosition(sf::Vector2f(64.0f, 16.0f));
+	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 64.0f, true);
+
+	// HP
+	gamePanel->addText([]() -> std::string { 
+		return to_string((int)round(playerDestructible->getHp())) + "/" +
+			to_string((int)round(playerDestructible->getMaxHp()));
+	});
 
 	//Creat edges
 	createEdges();

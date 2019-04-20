@@ -6,7 +6,7 @@
 class PanelComponent : public Component {
 public:
 	PanelComponent() = delete;
-	explicit PanelComponent(Entity* p, const sf::Vector2f anchor, const float interval = 0.0f);
+	explicit PanelComponent(Entity* p, const sf::Vector2f anchor, const float interval = 0.0f, const bool horizontal = false);
 
 	void update(double dt) override;
 	void render() override { }
@@ -28,6 +28,7 @@ private:
 	std::vector<std::shared_ptr<Entity>> _buttons;
 	std::vector<std::shared_ptr<Entity>> _elements;
 	sf::Vector2f _anchor;
+	bool _horizontal;// false = vertical
 	Scene* _panelScene;
 
 	float _interval;

@@ -14,8 +14,8 @@ public:
 
 	void render() override { } 
 	void update(double dt) override;
-	float getHp() const;
-	float getMaxHp() const;
+	float getHp();
+	float getMaxHp();
 	void damage(const float hp);
 	void repair(const float hp);
 	void spawnFragments(const sf::Vector2f coords);
