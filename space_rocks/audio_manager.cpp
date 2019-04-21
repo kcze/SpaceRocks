@@ -103,10 +103,28 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 sf::Sound AudioManager::_sounds[10] = { sf::Sound()};
 
 void AudioManager::playSound(std::string name) { 
-	_soundIndex = _soundIndex > 9 ? 0 : _soundIndex;
-	_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
-	_sounds[_soundIndex].play();
-	_soundIndex++;
+	_soundQueue.push(name);
+}
+
+void AudioManager::update(double dt)
+{
+	_playSound();
+}
+
+
+
+void AudioManager::_playSound()
+{
+	while (!_soundQueue.empty())
+	{
+		std::string name = _soundQueue.front();
+		_soundQueue.pop();
+		_soundIndex = _soundIndex > 9 ? 0 : _soundIndex;
+		_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
+		_sounds[_soundIndex].play();
+		_soundIndex++;
+		std::cout << "Playing Sound: " << name << std::endl;
+	}
 }
 
 AudioManager audioManager;
