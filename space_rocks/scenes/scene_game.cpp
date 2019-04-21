@@ -202,7 +202,7 @@ void GameScene::load() {
 
 	shopPanel->addButton("Repair 1HP", []() {	
 		//if player has enough credits
-		if (player1->getComponents<PlayerComponent>()[0]->getCoins() > 2)
+		if (player1->getComponents<PlayerComponent>()[0]->getCoins() >= 2)
 		{
 			//Pay and repair
 			player1->getComponents<PlayerComponent>()[0]->removeCoins(2);
@@ -211,7 +211,7 @@ void GameScene::load() {
 	});
 	shopPanel->addButton("Repair ALL", []() {  
 		//if player has enough credits
-		if (player1->getComponents<PlayerComponent>()[0]->getCoins() > 8)
+		if (player1->getComponents<PlayerComponent>()[0]->getCoins() >= 8)
 		{
 			//Pay and repair
 			player1->getComponents<PlayerComponent>()[0]->removeCoins(8);
