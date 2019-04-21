@@ -17,6 +17,7 @@ std::list<void(*)(Mouse::Button)>	Input::mouseReleasedHandlers;
 std::list<void(*)(Mouse::Button)>	Input::mouseHandlers;
 std::list<void(*)(int, int)>		Input::mouseMoveHandlers;
 std::list<void(*)(int, int)>		Input::resizeHandlers;
+std::list<void(*)(std::string)>		Input::textEnteredHandlers;
 std::list<InputEvents*>				Input::handlers;
 
 Keyboard::Key Input::lastKey = Keyboard::Key::Unknown;//todo change to vector
@@ -111,6 +112,11 @@ void Input::onResized(sf::Event event) {
 	//todo refresh window
 }
 
+void Input::onTextEntered(sf::Event event) {
+	for (auto func : textEnteredHandlers) func(((sf::String)(event.text.unicode)).toAnsiString());
+	for (auto handler : handlers) handler->onTextEntered(((sf::String)(event.text.unicode)).toAnsiString());
+}
+
 void Input::keyPressed(void(*handler)(Keyboard::Key)) { keyPressedHandlers.push_back(handler); }
 void Input::keyReleased(void(*handler)(Keyboard::Key)) { keyReleasedHandlers.push_back(handler); }
 void Input::key(void(*handler)(Keyboard::Key)) { keyHandlers.push_back(handler); }
@@ -119,6 +125,7 @@ void Input::mouseReleased(void(*handler)(Mouse::Button)) { mouseReleasedHandlers
 void Input::mouse(void(*handler)(Mouse::Button)) { mouseHandlers.push_back(handler); }
 void Input::mouseMove(void(*handler)(int, int)) { mouseMoveHandlers.push_back(handler); }
 void Input::resize(void(*handler)(int, int)) { resizeHandlers.push_back(handler); }
+void Input::textEntered(void(*handler)(std::string)) { textEnteredHandlers.push_back(handler); }
 
 void Input::registerHandler(InputEvents* handler) { handlers.push_back(handler); }
 void Input::unregisterHandler(InputEvents* handler) { handlers.remove(handler); }

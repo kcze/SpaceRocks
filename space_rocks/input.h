@@ -41,6 +41,7 @@ public:
 	static void mouse(void(*handler)(Mouse::Button));
 	static void mouseMove(void(*handler)(int, int));
 	static void resize(void(*handler)(int, int));
+	static void textEntered(void(*handler)(std::string));
 
 private:
 	Input() {} // Static class
@@ -56,6 +57,7 @@ private:
 	static std::list<void(*)(Mouse::Button)>	mouseHandlers;
 	static std::list<void(*)(int, int)>	mouseMoveHandlers;
 	static std::list<void(*)(int, int)>	resizeHandlers;
+	static std::list<void(*)(std::string)>		textEnteredHandlers;
 	static std::list<InputEvents*>		handlers;
 
 	static Keyboard::Key lastKey;
@@ -70,6 +72,7 @@ private:
 	static void onMouseReleased(sf::Event event);
 	static void onMouseMoved(sf::Event event);
 	static void onResized(sf::Event event);
+	static void onTextEntered(sf::Event event);
 
 };
 
@@ -85,6 +88,7 @@ public:
 	virtual void onMouse(Mouse::Button button) {}
 	virtual void onMouseMove(int x, int y) {}
 	virtual void onResize(int x, int y) {}
+	virtual void onTextEntered(std::string text) {}
 
 	virtual ~InputEvents() { Input::unregisterHandler(this); }
 };

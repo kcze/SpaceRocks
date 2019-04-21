@@ -104,6 +104,7 @@ void Engine::start(unsigned int width, unsigned int height,
 			case sf::Event::MouseButtonReleased:Input::onMouseReleased(event);	break;
 			case sf::Event::MouseMoved:			Input::onMouseMoved(event);		break;
 			case sf::Event::Resized:			Input::onResized(event);		break;
+			case sf::Event::TextEntered:		Input::onTextEntered(event);	break;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
