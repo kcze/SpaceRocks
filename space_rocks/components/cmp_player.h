@@ -17,6 +17,8 @@ public:
 	void addCoins(int c) { _coins += c; }
 	void removeCoins(int c) { _coins -= c; }
 	bool tryPurchase(int cost);
+	
+	bool upgradeDamage();
 
 	~PlayerComponent() override = default;
 
@@ -24,5 +26,4 @@ protected:
 	int _player;
 	int _coins = 0;
 	std::shared_ptr<ShipComponent> _shipComponent;
-
 };

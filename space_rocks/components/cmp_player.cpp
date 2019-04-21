@@ -49,3 +49,16 @@ bool PlayerComponent::tryPurchase(int cost)
 		return false;
 	}
 }
+
+bool PlayerComponent::upgradeDamage()
+{
+	Bullet curBullet = _shipComponent->getBullet();
+
+	//If allready maxed (shouldn't ever run as button should be greyed out.)
+	if(curBullet._id == 34)
+		return false;
+
+	//Else upgrade
+	_shipComponent->setBullet(curBullet._damage + 0.5f, curBullet._id + 10);
+	return true;
+}

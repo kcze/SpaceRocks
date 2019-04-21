@@ -191,40 +191,52 @@ void GameScene::load() {
 	gamePanel->addText([]() -> std::string { return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins()); });
 
 	// Shop panel
-	shop = makeEntity();
-	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
-	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	shopPanel->addText("Shop", 78.0f);
+	{
+		shop = makeEntity();
+		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
+		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+		shopPanel->addText("Shop", 78.0f);
 
-	//Item name and description
-	//shopPanel->addText("Repair Kit", 40.0f);
-	//shopPanel->addText("Restores 1 HP", 20.0f);
+		//Item name and description
+		//shopPanel->addText("Repair Kit", 40.0f);
+		//shopPanel->addText("Restores 1 HP", 20.0f);
 
-	shopPanel->addButton("Repair 1HP", []() {	
-		//if player has enough credits, purchase
-		if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
-		{
-			//Repair
-			player1->getComponents<DestructibleComponent>()[0]->repair(1);
-		}
-	});
-	shopPanel->addButton("Repair ALL", []() {  
-		//if player has enough credits, purchase
-		if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
-		{
-			//Repair
-			player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
-		}
-	});
+		shopPanel->addButton("Repair 1HP [$2]", []() {
+			//if player has enough credits, purchase
+			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
+			{
+				//Repair
+				player1->getComponents<DestructibleComponent>()[0]->repair(1);
+			}
+		});
+		shopPanel->addButton("Repair ALL [$8]", []() {
+			//if player has enough credits, purchase
+			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
+			{
+				//Repair
+				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
+			}
+		});
+		shopPanel->addButton("Damage Up [$15]", []() {
+			//if player has enough credits, purchase
+			if (player1->getComponents<ShipComponent>()[0]->getBullet()._id != 34 && player1->getComponents<PlayerComponent>()[0]->tryPurchase(15))
+			{
+				//Upgrade
+				player1->getComponents<PlayerComponent>()[0]->upgradeDamage();
+			}
+		});		
+		shopPanel->addButton("Ready", []() {
+			setShopVisible(false);
+			//Start next round
+			gameScene.roundwaveStart();
+		});
 
-	shopPanel->addButton("Ready", []() {
-		setShopVisible(false); 
-		//Start next round
-		gameScene.roundwaveStart();
-	});
 
-	//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
-	setShopVisible(true);
+		//TODO: Fix navigation back to menu and add Save button
+		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+
+		setShopVisible(true);
+	}
 
 
 
