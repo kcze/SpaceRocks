@@ -32,7 +32,7 @@ void DestructibleComponent::update(double dt) {
 
 	//Check asteroid drifted offscreen
 	if (_parent->getComponents<DestructibleComponent>()[0]->getHp() != FLT_MIN &&
-		sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 805.0f &&
+		sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 775.0f &&
 		_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
 	{
 			_parent->setForDelete();
