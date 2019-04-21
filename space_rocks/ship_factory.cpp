@@ -187,7 +187,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 
 	// Change bullet
 	{
-		enemy->getComponents<ShipComponent>()[0]->setBullet(1.0f + (type - 1.0) / 2.0, std::min(((int)type - 1) * 10 + 2, 23));
+		enemy->getComponents<ShipComponent>()[0]->setBullet(0.5f + (type - 1.0) / 2.0, std::min(((int)type - 1) * 10 + 2, 23));
 	}
 
 	return enemy;
