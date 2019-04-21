@@ -201,20 +201,18 @@ void GameScene::load() {
 	//shopPanel->addText("Restores 1 HP", 20.0f);
 
 	shopPanel->addButton("Repair 1HP", []() {	
-		//if player has enough credits
-		if (player1->getComponents<PlayerComponent>()[0]->getCoins() >= 2)
+		//if player has enough credits, purchase
+		if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
 		{
-			//Pay and repair
-			player1->getComponents<PlayerComponent>()[0]->removeCoins(2);
+			//Repair
 			player1->getComponents<DestructibleComponent>()[0]->repair(1);
 		}
 	});
 	shopPanel->addButton("Repair ALL", []() {  
-		//if player has enough credits
-		if (player1->getComponents<PlayerComponent>()[0]->getCoins() >= 8)
+		//if player has enough credits, purchase
+		if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
 		{
-			//Pay and repair
-			player1->getComponents<PlayerComponent>()[0]->removeCoins(8);
+			//Repair
 			player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 		}
 	});

@@ -33,3 +33,19 @@ void PlayerComponent::update(double dt)
 		_shipComponent->shoot();
 	}
 }
+
+bool PlayerComponent::tryPurchase(int cost)
+{
+	if (_coins >= cost)
+	{
+		audioManager.playSound("upgrade_purchased_2");
+		removeCoins(cost);
+		return true;
+	}
+	else
+	{
+		//Play audio
+		audioManager.playSound("not_enough_coins");
+		return false;
+	}
+}
