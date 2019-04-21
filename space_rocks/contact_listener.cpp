@@ -39,12 +39,7 @@ void MyContactListener::BeginContact(b2Contact* contact)
 		else if (filterA.categoryBits == PLAYER_BULLET && (filterB.categoryBits == ASTEROIDS || filterB.categoryBits == ENEMY_SHIP) && 
 			entityB->getComponents<DestructibleComponent>()[0]->getHp() <= 0.0f)
 		{
-			//Coin drop
-			if (zeroOne(rndG) < entityB->getComponents<DestructibleComponent>()[0]->getCoinChance())
-			{
-				player1->getComponents<PlayerComponent>()[0]->addCoins(entityB->getComponents<DestructibleComponent>()[0]->getCoinValue());
-				audioManager.playSound("pickup_coin");
-			}
+			coinDrop(entityB);
 		}
 
 
@@ -85,14 +80,35 @@ void MyContactListener::BeginContact(b2Contact* contact)
 		entityA->getComponents<DestructibleComponent>()[0]->damage(1.0f);
 
 		//Damage enemy ship
-		if(filterB.categoryBits == ENEMY_SHIP)
+		if (filterB.categoryBits == ENEMY_SHIP)
+		{
+			entityB->getComponents<DestructibleComponent>()[0]->damage(1.0f);
+			//If enemy ship was killed buy melee drop coins
+			if (entityB->getComponents<DestructibleComponent>()[0]->getHp() <= 0.0f)
+				coinDrop(entityB);
+		}
+
+		//Damage asteroid
+		if (filterB.categoryBits == ASTEROIDS)
+		{
 			entityB->getComponents<DestructibleComponent>()[0]->damage(1.0f);
 
-		//Damage asteroid ship
-		if (filterB.categoryBits == ASTEROIDS)
-			entityB->getComponents<DestructibleComponent>()[0]->damage(1.0f);
+			//If asteroid was killed buy melee drop coins
+			if(entityB->getComponents<DestructibleComponent>()[0]->getHp() <= 0.0f)
+				coinDrop(entityB);
+		}
 
 		//Play audio
 		audioManager.playSound("player_hurt");
+	}
+}
+
+void MyContactListener::coinDrop(Entity * entityB)
+{
+	//Coin drop
+	if (zeroOne(rndG) < entityB->getComponents<DestructibleComponent>()[0]->getCoinChance())
+	{
+		player1->getComponents<PlayerComponent>()[0]->addCoins(entityB->getComponents<DestructibleComponent>()[0]->getCoinValue());
+		audioManager.playSound("pickup_coin");
 	}
 }

@@ -17,4 +17,6 @@ public:
 protected:
 	void BeginContact(b2Contact* contact);
 
+	void coinDrop(Entity * entityB);
+
 };
