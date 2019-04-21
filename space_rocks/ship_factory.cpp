@@ -166,7 +166,10 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 	//Destructible
 	{
 		//HP governed by ID, so ID 2 = 1hp, ID 3 = 2 hp, etc.
-		enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
+		auto des  = enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
+		//100% drop chance of coin equal to ID
+		des->setCoinDrop(1.0f, type);
+
 	}
 
 	//Sprite

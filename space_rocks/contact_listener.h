@@ -5,7 +5,11 @@
 #include "game.h"
 #include "components/cmp_destructible.h"
 #include "components/cmp_bullet.h"
+#include "components/cmp_player.h"
+#include "game.h"
 #include "Box2D/Box2D.h"
+
+#include <random>
 
 class MyContactListener : public b2ContactListener {
 public:

@@ -1,5 +1,8 @@
 #include "contact_listener.h"
 
+std::default_random_engine rndG((int)time(NULL));
+std::uniform_real_distribution<float> zeroOne(0.0f, 1.0f);
+
 //Contact Listener
 void MyContactListener::BeginContact(b2Contact* contact)
 {
@@ -31,6 +34,18 @@ void MyContactListener::BeginContact(b2Contact* contact)
 		//If player, play sound
 		if(filterB.categoryBits == PLAYER_SHIP)
 			audioManager.playSound("player_hurt");
+
+		//Else if Player Bullet x Asteroid/Ship and Object was destroyed
+		else if (filterA.categoryBits == PLAYER_BULLET && (filterB.categoryBits == ASTEROIDS || filterB.categoryBits == ENEMY_SHIP) && 
+			entityB->getComponents<DestructibleComponent>()[0]->getHp() <= 0.0f)
+		{
+			//Coin drop
+			if (zeroOne(rndG) < entityB->getComponents<DestructibleComponent>()[0]->getCoinChance())
+			{
+				player1->getComponents<PlayerComponent>()[0]->addCoins(entityB->getComponents<DestructibleComponent>()[0]->getCoinValue());
+				audioManager.playSound("pickup_coin");
+			}
+		}
 
 
 		//Destroy bullet
