@@ -16,7 +16,7 @@ private:
 
 	void _playSound();
 	static std::map<std::string, sf::SoundBuffer> _soundBuffers;
-	static sf::Sound _sounds[10];
+	static sf::Sound _sounds[20];
 	unsigned int _soundIndex = 0;
 	std::queue<std::string> _soundQueue;
 
