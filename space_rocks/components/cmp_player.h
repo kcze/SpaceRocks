@@ -18,7 +18,7 @@ public:
 	void removeCoins(int c) { _coins -= c; }
 	bool tryPurchase(int cost);
 	
-	bool upgradeDamage();
+	void tryUpgradeDamage();
 
 	~PlayerComponent() override = default;
 

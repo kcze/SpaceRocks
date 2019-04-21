@@ -186,7 +186,7 @@ void GameScene::load() {
 	// Game panel
 	game = makeEntity();
 	game->setPosition(sf::Vector2f(16.0f, 16.0f));
-	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
+	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 50.0f);
 	//gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
 	gamePanel->addText([]() -> std::string { return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins()); });
 
@@ -217,14 +217,11 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 			}
 		});
-		shopPanel->addButton("Damage Up [$15]", []() {
+		shopPanel->addButton("Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) +"]", []() {
 			//if player has enough credits, purchase
-			if (player1->getComponents<ShipComponent>()[0]->getBullet()._id != 34 && player1->getComponents<PlayerComponent>()[0]->tryPurchase(15))
-			{
-				//Upgrade
-				player1->getComponents<PlayerComponent>()[0]->upgradeDamage();
-			}
-		});		
+			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
+		});	
+
 		shopPanel->addButton("Ready", []() {
 			setShopVisible(false);
 			//Start next round
