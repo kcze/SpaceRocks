@@ -176,7 +176,7 @@ void PanelComponent::updatePositions()
 	sf::Vector2f center = _parent->getPosition();
 	int size = _elements.size();
 
-	// Placing entities vertically
+	// Placing entities
 	for (int i = 0; i < size; i++)
 	{
 		if(_horizontal)

@@ -144,11 +144,17 @@ void MenuScene::load() {
 	controls = makeEntity();
 	controls->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	controlsPanel = controls->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	controlsPanel->addText("Controls", 48.0f);
+	//todo not enough space
+	//controlsPanel->addText("Controls", 48.0f);
 	controlsPanel->addButton(
-		[]() -> std::string { return "Thrust: " + Input::keys[Input::KeyCode::P1_THRUST].second; },
+		[]() -> std::string { return "Thrust/Up: " + Input::keys[Input::KeyCode::P1_THRUST].second; },
 		[]() { Input::keys[Input::KeyCode::P1_THRUST].second = "";
 				changeKeyCode = Input::KeyCode::P1_THRUST;
+	});
+	controlsPanel->addButton(
+		[]() -> std::string { return "Down: " + Input::keys[Input::KeyCode::P1_DOWN].second; },
+		[]() { Input::keys[Input::KeyCode::P1_DOWN].second = "";
+				changeKeyCode = Input::KeyCode::P1_DOWN;
 	});
 	controlsPanel->addButton(
 		[]() -> std::string { return "Left: " + Input::keys[Input::KeyCode::P1_LEFT].second; },
@@ -172,28 +178,50 @@ void MenuScene::load() {
 	setLoaded(true);
 }
 
-void MenuScene::onKeyPressed(Keyboard::Key key)
+void MenuScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 {
 	if (!menuScene.isLoaded())
 		return;
 
+	Keyboard::Key keyboardKey = Keyboard::Unknown;
+	unsigned int joystickButton = 0;
+
+	// Keyboard
+	if (std::holds_alternative<Keyboard::Key>(k))
+		keyboardKey = std::get<Keyboard::Key>(k);
+	// Joystick
+	else
+		joystickButton = std::get<unsigned int>(k);
+
 	// Changing player controls
 	if (changeKeyCode != (Input::KeyCode)-1)
 	{
-		Input::keys[changeKeyCode].first = key;
-
-		// Handling some keys that don't trigger TextEntered event or don't return key names
-		switch(key)
+		// Keyboard
+		if (keyboardKey != Keyboard::Unknown)
 		{
-		case Keyboard::Space: Input::keys[changeKeyCode].second = "Space"; break;
-		case Keyboard::Up: Input::keys[changeKeyCode].second = "Up"; break;
-		case Keyboard::Down: Input::keys[changeKeyCode].second = "Down"; break;
-		case Keyboard::Left: Input::keys[changeKeyCode].second = "Left"; break;
-		case Keyboard::Right: Input::keys[changeKeyCode].second = "Right"; break;
-		case Keyboard::Enter: Input::keys[changeKeyCode].second = "Enter"; break;
-		case Keyboard::LControl: Input::keys[changeKeyCode].second = "Control"; break;
-		case Keyboard::LAlt: Input::keys[changeKeyCode].second = "Alt"; break;
-		default: changeTextEntered = changeKeyCode; break;
+			Input::keys[changeKeyCode].first = keyboardKey;
+
+			// Handling some keys that don't trigger TextEntered event or don't return key names
+			switch (keyboardKey)
+			{
+			case Keyboard::Space: Input::keys[changeKeyCode].second = "Space"; break;
+			case Keyboard::Up: Input::keys[changeKeyCode].second = "Up"; break;
+			case Keyboard::Down: Input::keys[changeKeyCode].second = "Down"; break;
+			case Keyboard::Left: Input::keys[changeKeyCode].second = "Left"; break;
+			case Keyboard::Right: Input::keys[changeKeyCode].second = "Right"; break;
+			case Keyboard::Enter: Input::keys[changeKeyCode].second = "Enter"; break;
+			case Keyboard::LControl: Input::keys[changeKeyCode].second = "LControl"; break;
+			case Keyboard::RControl: Input::keys[changeKeyCode].second = "RControl"; break;
+			case Keyboard::LAlt: Input::keys[changeKeyCode].second = "LAlt"; break;
+			case Keyboard::RAlt: Input::keys[changeKeyCode].second = "RAlt"; break;
+			default: changeTextEntered = changeKeyCode; break;
+			}
+		}
+		// Joystick
+		else
+		{
+			Input::keys[changeKeyCode].first = joystickButton;
+			Input::keys[changeKeyCode].second = std::to_string(joystickButton);
 		}
 		
 		changeKeyCode = (Input::KeyCode)-1;
@@ -202,15 +230,18 @@ void MenuScene::onKeyPressed(Keyboard::Key key)
 	}
 
 	// Menu navigation
-	if (key == Keyboard::Up)
+	if (std::holds_alternative<unsigned int>(k))
+		return;
+
+	if (keyboardKey == Keyboard::Up)
 	{
 		currentPanel->pointerPrevious();
 	}
-	else if (key == Keyboard::Down)
+	else if (keyboardKey == Keyboard::Down)
 	{	
 		currentPanel->pointerNext();
 	}
-	else if (key == Keyboard::Enter)
+	else if (keyboardKey == Keyboard::Enter)
 	{	
 		currentPanel->executeButton();
 	}

@@ -2,6 +2,7 @@
 #include <list>
 #include <SFML/Window.hpp>
 #include <map>
+#include <variant>
 #include "engine.h"
 
 using namespace sf;
@@ -14,28 +15,31 @@ class Input {
 
 public:
 	enum KeyCode {
+		NONE,
 		P1_LEFT,
 		P1_RIGHT,
 		P1_THRUST,
+		P1_DOWN,
 		P1_FIRE
 	};
+	
+	static std::map<Input::KeyCode, std::pair<std::variant<Keyboard::Key, unsigned int>, std::string>> keys;
 
-	static std::map<Input::KeyCode, std::pair<Keyboard::Key, std::string>> keys;
+	static Input::KeyCode getKeyCode(std::variant<Keyboard::Key, unsigned int> key);
 
-	static bool isKeyPressed(Keyboard::Key key);
-	static bool isKeyReleased(Keyboard::Key key);
+	static bool isKeyPressed(std::variant<Keyboard::Key, unsigned int> key);
+	static bool isKeyReleased(std::variant<Keyboard::Key, unsigned int> key);
 	static bool isMousePressed(Mouse::Button button);
 	static bool isMouseReleased(Mouse::Button button);
 
-	//todo could use union -> one method for KeyCode, Keyboard::Key
 	static bool isKeyDown(KeyCode keyCode);
 	static bool isKeyUp(KeyCode keyCode);
 
 	static Vector2f mousePosition();
 
-	static void keyPressed(void(*handler)(Keyboard::Key));
-	static void keyReleased(void(*handler)(Keyboard::Key));
-	static void key(void(*handler)(Keyboard::Key));
+	static void keyPressed(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
+	static void keyReleased(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
+	//static void key(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
 	static void mousePressed(void(*handler)(Mouse::Button));
 	static void mouseReleased(void(*handler)(Mouse::Button));
 	static void mouse(void(*handler)(Mouse::Button));
@@ -49,9 +53,9 @@ private:
 	static void registerHandler(InputEvents* handler);
 	static void unregisterHandler(InputEvents* handler);
 
-	static std::list<void(*)(Keyboard::Key)>		keyPressedHandlers;
-	static std::list<void(*)(Keyboard::Key)>		keyReleasedHandlers;
-	static std::list<void(*)(Keyboard::Key)>		keyHandlers;
+	static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyPressedHandlers;
+	static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyReleasedHandlers;
+	//static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyHandlers;
 	static std::list<void(*)(Mouse::Button)>	mousePressedHandlers;
 	static std::list<void(*)(Mouse::Button)>	mouseReleasedHandlers;
 	static std::list<void(*)(Mouse::Button)>	mouseHandlers;
@@ -60,7 +64,7 @@ private:
 	static std::list<void(*)(std::string)>		textEnteredHandlers;
 	static std::list<InputEvents*>		handlers;
 
-	static Keyboard::Key lastKey;
+	static std::variant<Keyboard::Key, unsigned int> lastKey;
 	static Mouse::Button lastButton;
 	static Vector2f lastMousePos;
 
@@ -80,9 +84,9 @@ class InputEvents {
 public:
 	InputEvents() { Input::registerHandler(this); }
 
-	virtual void onKeyPressed(Keyboard::Key key) {}
-	virtual void onKeyReleased(Keyboard::Key key) {}
-	virtual void onKey(Keyboard::Key key) {}
+	virtual void onKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {}
+	virtual void onKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {}
+	//virtual void onKey(std::variant<Keyboard::Key, unsigned int> key) {}
 	virtual void onMousePressed(Mouse::Button button) {}
 	virtual void onMouseReleased(Mouse::Button button) {}
 	virtual void onMouse(Mouse::Button button) {}

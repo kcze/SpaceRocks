@@ -122,12 +122,12 @@ DebugDraw debugDrawInstance;
 void setShopVisible(bool visible)
 {
 	suppressPlayerControl = visible;
-	shopVisible = visible;
+	shopVisible = visible;//todo maybe not needed?
 	shopPanel->setVisible(visible);
 }
 
 void GameScene::load() {
-	cout << "Game Scene Load \n";	
+	cout << "Game Scene Load \n";
 
 	// Shop panel
 	shop = makeEntity();
@@ -321,29 +321,25 @@ void GameScene::createEdges()
 
 }
 
-void GameScene::onKeyPressed(Keyboard::Key key)
+void GameScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 {
 	if (!gameScene.isLoaded())
 		return;
 
-	//todo temporary
-	if (key == Keyboard::Tab)
-	{
-		setShopVisible(true);
-	}
-
 	if (!shopVisible)
 		return;
 
-	if (key == Keyboard::Up)
+	Input::KeyCode key = Input::getKeyCode(k);
+
+	if (key == Input::P1_THRUST)
 	{
 		shopPanel->pointerPrevious();
 	}
-	else if (key == Keyboard::Down)
+	else if (key == Input::P1_DOWN)
 	{
 		shopPanel->pointerNext();
 	}
-	else if (key == Keyboard::Enter)
+	else if (key == Input::P1_FIRE)
 	{
 		shopPanel->executeButton();
 	}

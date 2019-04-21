@@ -10,7 +10,7 @@ public:
 
 	void load() override;
 
-	void onKeyPressed(Keyboard::Key key) override;
+	void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
 	void onTextEntered(std::string text) override;
 
 	void update(const double& dt) override;
