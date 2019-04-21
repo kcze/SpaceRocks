@@ -6,12 +6,13 @@
 class PanelComponent : public Component {
 public:
 	PanelComponent() = delete;
-	explicit PanelComponent(Entity* p, const sf::Vector2f anchor, const float interval = 0.0f);
+	explicit PanelComponent(Entity* p, const sf::Vector2f anchor, const float interval = 0.0f, const bool horizontal = false);
 
 	void update(double dt) override;
 	void render() override { }
 
 	void addButton(const std::string text, std::function<void()> function);
+	void addButton(std::function<std::string()> text, std::function<void()> function);
 	std::shared_ptr<Entity> addText(const std::string text, const float size = 40.0f);
 	std::shared_ptr<Entity> addText(std::function<std::string()>, const float size = 40.0f);
 	void executeButton();
@@ -28,6 +29,7 @@ private:
 	std::vector<std::shared_ptr<Entity>> _buttons;
 	std::vector<std::shared_ptr<Entity>> _elements;
 	sf::Vector2f _anchor;
+	bool _horizontal;// false = vertical
 	Scene* _panelScene;
 
 	float _interval;

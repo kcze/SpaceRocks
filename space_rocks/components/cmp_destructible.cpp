@@ -71,10 +71,10 @@ void DestructibleComponent::update(double dt) {
 
 
 //Get  the HP of this destructible
-float DestructibleComponent::getHp() const { return _hp; }
+float DestructibleComponent::getHp() { return _hp; }
 
 //Get the maximum HP of this destructible
-float DestructibleComponent::getMaxHp() const { return _maxHp; }
+float DestructibleComponent::getMaxHp() { return _maxHp; }
 
 //Damage this destructible, decreasing its HP by the given value
 void DestructibleComponent::damage(const float hp)

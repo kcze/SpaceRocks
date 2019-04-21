@@ -50,6 +50,10 @@ unsigned int curWave = 1;
 bool enemiesQueued = false;
 bool newRound = true;
 
+std::shared_ptr<Entity> player;
+std::shared_ptr<DestructibleComponent> playerDestructible;
+std::string str;
+
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
 	// ROUND 1 
@@ -176,7 +180,7 @@ DebugDraw debugDrawInstance;
 void setShopVisible(bool visible)
 {
 	suppressPlayerControl = visible;
-	shopVisible = visible;
+	shopVisible = visible;//todo maybe not needed?
 	shopPanel->setVisible(visible);
 }
 
@@ -286,7 +290,18 @@ void GameScene::load() {
 	//DEBUG SUPER BULLET
 	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
+	playerDestructible = player->getComponents<DestructibleComponent>()[0];
 
+	// Game panel
+	game = makeEntity();
+	game->setPosition(sf::Vector2f(64.0f, 16.0f));
+	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 64.0f, true);
+
+	// HP
+	gamePanel->addText([]() -> std::string { 
+		return to_string((int)round(playerDestructible->getHp())) + "/" +
+			to_string((int)round(playerDestructible->getMaxHp()));
+	});
 
 	//Creat edges
 	createEdges();
@@ -406,29 +421,25 @@ void GameScene::createEdges()
 
 }
 
-void GameScene::onKeyPressed(Keyboard::Key key)
+void GameScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 {
 	if (!gameScene.isLoaded())
 		return;
 
-	//todo temporary
-	if (key == Keyboard::Tab)
-	{
-		setShopVisible(true);
-	}
-
 	if (!shopVisible)
 		return;
 
-	if (key == Keyboard::Up)
+	Input::KeyCode key = Input::getKeyCode(k);
+
+	if (key == Input::P1_THRUST)
 	{
 		shopPanel->pointerPrevious();
 	}
-	else if (key == Keyboard::Down)
+	else if (key == Input::P1_DOWN)
 	{
 		shopPanel->pointerNext();
 	}
-	else if (key == Keyboard::Enter)
+	else if (key == Input::P1_FIRE)
 	{
 		shopPanel->executeButton();
 	}

@@ -1,11 +1,12 @@
 #include "cmp_panel.h"
+#include "cmp_destructible.h"
 #include "..\game.h"
 #include "system_resources.h"
 #include <vector>
 #include <iterator>
 
-PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const float interval)
-	: Component(p), _anchor(anchor), _interval(interval) {
+PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const float interval, const bool horizontal)
+	: Component(p), _anchor(anchor), _interval(interval), _horizontal(horizontal) {
 
 	_panelScene = Engine::getActiveScene();
 	// Create and hide button pointer
@@ -34,6 +35,38 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	auto ui = button->addComponent<UiComponent>();
 	ui->buttonExecute = function;
 	
+	// Set button pointer
+	if (_currentButton == NULL)
+	{
+		_currentButton = button;
+		_buttonPointer->setVisible(true);
+	}
+
+	_buttons.push_back(button);
+	updatePositions();
+}
+
+void PanelComponent::addButton(std::function<std::string()> text, std::function<void()> function) {
+
+	// Create text for the button
+	auto button = addText(text);
+
+	// Create frame
+	auto frame = button->addComponent<SpriteComponent>();
+	frame->setTextureRect(sf::IntRect(0, 0, 256, 96));
+	frame->setTexure(Resources::load<sf::Texture>("button.png"));
+
+	// Create ui component
+	if (button->getComponents<UiComponent>().size() == 0)
+	{
+		auto ui = button->addComponent<UiComponent>();
+		ui->buttonExecute = function;
+	}
+	else
+	{
+		button->getComponents<UiComponent>()[0]->buttonExecute = function;
+	}
+
 	// Set button pointer
 	if (_currentButton == NULL)
 	{
@@ -143,10 +176,13 @@ void PanelComponent::updatePositions()
 	sf::Vector2f center = _parent->getPosition();
 	int size = _elements.size();
 
-	// Placing entities vertically
+	// Placing entities
 	for (int i = 0; i < size; i++)
 	{
-		_elements[i]->setPosition(sf::Vector2f(center.x, center.y - (size / 2.0f) * _interval + i * _interval));
+		if(_horizontal)
+			_elements[i]->setPosition(sf::Vector2f(center.x - (size / 2.0f) * _interval + i * _interval, center.y));
+		else
+			_elements[i]->setPosition(sf::Vector2f(center.x, center.y - (size / 2.0f) * _interval + i * _interval));
 	}
 
 	// Setting position for button pointer
