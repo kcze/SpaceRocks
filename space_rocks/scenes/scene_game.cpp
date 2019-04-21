@@ -50,7 +50,6 @@ unsigned int curWave = 1;
 bool enemiesQueued = false;
 bool newRound = true;
 
-std::shared_ptr<Entity> player;
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
 
@@ -185,14 +184,13 @@ void setShopVisible(bool visible)
 }
 
 void GameScene::load() {
-	cout << "Game Scene Load \n";	
+	cout << "Game Scene Load \n";
 
-	// Game panel
-	game = makeEntity();
-	game->setPosition(sf::Vector2f(16.0f, 16.0f));
-	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 50.0f);
-	//gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
-	gamePanel->addText([]() -> std::string { return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins()); });
+	// Player ship
+	player1 = ShipFactory::makePlayer();
+	player1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	playerDestructible = player1->getComponents<DestructibleComponent>()[0];
+
 
 	// Shop panel
 	{
@@ -221,10 +219,13 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 			}
 		});
-		shopPanel->addButton("Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) +"]", []() {
+		shopPanel->addButton(
+			[]() -> std::string { return "Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) + "]"; },
+			[]() 
+		{
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
-		});	
+		});
 
 		shopPanel->addButton("Ready", []() {
 			setShopVisible(false);
@@ -232,15 +233,11 @@ void GameScene::load() {
 			gameScene.roundwaveStart();
 		});
 
-
 		//TODO: Fix navigation back to menu and add Save button
 		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 
 		setShopVisible(true);
 	}
-
-
-
 
 	//Edge Arrows
 	{
@@ -284,24 +281,27 @@ void GameScene::load() {
 			arrows[i]->setVisible(false);
 	}
 
-	// Player ship
-	player1 = ShipFactory::makePlayer();
-	player1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
-	//DEBUG SUPER BULLET
-	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
-
-	playerDestructible = player->getComponents<DestructibleComponent>()[0];
 
 	// Game panel
-	game = makeEntity();
-	game->setPosition(sf::Vector2f(64.0f, 16.0f));
-	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 64.0f, true);
+	{
+		game = makeEntity();
+		game->setPosition(sf::Vector2f(192.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 128.0f, true);
+		
+		// HP
 
-	// HP
-	gamePanel->addText([]() -> std::string { 
-		return to_string((int)round(playerDestructible->getHp())) + "/" +
-			to_string((int)round(playerDestructible->getMaxHp()));
-	});
+		gamePanel->addText([]() -> std::string {
+			stringstream ss;
+			ss << fixed << setprecision(1) << playerDestructible->getHp() << "/" << playerDestructible->getMaxHp();
+			return ss.str();
+		});
+
+		//Credits
+		gamePanel->addText([]() -> std::string {
+			return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins());
+		});
+	}
+
 
 	//Creat edges
 	createEdges();
@@ -509,6 +509,7 @@ void GameScene::update(const double& dt) {
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
 	//world->DrawDebugData();
+	audioManager.update(dt);
 	Scene::update(dt);
 }
 
