@@ -30,14 +30,11 @@ void DestructibleComponent::update(double dt) {
 		}
 	}
 
-	//Check asteroid drifted offscreen (or explosion occured offscreen
-	if (sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 805.0f)
+	//Check asteroid drifted offscreen
+	if (_parent->getComponents<DestructibleComponent>()[0]->getHp() != FLT_MIN &&
+		sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 805.0f &&
+		_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
 	{
-		//If particle (Check first as particle doesn't have fixture.)
-		if (_parent->getComponents<DestructibleComponent>()[0]->getHp() == FLT_MIN)
-			_parent->setForDelete();
-
-		else if (_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
 			_parent->setForDelete();
 	}
 
@@ -115,8 +112,9 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 	{
 		//0: Bullet (Any)
 		case 0:
-			//Spawn bullet particles for all bullet impacts, regardless if they kill
-			particleBurst(coords, 5, 35.0f);
+			//Spawn bullet particles for all bullet impacts, regardless if they kill (unless off screen)
+			if((coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).y < 400.0f || (coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).x < 650.0f)
+				particleBurst(coords, 5, 35.0f);
 			//TODO: vary depending on bullet type
 			audioManager.playSound("bullet_impact_light");
 			break;
@@ -130,7 +128,9 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		//2: Enemy (Any)
 		case 2:
 			audioManager.playSound("enemy_death");
-			particleBurst(coords, 20, 100.0f);
+			//If on screen, trigger explosion
+			if (sf::length(coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)) < 800.0f)
+				particleBurst(coords, 20, 100.0f);
 			break;
 		//3-10: Reserved for expansion
 		

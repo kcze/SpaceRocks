@@ -510,7 +510,7 @@ void GameScene::destroyAll()
 		std::shared_ptr<Entity> current = gameScene.ents.list[i];
 
 		//If Destructible and not player or particle, kill
-		if (!current->getComponents<DestructibleComponent>().empty() && current->getComponents<PlayerComponent>().empty() && current->getComponents<DestructibleComponent>()[0]->getHp() != 0.01f)
+		if (!current->getComponents<DestructibleComponent>().empty() && current->getComponents<PlayerComponent>().empty() && current->getComponents<DestructibleComponent>()[0]->getHp() != FLT_MIN)
 		{
 			//If Asteroid, delete (as destroying too many objects causes lag, and asteroids spawn more fragments)
 			if (current->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
