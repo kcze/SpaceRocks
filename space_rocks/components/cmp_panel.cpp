@@ -46,6 +46,38 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	updatePositions();
 }
 
+void PanelComponent::addButton(std::function<std::string()> text, std::function<void()> function) {
+
+	// Create text for the button
+	auto button = addText(text);
+
+	// Create frame
+	auto frame = button->addComponent<SpriteComponent>();
+	frame->setTextureRect(sf::IntRect(0, 0, 256, 96));
+	frame->setTexure(Resources::load<sf::Texture>("button.png"));
+
+	// Create ui component
+	if (button->getComponents<UiComponent>().size() == 0)
+	{
+		auto ui = button->addComponent<UiComponent>();
+		ui->buttonExecute = function;
+	}
+	else
+	{
+		button->getComponents<UiComponent>()[0]->buttonExecute = function;
+	}
+
+	// Set button pointer
+	if (_currentButton == NULL)
+	{
+		_currentButton = button;
+		_buttonPointer->setVisible(true);
+	}
+
+	_buttons.push_back(button);
+	updatePositions();
+}
+
 std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const float size) {
 
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
