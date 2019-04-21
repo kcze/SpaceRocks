@@ -51,7 +51,6 @@ void SpriteComponent::setAnchor(sf::Vector2f vec)
 	_sprite->setOrigin(sf::Vector2f(
 		_anchor.x * bounds.width,
 		_anchor.y * bounds.height));
-	cout << "Origin set to: " << _anchor.x * bounds.width << ", " << _anchor.y * bounds.height << endl;
 }
 
 void SpriteComponent::update(double dt) {
