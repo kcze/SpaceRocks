@@ -187,8 +187,8 @@ void GameScene::load() {
 	}
 
 	// Player ship
-	auto player = ShipFactory::makePlayer();
-	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	player1 = ShipFactory::makePlayer();
+	player1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 	//DEBUG SUPER BULLET
 	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
 
@@ -198,7 +198,7 @@ void GameScene::load() {
 	createEdges();
 
 	//Set contact listener
-	auto body = player->getComponents<PhysicsComponent>()[0]->getBody();
+	auto body = player1->getComponents<PhysicsComponent>()[0]->getBody();
 	auto world = body->GetWorld();
 	world->SetContactListener(&contactListenerInstance);
 
