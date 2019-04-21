@@ -113,7 +113,7 @@ void Input::onResized(sf::Event event) {
 }
 
 void Input::onTextEntered(sf::Event event) {
-	std::string str = ((sf::String)(event.text.unicode)).toAnsiString(); break;
+	std::string str = ((sf::String)(event.text.unicode)).toAnsiString();
 
 	for (auto func : textEnteredHandlers) func(str);
 	for (auto handler : handlers) handler->onTextEntered(str);
