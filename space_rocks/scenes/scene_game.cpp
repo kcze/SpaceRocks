@@ -56,13 +56,13 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 1
 	{make_pair < unsigned int, unsigned int>(1,1), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1)	//squadron 1
 		}
 	},
 	//Wave 2
 	{make_pair < unsigned int, unsigned int>(1,2), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4)	//squadron 1
 		}
 	},
 
@@ -84,7 +84,7 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 3
 	{make_pair < unsigned int, unsigned int>(2,3), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 1) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 1)	//squadron 1
 		}
 	},
 
@@ -106,7 +106,65 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 3
 	{make_pair < unsigned int, unsigned int>(3,3), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(3 , 2, 3) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(3 , 2, 3)	//squadron 1
+		}
+	},
+
+	// ROUND 4
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(4,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 1), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 3, 3)	//squadron 2
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(4,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 3, 2)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(4,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 1),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 2),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 3),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 4)	//squadron 1
+		}
+	}, 
+
+	// ROUND 5
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(5,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 3, 2),	//squadron 2
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 1)	//squadron 3
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(5,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 2),	//squadron 2
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 3, 3)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(5,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 1),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 3),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 2)	//squadron 1
+		}
+	},
+	//Wave 4
+	{ make_pair < unsigned int, unsigned int>(5,4), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 5, 1)	//squadron 1
 		}
 	}
 };
