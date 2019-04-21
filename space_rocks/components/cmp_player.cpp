@@ -63,3 +63,11 @@ void PlayerComponent::tryUpgradeDamage()
 	if(tryPurchase(curBullet._id + 4))
 		_shipComponent->setBullet(curBullet._damage + 0.5f, curBullet._id + 10);
 }
+
+//Try to purchase and upgrade the Weapon's Rate of Fire
+void PlayerComponent::tryUpgradeROF()
+{
+	//If reload time > 0.1 and can afford cost, upgrade.
+	if (_shipComponent->getReload() > 0.1f && tryPurchase(80 - 100 * _shipComponent->getReload()))
+		_shipComponent->setReload(_shipComponent->getReload() - 0.1f);
+}

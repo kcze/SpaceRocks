@@ -198,11 +198,8 @@ void GameScene::load() {
 		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
 		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		shopPanel->addText("Shop", 78.0f);
-
-		//Item name and description
-		//shopPanel->addText("Repair Kit", 40.0f);
-		//shopPanel->addText("Restores 1 HP", 20.0f);
-
+		//ITEMS
+		//Repair 1HP
 		shopPanel->addButton("Repair 1HP [$2]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
@@ -211,6 +208,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(1);
 			}
 		});
+		//Repair All
 		shopPanel->addButton("Repair ALL [$8]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
@@ -219,6 +217,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 			}
 		});
+		//Damage Upgrade
 		shopPanel->addButton(
 			[]() -> std::string { return "Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) + "]"; },
 			[]() 
@@ -226,7 +225,14 @@ void GameScene::load() {
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
 		});
-
+		//Rate of Fire Upgrade
+		shopPanel->addButton(
+			[]() -> std::string { return "Firerate Up [$" + std::to_string((int)(80 - 100 * player1->getComponents<ShipComponent>()[0]->getReload())) + "]"; },
+			[]()
+		{
+			//if player has enough credits, purchase
+			player1->getComponents<PlayerComponent>()[0]->tryUpgradeROF();
+		});
 		shopPanel->addButton("Ready", []() {
 			setShopVisible(false);
 			//Start next round
@@ -333,7 +339,7 @@ void GameScene::spawnAsteroid()
 	//calculate center of screen
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
-	auto asteroid = AsteroidFactory::makeAsteroid(11, center + dir * 800.0f);
+	auto asteroid = AsteroidFactory::makeAsteroid(11, center + dir * 770.0f);
 
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.

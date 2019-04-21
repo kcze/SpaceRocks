@@ -19,6 +19,7 @@ public:
 	bool tryPurchase(int cost);
 	
 	void tryUpgradeDamage();
+	void tryUpgradeROF();
 
 	~PlayerComponent() override = default;
 
