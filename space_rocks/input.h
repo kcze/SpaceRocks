@@ -20,7 +20,7 @@ public:
 		P1_FIRE
 	};
 
-	static std::map<Input::KeyCode, Keyboard::Key> keys;
+	static std::map<Input::KeyCode, std::pair<Keyboard::Key, std::string>> keys;
 
 	static bool isKeyPressed(Keyboard::Key key);
 	static bool isKeyReleased(Keyboard::Key key);

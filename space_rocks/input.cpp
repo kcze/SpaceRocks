@@ -1,12 +1,12 @@
 #include "input.h"
 #include <iostream>
 
-std::map<Input::KeyCode, Keyboard::Key> Input::keys =
+std::map<Input::KeyCode, std::pair<Keyboard::Key, std::string>> Input::keys =
 {
-	{ KeyCode::P1_LEFT,  Keyboard::Key::Left},
-	{ KeyCode::P1_RIGHT, Keyboard::Key::Right },
-	{ KeyCode::P1_THRUST, Keyboard::Key::Up },
-	{ KeyCode::P1_FIRE, Keyboard::Key::Space }
+	{ KeyCode::P1_LEFT, { Keyboard::Key::Left, "Left" } },
+	{ KeyCode::P1_RIGHT, { Keyboard::Key::Right, "Right" }  },
+	{ KeyCode::P1_THRUST, { Keyboard::Key::Up, "Up" } },
+	{ KeyCode::P1_FIRE, { Keyboard::Key::Space, "Space" } }
 };
 
 std::list<void(*)(Keyboard::Key)>		Input::keyPressedHandlers;
@@ -33,23 +33,23 @@ bool Input::isMousePressed(Mouse::Button button) { return  sf::Mouse::isButtonPr
 bool Input::isMouseReleased(Mouse::Button button) { return !sf::Mouse::isButtonPressed((sf::Mouse::Button)button); }
 
 bool Input::isKeyDown(Input::KeyCode keyCode) {
-	std::map<Input::KeyCode, Keyboard::Key>::iterator iterator = Input::keys.find(keyCode);
+	std::map<Input::KeyCode, std::pair<Keyboard::Key, std::string>>::iterator iterator = Input::keys.find(keyCode);
 	
 	// Mapping wasn't found
 	if (iterator == Input::keys.end())
 		return false;
 
-	return Input::isKeyPressed(iterator->second);
+	return Input::isKeyPressed(iterator->second.first);
 }
 
 bool Input::isKeyUp(Input::KeyCode keyCode) {
-	std::map<Input::KeyCode, Keyboard::Key>::iterator iterator = Input::keys.find(keyCode);
+	std::map<Input::KeyCode, std::pair<Keyboard::Key, std::string>>::iterator iterator = Input::keys.find(keyCode);
 
 	// Mapping wasn't found
 	if (iterator == Input::keys.end())
 		return false;
 
-	return Input::isKeyReleased(iterator->second);
+	return Input::isKeyReleased(iterator->second.first);
 }
 
 
@@ -113,8 +113,10 @@ void Input::onResized(sf::Event event) {
 }
 
 void Input::onTextEntered(sf::Event event) {
-	for (auto func : textEnteredHandlers) func(((sf::String)(event.text.unicode)).toAnsiString());
-	for (auto handler : handlers) handler->onTextEntered(((sf::String)(event.text.unicode)).toAnsiString());
+	std::string str = ((sf::String)(event.text.unicode)).toAnsiString(); break;
+
+	for (auto func : textEnteredHandlers) func(str);
+	for (auto handler : handlers) handler->onTextEntered(str);
 }
 
 void Input::keyPressed(void(*handler)(Keyboard::Key)) { keyPressedHandlers.push_back(handler); }
