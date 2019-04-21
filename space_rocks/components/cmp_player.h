@@ -21,7 +21,7 @@ public:
 
 protected:
 	int _player;
-	int _coins;
+	int _coins = 0;
 	std::shared_ptr<ShipComponent> _shipComponent;
 
 };

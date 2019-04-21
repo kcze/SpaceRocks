@@ -129,20 +129,49 @@ void GameScene::load() {
 	game = makeEntity();
 	game->setPosition(sf::Vector2f(16.0f, 16.0f));
 	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f));
-	gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
+	//gamePanel->addText([]() -> std::string { time_t now = time(0); return std::ctime(&now); });
+	gamePanel->addText([]() -> std::string { return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins()); });
 
-	// Show panel
+	// Shop panel
 	shop = makeEntity();
 	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
 	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	shopPanel->addText("Shop", 48.0f);
-	shopPanel->addButton("Continue", []() { 
+	shopPanel->addText("Shop", 78.0f);
+
+	//Item name and description
+	//shopPanel->addText("Repair Kit", 40.0f);
+	//shopPanel->addText("Restores 1 HP", 20.0f);
+
+	shopPanel->addButton("Repair 1HP", []() {	
+		//if player has enough credits
+		if (player1->getComponents<PlayerComponent>()[0]->getCoins() > 2)
+		{
+			//Pay and repair
+			player1->getComponents<PlayerComponent>()[0]->removeCoins(2);
+			player1->getComponents<DestructibleComponent>()[0]->repair(1);
+		}
+	});
+	shopPanel->addButton("Repair ALL", []() {  
+		//if player has enough credits
+		if (player1->getComponents<PlayerComponent>()[0]->getCoins() > 8)
+		{
+			//Pay and repair
+			player1->getComponents<PlayerComponent>()[0]->removeCoins(8);
+			player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
+		}
+	});
+
+	shopPanel->addButton("Ready", []() {
 		setShopVisible(false); 
 		//Start next round
 		gameScene.roundwaveStart();
 	});
-	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+
+	//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 	setShopVisible(true);
+
+
+
 
 	//Edge Arrows
 	{
