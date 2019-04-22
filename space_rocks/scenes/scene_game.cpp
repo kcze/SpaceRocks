@@ -25,9 +25,14 @@ using namespace sf;
 std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
+
 std::shared_ptr<PanelComponent> gamePanel;
 std::shared_ptr<PanelComponent> shopPanel;
 bool shopVisible;
+
+std::shared_ptr<Entity> gameOver1;
+std::shared_ptr<Entity> gameOver2;
+std::shared_ptr<PanelComponent> gameOverPanel;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::vector<std::shared_ptr<Entity>> enemies;
@@ -181,6 +186,20 @@ void setShopVisible(bool visible)
 	shopPanel->setVisible(visible);
 }
 
+void setGameoverVisible(bool visible)
+{
+	if (!visible)
+	{
+		gameOver1->setVisible(false);
+		gameOver2->setVisible(false);
+		gameOverPanel->setVisible(false);
+	}
+	else
+	{
+		suppressPlayerControl = true;
+	}
+}
+
 void GameScene::load() {
 	cout << "Game Scene Load \n";
 
@@ -242,6 +261,28 @@ void GameScene::load() {
 		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 
 		setShopVisible(true);
+	}
+
+	// Gameover screen
+	{
+		gameOver1 = makeEntity();
+		gameOver1->setPosition(sf::Vector2f(GAMEX / 2 - 200.0f, GAMEY / 2 - 100.0f));
+		auto t = gameOver1->addComponent<TextComponent>();
+		t->setText("Game");
+		t->setSize(200.0f);
+
+		gameOver2 = makeEntity();
+		gameOver2->setPosition(sf::Vector2f(GAMEX / 2 + 200.0f, GAMEY / 2 - 100.0f));
+		t = gameOver2->addComponent<TextComponent>();
+		t->setText("Over");
+		t->setSize(200.0f);
+
+		auto go = makeEntity();
+		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 192.0f));
+		gameOverPanel = go->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+		gameOverPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+
+		setGameoverVisible(false);
 	}
 
 	//Edge Arrows
@@ -526,6 +567,19 @@ void pDThread()
 {
 	sf::sleep(sf::milliseconds(2000));
 	audioManager.playSound("game_over");
+	setGameoverVisible(true);
+
+	gameOver1->setVisible(true);
+	sf::sleep(sf::milliseconds(750));
+	gameOver2->setVisible(true);
+
+	maxAsteroidPop = 0;
+	gameScene.destroyAll();
+	sf::sleep(sf::milliseconds(100));
+	setShopVisible(false);
+	sf::sleep(sf::milliseconds(650));
+	gameOverPanel->setVisible(true);
+
 } sf::Thread pdthread(&pDThread);
 
 
