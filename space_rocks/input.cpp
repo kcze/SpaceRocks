@@ -174,7 +174,7 @@ void Input::onKeyReleased(sf::Event event) {
 	{
 		if (std::holds_alternative<unsigned int>(lastKey))
 			if (std::get<unsigned int>(lastKey) == event.joystickButton.button)
-				lastKey = (unsigned int)0;
+				lastKey = (unsigned int)48;
 
 		for (auto func : keyReleasedHandlers) func(event.joystickButton.button);
 		for (auto handler : handlers) handler->onKeyReleased(event.joystickButton.button);
@@ -182,20 +182,31 @@ void Input::onKeyReleased(sf::Event event) {
 	// Joystick axes
 	else if (event.type == sf::Event::JoystickMoved)
 	{
+		if (event.joystickMove.position < -AXIS_THRESHOLD || event.joystickMove.position > AXIS_THRESHOLD)
+			return;
+
 		unsigned int joystickButton = 48;
+
 		// Negative values 32 - 39
-		if (event.joystickMove.position < -AXIS_THRESHOLD)
-			joystickButton = 32 + (unsigned int)event.joystickMove.axis;
-		// Positive values 40 - 47
-		else if (event.joystickMove.position > AXIS_THRESHOLD)
-			joystickButton = 40 + (unsigned int)event.joystickMove.axis;
+		joystickButton = 32 + (unsigned int)event.joystickMove.axis;
 
 		if (joystickAxes[joystickButton] == true)
-			if (event.joystickMove.position >= -AXIS_THRESHOLD && event.joystickMove.position <= AXIS_THRESHOLD)
-				joystickAxes[joystickButton] = false;
+		{
+			joystickAxes[joystickButton] = false;
+			for (auto func : keyReleasedHandlers) func(joystickButton);
+			for (auto handler : handlers) handler->onKeyReleased(joystickButton);
+		}
 
-		for (auto func : keyReleasedHandlers) func(joystickButton);
-		for (auto handler : handlers) handler->onKeyReleased(joystickButton);
+		// Positive values 40 - 47
+		joystickButton = 40 + (unsigned int)event.joystickMove.axis;
+
+		if (joystickAxes[joystickButton] == true)
+		{
+			joystickAxes[joystickButton] = false;
+			for (auto func : keyReleasedHandlers) func(joystickButton);
+			for (auto handler : handlers) handler->onKeyReleased(joystickButton);
+		}
+
 	}
 	//todo useless
 	/*if (std::get<Keyboard::Key>(lastKey) == (Keyboard::Key)event.key.code) {
