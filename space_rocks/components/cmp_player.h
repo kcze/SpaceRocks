@@ -12,10 +12,19 @@ public:
 	void render() override { }
 	void update(double dt) override;
 
+	int getCoins() { return _coins; }
+	void setCoins(int c) { _coins = c; }
+	void addCoins(int c) { _coins += c; }
+	void removeCoins(int c) { _coins -= c; }
+	bool tryPurchase(int cost);
+	
+	void tryUpgradeDamage();
+	void tryUpgradeROF();
+
 	~PlayerComponent() override = default;
 
 protected:
 	int _player;
+	int _coins = 0;
 	std::shared_ptr<ShipComponent> _shipComponent;
-
 };

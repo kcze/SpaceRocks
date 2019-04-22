@@ -15,6 +15,8 @@ public:
 	explicit ShipComponent(Entity* d, const float speed, const float angularSpeed, const float reload);
 	void setBullet(float damage, unsigned int id);
 	Bullet getBullet() { return _bullet; }
+	float getReload() { return _reload; };
+	void setReload(float r) { _reload = r; }
 	void render() override { }
 	void update(double dt) override;
 	void thrust(double dt);

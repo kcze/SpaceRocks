@@ -41,8 +41,6 @@ float PSI = Physics::physicsScaleInv;
 
 //TODO: Convert asteroid spawning to que system?
 unsigned int maxAsteroidPop = 0;
-unsigned int maxAsteroidsTotal = 5;
-unsigned int asteroidsSoFar = 0;
 
 unsigned int curRound = 0;
 unsigned int curWave = 1;
@@ -50,7 +48,6 @@ unsigned int curWave = 1;
 bool enemiesQueued = false;
 bool newRound = true;
 
-std::shared_ptr<Entity> player;
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
 
@@ -60,13 +57,13 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 1
 	{make_pair < unsigned int, unsigned int>(1,1), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 2, 1)	//squadron 1
 		}
 	},
 	//Wave 2
 	{make_pair < unsigned int, unsigned int>(1,2), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4)	//squadron 1
 		}
 	},
 
@@ -88,7 +85,7 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 3
 	{make_pair < unsigned int, unsigned int>(2,3), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 1) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1 , 3, 1)	//squadron 1
 		}
 	},
 
@@ -110,7 +107,65 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	//Wave 3
 	{make_pair < unsigned int, unsigned int>(3,3), //Key
 		{
-			make_tuple<unsigned int, unsigned int, unsigned int>(3 , 2, 3) //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(3 , 2, 3)	//squadron 1
+		}
+	},
+
+	// ROUND 4
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(4,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 1), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 3, 3)	//squadron 2
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(4,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 2, 4), //squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(2 , 3, 2)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(4,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 1),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 2),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 3),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 4)	//squadron 1
+		}
+	}, 
+
+	// ROUND 5
+	//Wave 1
+	{make_pair < unsigned int, unsigned int>(5,1), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 3, 2),	//squadron 2
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 1)	//squadron 3
+		}
+	},
+	//Wave 2
+	{make_pair < unsigned int, unsigned int>(5,2), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 2),	//squadron 2
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 3, 3)	//squadron 2
+		}
+	},
+	//Wave 3
+	{make_pair < unsigned int, unsigned int>(5,3), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 1),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 2, 3),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 4),	//squadron 1
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 4, 2)	//squadron 1
+		}
+	},
+	//Wave 4
+	{ make_pair < unsigned int, unsigned int>(5,4), //Key
+		{
+			make_tuple<unsigned int, unsigned int, unsigned int>(1, 5, 1)	//squadron 1
 		}
 	}
 };
@@ -129,18 +184,64 @@ void setShopVisible(bool visible)
 void GameScene::load() {
 	cout << "Game Scene Load \n";
 
+	// Player ship
+	player1 = ShipFactory::makePlayer();
+	player1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
+	playerDestructible = player1->getComponents<DestructibleComponent>()[0];
+
+
 	// Shop panel
-	shop = makeEntity();
-	shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
-	shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	shopPanel->addText("Shop", 48.0f);
-	shopPanel->addButton("Continue", []() { 
-		setShopVisible(false); 
-		//Start next round
-		gameScene.roundwaveStart();
-	});
-	shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
-	setShopVisible(true);
+	{
+		shop = makeEntity();
+		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
+		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+		shopPanel->addText("Shop", 78.0f);
+		//ITEMS
+		//Repair 1HP
+		shopPanel->addButton("Repair 1HP [$2]", []() {
+			//if player has enough credits, purchase
+			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
+			{
+				//Repair
+				player1->getComponents<DestructibleComponent>()[0]->repair(1);
+			}
+		});
+		//Repair All
+		shopPanel->addButton("Repair ALL [$8]", []() {
+			//if player has enough credits, purchase
+			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
+			{
+				//Repair
+				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
+			}
+		});
+		//Damage Upgrade
+		shopPanel->addButton(
+			[]() -> std::string { return "Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) + "]"; },
+			[]() 
+		{
+			//if player has enough credits, purchase
+			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
+		});
+		//Rate of Fire Upgrade
+		shopPanel->addButton(
+			[]() -> std::string { return "Firerate Up [$" + std::to_string((int)(80 - 100 * player1->getComponents<ShipComponent>()[0]->getReload())) + "]"; },
+			[]()
+		{
+			//if player has enough credits, purchase
+			player1->getComponents<PlayerComponent>()[0]->tryUpgradeROF();
+		});
+		shopPanel->addButton("Ready", []() {
+			setShopVisible(false);
+			//Start next round
+			gameScene.roundwaveStart();
+		});
+
+		//TODO: Fix navigation back to menu and add Save button
+		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+
+		setShopVisible(true);
+	}
 
 	//Edge Arrows
 	{
@@ -184,30 +285,33 @@ void GameScene::load() {
 			arrows[i]->setVisible(false);
 	}
 
-	// Player ship
-	player = ShipFactory::makePlayer();
-	player->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
-	//DEBUG SUPER BULLET
-	//player->getComponents<ShipComponent>()[0]->setBullet(5.0f, 14);
-
-	playerDestructible = player->getComponents<DestructibleComponent>()[0];
 
 	// Game panel
-	game = makeEntity();
-	game->setPosition(sf::Vector2f(64.0f, 16.0f));
-	gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 64.0f, true);
+	{
+		game = makeEntity();
+		game->setPosition(sf::Vector2f(192.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 128.0f, true);
+		
+		// HP
 
-	// HP
-	gamePanel->addText([]() -> std::string { 
-		return to_string((int)round(playerDestructible->getHp())) + "/" +
-			to_string((int)round(playerDestructible->getMaxHp()));
-	});
+		gamePanel->addText([]() -> std::string {
+			stringstream ss;
+			ss << fixed << setprecision(1) << playerDestructible->getHp() << "/" << playerDestructible->getMaxHp();
+			return ss.str();
+		});
+
+		//Credits
+		gamePanel->addText([]() -> std::string {
+			return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins());
+		});
+	}
+
 
 	//Creat edges
 	createEdges();
 
 	//Set contact listener
-	auto body = player->getComponents<PhysicsComponent>()[0]->getBody();
+	auto body = player1->getComponents<PhysicsComponent>()[0]->getBody();
 	auto world = body->GetWorld();
 	world->SetContactListener(&contactListenerInstance);
 
@@ -233,11 +337,11 @@ void GameScene::spawnAsteroid()
 	//calculate center of screen
 	sf::Vector2f center = sf::Vector2f(GAMEX/2, GAMEY/2);
 	//Set asteroid starting position
-	auto asteroid = AsteroidFactory::makeAsteroid(11, center + dir * 800.0f);
+	auto asteroid = AsteroidFactory::makeAsteroid(11, center + dir * 770.0f);
 
 	//Set velocity back towards center
 	//TODO: Random variation to prevent all asteroids heading straight to center.
-	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -75.0f);
+	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -50.0f);
 
 	//Add to collection
 	asteroids.push_back(asteroid);
@@ -368,10 +472,9 @@ void GameScene::update(const double& dt) {
 	}
 
 	//Spawn Asteroids
-	if (asteroids.size() < maxAsteroidPop && asteroidsSoFar < maxAsteroidsTotal)
+	if (asteroids.size() < maxAsteroidPop)
 	{
 		spawnAsteroid();
-		asteroidsSoFar++;
 	}
 
 	//Spawn Enemies
@@ -398,6 +501,8 @@ void GameScene::update(const double& dt) {
 		//Else when all waves are complete, Round complete
 		else 
 		{
+			//Damage to death all asteroid and bullet fragments
+			gameScene.destroyAll();
 			newRound = true;
 			//Go to shop
 			setShopVisible(true);
@@ -407,6 +512,7 @@ void GameScene::update(const double& dt) {
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
 	//world->DrawDebugData();
+	audioManager.update(dt);
 	Scene::update(dt);
 }
 
@@ -431,9 +537,6 @@ void roundStartThread()
 		curRound++;
 		curWave = 1;
 		maxAsteroidPop = 0;
-		asteroidsSoFar = 0;
-		//TODO: Damage to death all asteroid and bullet fragments
-
 		//Countdown
 		audioManager.playSound("voice_3");
 		sf::sleep(sf::milliseconds(1000));
@@ -442,6 +545,7 @@ void roundStartThread()
 		audioManager.playSound("voice_1");
 		sf::sleep(sf::milliseconds(1000));
 		newRound = false;
+		maxAsteroidPop = 3;
 	}
 	else
 		sf::sleep(sf::milliseconds(3000));
@@ -450,12 +554,6 @@ void roundStartThread()
 	//Enemies
 	gameScene.spawnWave();
 
-	//Asteroids
-	maxAsteroidPop++;
-	sf::sleep(sf::milliseconds(1000));
-	maxAsteroidPop++;
-	sf::sleep(sf::milliseconds(1000));
-	maxAsteroidPop++;
 
 } sf::Thread rst(&roundStartThread);
 
@@ -503,4 +601,26 @@ void GameScene::spawnWave() {
 
 
 	enemiesQueued = true;
+}
+
+
+//Damage to death all non-player destructibles in the scene
+void GameScene::destroyAll()
+{
+	for (unsigned int i = 0; i < gameScene.ents.list.size(); i++)
+	{
+		std::shared_ptr<Entity> current = gameScene.ents.list[i];
+
+		//If Destructible and not player or particle, kill
+		if (!current->getComponents<DestructibleComponent>().empty() && current->getComponents<PlayerComponent>().empty() && current->getComponents<DestructibleComponent>()[0]->getHp() != FLT_MIN)
+		{
+			//If Asteroid, delete (as destroying too many objects causes lag, and asteroids spawn more fragments)
+			if (current->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
+				current->setForDelete();
+
+			//Else kill
+			else
+				current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
+		}
+	}
 }

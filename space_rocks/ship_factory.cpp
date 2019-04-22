@@ -166,7 +166,10 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 	//Destructible
 	{
 		//HP governed by ID, so ID 2 = 1hp, ID 3 = 2 hp, etc.
-		enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
+		auto des  = enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
+		//100% drop chance of coin equal to ID
+		des->setCoinDrop(1.0f, type);
+
 	}
 
 	//Sprite
@@ -184,7 +187,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 
 	// Change bullet
 	{
-		enemy->getComponents<ShipComponent>()[0]->setBullet(1.0f, std::min(((int)type - 1) * 10 + 2, 23));
+		enemy->getComponents<ShipComponent>()[0]->setBullet(0.5f + (type - 1.0) / 2.0, std::min(((int)type - 1) * 10 + 2, 23));
 	}
 
 	return enemy;

@@ -30,16 +30,45 @@ void DestructibleComponent::update(double dt) {
 		}
 	}
 
+	//Check asteroid drifted offscreen
+	if (_parent->getComponents<DestructibleComponent>()[0]->getHp() != FLT_MIN &&
+		sf::length(_parent->getPosition() - sf::Vector2f(GAMEX / 2, GAMEY / 2)) > 775.0f &&
+		_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == ASTEROIDS)
+	{
+			_parent->setForDelete();
+	}
+
+	//Decrement and unset immunity
+	if (_immune)
+	{
+		_flashTime += dt;
+		_immuneTime -= dt;
+
+		//Flash
+		if (_flashTime > 1.0f / 6.0f)
+		{
+			_parent->setVisible(!_parent->isVisible());
+			_flashTime = 0.0f;
+		}
+
+		//Check if immunity expired
+		if (_immuneTime <= 0.0f)
+		{
+			_parent->setVisible(true);
+			_immune = false;
+		}
+	}
+
 	//Destroied
 	if (_hp <= 0.0f)
 	{
 		//Spawn impact fragments
 		spawnFragments(_parent->getPosition());
-
+		//Set for deletion
 		_parent->setForDelete();
-
 	}
 }
+
 
 //Get  the HP of this destructible
 float DestructibleComponent::getHp() { return _hp; }
@@ -50,13 +79,21 @@ float DestructibleComponent::getMaxHp() { return _maxHp; }
 //Damage this destructible, decreasing its HP by the given value
 void DestructibleComponent::damage(const float hp)
 {
-	//Take damage
-	_hp -= hp;
-	//Still alive
-	//if (hp > 0.0f)
-	//{
-	//}
-
+	//Take damage if not immumne
+	if (!_immune)
+	{
+		//damage
+		_hp -= hp;
+		
+		//if player, set immune
+		if (_parent->getComponents<PhysicsComponent>()[0]->getFixture()->GetFilterData().categoryBits == PLAYER_SHIP)
+		{
+			_immune = true;
+			_immuneTime = 1.0f;
+			_flashTime = 0.0f;
+			_parent->setVisible(false);
+		}
+	}
 }
 
 //Repair this destructible, increasing its HP by the given value
@@ -75,8 +112,10 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 	{
 		//0: Bullet (Any)
 		case 0:
-			//Spawn bullet particles for all bullet impacts, regardless if they kill
-			particleBurst(coords, 5, 35.0f);
+			//Spawn bullet particles for all bullet impacts, regardless if they kill (unless off screen)
+			if((coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).y < 400.0f || (coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).x < 650.0f)
+				particleBurst(coords, 5, 35.0f);
+			//TODO: vary depending on bullet type
 			audioManager.playSound("bullet_impact_light");
 			break;
 		//1: Player
@@ -89,7 +128,9 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 		//2: Enemy (Any)
 		case 2:
 			audioManager.playSound("enemy_death");
-			particleBurst(coords, 20, 100.0f);
+			//If on screen, trigger explosion
+			if (sf::length(coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)) < 800.0f)
+				particleBurst(coords, 20, 100.0f);
 			break;
 		//3-10: Reserved for expansion
 		

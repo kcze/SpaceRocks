@@ -10,6 +10,7 @@
 extern AudioManager audioManager;
 extern MenuScene menuScene;
 extern GameScene gameScene;
+extern std::shared_ptr<Entity> player1;
 extern bool suppressPlayerControl;
 
 enum _collisionFlags

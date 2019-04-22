@@ -17,6 +17,7 @@ public:
   void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
   void roundwaveStart();
   void spawnWave();
+  void destroyAll();
 
   void update(const double& dt) override;
 };
