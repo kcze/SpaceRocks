@@ -147,6 +147,19 @@ void Input::onKeyPressed(sf::Event event) {
 }
 
 void Input::onKeyReleased(sf::Event event) {
+	// Map movement of joystick axes as buttons
+	unsigned int joystickButton = event.joystickButton.button;
+	if (event.type == sf::Event::JoystickMoved)
+	{
+		// Negative values 32 - 39
+		if (event.joystickMove.position < -AXIS_THRESHOLD)
+			joystickButton = 32 + (unsigned int)event.joystickMove.axis;
+		// Positive values 40 - 47
+		else if (event.joystickMove.position > AXIS_THRESHOLD)
+			joystickButton = 40 + (unsigned int)event.joystickMove.axis;
+		else
+			joystickButton = 48;
+	}
 	// Keyboard
 	if (event.type == sf::Event::KeyReleased)
 	{
@@ -169,7 +182,9 @@ void Input::onKeyReleased(sf::Event event) {
 	}
 	else if (event.type == sf::Event::JoystickMoved)
 	{
-		if(event.joystickMove.position >= -AXIS_THRESHOLD && event.joystickMove.position <= AXIS_THRESHOLD)
+		if (std::holds_alternative<unsigned int>(lastKey))
+			if (std::get<unsigned int>(lastKey) == joystickButton)
+				if(event.joystickMove.position >= -AXIS_THRESHOLD && event.joystickMove.position <= AXIS_THRESHOLD)
 			lastKey = (unsigned int)0;
 	}
 	//todo useless
