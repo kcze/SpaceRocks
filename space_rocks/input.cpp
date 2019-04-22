@@ -110,18 +110,17 @@ Vector2f Input::mousePosition() {
 
 void Input::onKeyPressed(sf::Event event) {
 	// Map movement of joystick axes as buttons
+	unsigned int joystickButton = event.joystickButton.button;
 	if (event.type == sf::Event::JoystickMoved)
 	{
 		// Negative values 32 - 39
 		if (event.joystickMove.position < -AXIS_THRESHOLD)
-		{
-			event.joystickButton.button = 32 + (unsigned int)event.joystickMove.axis;
-		}
+			joystickButton = 32 + (unsigned int)event.joystickMove.axis;
 		// Positive values 40 - 47
 		else if (event.joystickMove.position > AXIS_THRESHOLD)
-		{
-			event.joystickButton.button = 40 + (unsigned int)event.joystickMove.axis;;
-		}
+			joystickButton = 40 + (unsigned int)event.joystickMove.axis;
+		else
+			joystickButton = 48;
 	}
 	// Keyboard
 	if (event.type == sf::Event::KeyPressed)
@@ -135,15 +134,15 @@ void Input::onKeyPressed(sf::Event event) {
 		for (auto handler : handlers) handler->onKeyPressed((Keyboard::Key)event.key.code);
 	}
 	// Joystick
-	else if (event.type == sf::Event::JoystickButtonPressed || event.type == sf::Event::JoystickMoved)
+	else if (event.type == sf::Event::JoystickButtonPressed || (event.type == sf::Event::JoystickMoved && joystickButton != 48))
 	{
 		if (std::holds_alternative<unsigned int>(lastKey))
-			if (std::get<unsigned int>(lastKey) == event.joystickButton.button)
+			if (std::get<unsigned int>(lastKey) == joystickButton)
 				return;
 
-		lastKey = event.joystickButton.button;
-		for (auto func : keyPressedHandlers) func(event.joystickButton.button);
-		for (auto handler : handlers) handler->onKeyPressed(event.joystickButton.button);
+		lastKey = joystickButton;
+		for (auto func : keyPressedHandlers) func(joystickButton);
+		for (auto handler : handlers) handler->onKeyPressed(joystickButton);
 	}
 }
 
