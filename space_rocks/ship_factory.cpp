@@ -169,6 +169,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		auto des  = enemy->addComponent<DestructibleComponent>(type - 1.0f, 2);
 		//100% drop chance of coin equal to ID
 		des->setCoinDrop(1.0f, type);
+		des->setScoreValue(1000 * type);
 
 	}
 

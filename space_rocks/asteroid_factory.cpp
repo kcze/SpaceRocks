@@ -178,6 +178,9 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 	}
 };
 
+std::default_random_engine rG((int)time(NULL));
+std::uniform_real_distribution<float> tO(0.1f, 1.0f);
+
 
 std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vector2f coords)
 {
@@ -224,6 +227,7 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vecto
 
 		//50% drop chance of 1 coin
 		des->setCoinDrop(0.5f, 1);
+		des->setScoreValue(100 * tO(rG));
 	}
 
 	return asteroid;

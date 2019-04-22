@@ -17,6 +17,8 @@ public:
 protected:
 	void BeginContact(b2Contact* contact);
 
+	void scoreAdd(Entity * entityB, bool killed);
+
 	void coinDrop(Entity * entityB);
 
 };

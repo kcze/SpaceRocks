@@ -193,7 +193,7 @@ void GameScene::load() {
 	// Shop panel
 	{
 		shop = makeEntity();
-		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
+		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2 + 64.0f));
 		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		shopPanel->addText("Shop", 78.0f);
 		//ITEMS
@@ -289,11 +289,10 @@ void GameScene::load() {
 	// Game panel
 	{
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(192.0f, 16.0f));
-		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 128.0f, true);
+		game->setPosition(sf::Vector2f(320.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 192.0f, true);
 		
 		// HP
-
 		gamePanel->addText([]() -> std::string {
 			stringstream ss;
 			ss << fixed << setprecision(1) << playerDestructible->getHp() << "/" << playerDestructible->getMaxHp();
@@ -303,6 +302,11 @@ void GameScene::load() {
 		//Credits
 		gamePanel->addText([]() -> std::string {
 			return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins());
+		});
+
+		//Score (Leave last as gets long!)
+		gamePanel->addText([]() -> std::string {
+			return "Score: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getScore());
 		});
 	}
 
