@@ -50,9 +50,9 @@ bool Input::isKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {
 		if (button < 32)
 			return sf::Joystick::isButtonPressed(0, button);
 		else if (button >= 32 < 40)// Negative axes
-			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) < -20);
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) < -AXIS_THRESHOLD);
 		else// Positive axes
-			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) > 20);
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) > AXIS_THRESHOLD);
 	}
 }
 
@@ -65,9 +65,9 @@ bool Input::isKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {
 		if (button < 32)
 			return !sf::Joystick::isButtonPressed(0, button);
 		else if (button >= 32 < 40)// Negative axes
-			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) >= -20);
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) >= -AXIS_THRESHOLD);
 		else// Positive axes
-			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) <= 20);
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) <= AXIS_THRESHOLD);
 	}
 }
 
@@ -113,12 +113,12 @@ void Input::onKeyPressed(sf::Event event) {
 	if (event.type == sf::Event::JoystickMoved)
 	{
 		// Negative values 32 - 39
-		if (event.joystickMove.position < -20)
+		if (event.joystickMove.position < -AXIS_THRESHOLD)
 		{
 			event.joystickButton.button = 32 + (unsigned int)event.joystickMove.axis;
 		}
 		// Positive values 40 - 47
-		else if (event.joystickMove.position > 20)
+		else if (event.joystickMove.position > AXIS_THRESHOLD)
 		{
 			event.joystickButton.button = 40 + (unsigned int)event.joystickMove.axis;;
 		}

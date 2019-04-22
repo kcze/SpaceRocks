@@ -5,6 +5,8 @@
 #include <variant>
 #include "engine.h"
 
+constexpr auto AXIS_THRESHOLD = 50;
+
 using namespace sf;
 
 class InputEvents;
