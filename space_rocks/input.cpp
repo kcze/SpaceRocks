@@ -167,6 +167,10 @@ void Input::onKeyReleased(sf::Event event) {
 		for (auto func : keyReleasedHandlers) func(event.joystickButton.button);
 		for (auto handler : handlers) handler->onKeyReleased(event.joystickButton.button);
 	}
+	else if (event.type == sf::Event::JoystickMoved)
+	{
+		lastKey = (unsigned int)0;
+	}
 	//todo useless
 	/*if (std::get<Keyboard::Key>(lastKey) == (Keyboard::Key)event.key.code) {
 		lastKey = Keyboard::Key::Unknown;
