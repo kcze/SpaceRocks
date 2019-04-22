@@ -107,6 +107,7 @@ void Engine::start(unsigned int width, unsigned int height,
 			case sf::Event::TextEntered:		Input::onTextEntered(event);	break;
 			case sf::Event::JoystickButtonPressed: Input::onKeyPressed(event);	break;
 			case sf::Event::JoystickButtonReleased: Input::onKeyReleased(event);break;
+			case sf::Event::JoystickMoved:		Input::onKeyPressed(event);	break;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) {

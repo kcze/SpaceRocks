@@ -45,14 +45,30 @@ bool Input::isKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {
 	if (std::holds_alternative<Keyboard::Key>(key))
 		return sf::Keyboard::isKeyPressed(std::get<Keyboard::Key>(key));
 	else
-		return sf::Joystick::isButtonPressed(0, std::get<unsigned int>(key));
+	{
+		int button = std::get<unsigned int>(key);
+		if (button < 32)
+			return sf::Joystick::isButtonPressed(0, button);
+		else if (button >= 32 < 40)// Negative axes
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) < -20);
+		else// Positive axes
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) > 20);
+	}
 }
 
 bool Input::isKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {
 	if (std::holds_alternative<Keyboard::Key>(key))
 		return !sf::Keyboard::isKeyPressed(std::get<Keyboard::Key>(key));
 	else
-		return !sf::Joystick::isButtonPressed(0, std::get<unsigned int>(key));
+	{
+		int button = std::get<unsigned int>(key);
+		if (button < 32)
+			return !sf::Joystick::isButtonPressed(0, button);
+		else if (button >= 32 < 40)// Negative axes
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) >= -20);
+		else// Positive axes
+			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) <= 20);
+	}
 }
 
 bool Input::isMousePressed(Mouse::Button button) { return  sf::Mouse::isButtonPressed((sf::Mouse::Button)button); }
@@ -93,6 +109,20 @@ Vector2f Input::mousePosition() {
 }
 
 void Input::onKeyPressed(sf::Event event) {
+	// Map movement of joystick axes as buttons
+	if (event.type == sf::Event::JoystickMoved)
+	{
+		// Negative values 32 - 39
+		if (event.joystickMove.position < -20)
+		{
+			event.joystickButton.button = 32 + (unsigned int)event.joystickMove.axis;
+		}
+		// Positive values 40 - 47
+		else if (event.joystickMove.position > 20)
+		{
+			event.joystickButton.button = 40 + (unsigned int)event.joystickMove.axis;;
+		}
+	}
 	// Keyboard
 	if (event.type == sf::Event::KeyPressed)
 	{
@@ -105,7 +135,7 @@ void Input::onKeyPressed(sf::Event event) {
 		for (auto handler : handlers) handler->onKeyPressed((Keyboard::Key)event.key.code);
 	}
 	// Joystick
-	else if (event.type == sf::Event::JoystickButtonPressed)
+	else if (event.type == sf::Event::JoystickButtonPressed || event.type == sf::Event::JoystickMoved)
 	{
 		if (std::holds_alternative<unsigned int>(lastKey))
 			if (std::get<unsigned int>(lastKey) == event.joystickButton.button)
