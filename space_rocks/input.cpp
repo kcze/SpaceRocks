@@ -49,7 +49,7 @@ bool Input::isKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {
 		int button = std::get<unsigned int>(key);
 		if (button < 32)
 			return sf::Joystick::isButtonPressed(0, button);
-		else if (button >= 32 < 40)// Negative axes
+		else if (button >= 32 && button < 40)// Negative axes
 			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) < -AXIS_THRESHOLD);
 		else// Positive axes
 			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) > AXIS_THRESHOLD);
@@ -64,7 +64,7 @@ bool Input::isKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {
 		int button = std::get<unsigned int>(key);
 		if (button < 32)
 			return !sf::Joystick::isButtonPressed(0, button);
-		else if (button >= 32 < 40)// Negative axes
+		else if (button >= 32 && button < 40)// Negative axes
 			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 32)) >= -AXIS_THRESHOLD);
 		else// Positive axes
 			return (sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)(button - 40)) <= AXIS_THRESHOLD);
