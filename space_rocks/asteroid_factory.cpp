@@ -205,8 +205,11 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vecto
 		shape.Set(&_objectData[id]._coords.front(), _objectData[id]._coords.size());
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &shape;
+		fixtureDef.density = 1.0f;
 		//Assign fixtureDef to physics component
 		phys->setFixtureDef(fixtureDef);
+		phys->setLinearDampening(0.0f);
+		phys->setAngularDampening(FLT_MAX);
 	}
 
 	// Destructible
