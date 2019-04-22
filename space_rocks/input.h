@@ -69,6 +69,7 @@ private:
 	static std::variant<Keyboard::Key, unsigned int> lastKey;
 	static Mouse::Button lastButton;
 	static Vector2f lastMousePos;
+	static std::map<int, bool> joystickAxes;
 
 	static void init();
 
