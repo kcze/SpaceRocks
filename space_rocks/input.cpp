@@ -169,7 +169,8 @@ void Input::onKeyReleased(sf::Event event) {
 	}
 	else if (event.type == sf::Event::JoystickMoved)
 	{
-		lastKey = (unsigned int)0;
+		if(event.joystickMove.position >= -AXIS_THRESHOLD && event.joystickMove.position <= AXIS_THRESHOLD)
+			lastKey = (unsigned int)0;
 	}
 	//todo useless
 	/*if (std::get<Keyboard::Key>(lastKey) == (Keyboard::Key)event.key.code) {
