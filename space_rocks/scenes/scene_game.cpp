@@ -41,8 +41,6 @@ float PSI = Physics::physicsScaleInv;
 
 //TODO: Convert asteroid spawning to que system?
 unsigned int maxAsteroidPop = 0;
-unsigned int maxAsteroidsTotal = 5;
-unsigned int asteroidsSoFar = 0;
 
 unsigned int curRound = 0;
 unsigned int curWave = 1;
@@ -474,10 +472,9 @@ void GameScene::update(const double& dt) {
 	}
 
 	//Spawn Asteroids
-	if (asteroids.size() < maxAsteroidPop && asteroidsSoFar < maxAsteroidsTotal)
+	if (asteroids.size() < maxAsteroidPop)
 	{
 		spawnAsteroid();
-		asteroidsSoFar++;
 	}
 
 	//Spawn Enemies
@@ -540,8 +537,6 @@ void roundStartThread()
 		curRound++;
 		curWave = 1;
 		maxAsteroidPop = 0;
-		asteroidsSoFar = 0;
-
 		//Countdown
 		audioManager.playSound("voice_3");
 		sf::sleep(sf::milliseconds(1000));
@@ -550,6 +545,7 @@ void roundStartThread()
 		audioManager.playSound("voice_1");
 		sf::sleep(sf::milliseconds(1000));
 		newRound = false;
+		maxAsteroidPop = 3;
 	}
 	else
 		sf::sleep(sf::milliseconds(3000));
@@ -558,12 +554,6 @@ void roundStartThread()
 	//Enemies
 	gameScene.spawnWave();
 
-	//Asteroids
-	maxAsteroidPop++;
-	sf::sleep(sf::milliseconds(1000));
-	maxAsteroidPop++;
-	sf::sleep(sf::milliseconds(1000));
-	maxAsteroidPop++;
 
 } sf::Thread rst(&roundStartThread);
 
