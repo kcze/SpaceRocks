@@ -182,8 +182,8 @@ void Input::onKeyReleased(sf::Event event) {
 	}
 	else if (event.type == sf::Event::JoystickMoved)
 	{
-		if (std::holds_alternative<unsigned int>(lastKey))
-			if (std::get<unsigned int>(lastKey) == joystickButton)
+		//if (std::holds_alternative<unsigned int>(lastKey))
+		//	if (std::get<unsigned int>(lastKey) == joystickButton)
 				if(event.joystickMove.position >= -AXIS_THRESHOLD && event.joystickMove.position <= AXIS_THRESHOLD)
 			lastKey = (unsigned int)0;
 	}
