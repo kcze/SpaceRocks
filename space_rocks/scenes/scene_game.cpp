@@ -197,7 +197,7 @@ void GameScene::load() {
 		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		shopPanel->addText("Shop", 78.0f);
 		//ITEMS
-		//Repair 1HP
+		// Repair 1HP
 		shopPanel->addButton("Repair 1HP [$2]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
@@ -206,7 +206,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(1);
 			}
 		});
-		//Repair All
+		// Repair All
 		shopPanel->addButton("Repair ALL [$8]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
@@ -215,7 +215,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 			}
 		});
-		//Damage Upgrade
+		// Damage Upgrade
 		shopPanel->addButton(
 			[]() -> std::string { return "Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) + "]"; },
 			[]() 
@@ -223,7 +223,7 @@ void GameScene::load() {
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
 		});
-		//Rate of Fire Upgrade
+		// Rate of Fire Upgrade
 		shopPanel->addButton(
 			[]() -> std::string { return "Firerate Up [$" + std::to_string((int)(80 - 100 * player1->getComponents<ShipComponent>()[0]->getReload())) + "]"; },
 			[]()
@@ -231,6 +231,7 @@ void GameScene::load() {
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeROF();
 		});
+		// Ready
 		shopPanel->addButton("Ready", []() {
 			setShopVisible(false);
 			//Start next round
@@ -508,6 +509,7 @@ void GameScene::update(const double& dt) {
 			//Damage to death all asteroid and bullet fragments
 			gameScene.destroyAll();
 			newRound = true;
+			maxAsteroidPop = 0;
 			//Go to shop
 			setShopVisible(true);
 		}
@@ -540,7 +542,6 @@ void roundStartThread()
 		//Initialise round
 		curRound++;
 		curWave = 1;
-		maxAsteroidPop = 0;
 		//Countdown
 		audioManager.playSound("voice_3");
 		sf::sleep(sf::milliseconds(1000));
