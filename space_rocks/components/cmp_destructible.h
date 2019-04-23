@@ -21,9 +21,13 @@ public:
 	void spawnFragments(const sf::Vector2f coords);
 	void particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude);
 	void setToCall(std::function<void()>);
+
 	void setCoinDrop(float chance, unsigned int value) { _coinChance = chance; _coinValue = value; }
 	float getCoinChance() { return _coinChance; }
 	int getCoinValue() { return _coinValue; }
+
+	void setScoreValue(unsigned int s) { _scoreValue =	s; }
+	unsigned int getScoreValue() { return _scoreValue; }
 
 	~DestructibleComponent() override = default;
 
@@ -38,6 +42,7 @@ protected:
 	float _lifetime;
 	float _flashTime;
 	float _coinChance = 0.0f;
-	unsigned int _coinValue = 0.0f;
+	unsigned int _coinValue = 0;
+	unsigned int _scoreValue = 0;
 	std::function<void()> _toCall = NULL;
 };

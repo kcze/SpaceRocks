@@ -25,9 +25,14 @@ using namespace sf;
 std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
+
 std::shared_ptr<PanelComponent> gamePanel;
 std::shared_ptr<PanelComponent> shopPanel;
 bool shopVisible;
+
+std::shared_ptr<Entity> gameOver1;
+std::shared_ptr<Entity> gameOver2;
+std::shared_ptr<PanelComponent> gameOverPanel;
 
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::vector<std::shared_ptr<Entity>> enemies;
@@ -181,6 +186,20 @@ void setShopVisible(bool visible)
 	shopPanel->setVisible(visible);
 }
 
+void setGameoverVisible(bool visible)
+{
+	if (!visible)
+	{
+		gameOver1->setVisible(false);
+		gameOver2->setVisible(false);
+		gameOverPanel->setVisible(false);
+	}
+	else
+	{
+		suppressPlayerControl = true;
+	}
+}
+
 void GameScene::load() {
 	cout << "Game Scene Load \n";
 
@@ -193,11 +212,11 @@ void GameScene::load() {
 	// Shop panel
 	{
 		shop = makeEntity();
-		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2));
+		shop->setPosition(sf::Vector2f(256.0f, GAMEY / 2 + 64.0f));
 		shopPanel = shop->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		shopPanel->addText("Shop", 78.0f);
 		//ITEMS
-		//Repair 1HP
+		// Repair 1HP
 		shopPanel->addButton("Repair 1HP [$2]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(2))
@@ -206,7 +225,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(1);
 			}
 		});
-		//Repair All
+		// Repair All
 		shopPanel->addButton("Repair ALL [$8]", []() {
 			//if player has enough credits, purchase
 			if (player1->getComponents<PlayerComponent>()[0]->tryPurchase(8))
@@ -215,7 +234,7 @@ void GameScene::load() {
 				player1->getComponents<DestructibleComponent>()[0]->repair(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
 			}
 		});
-		//Damage Upgrade
+		// Damage Upgrade
 		shopPanel->addButton(
 			[]() -> std::string { return "Damage Up [$" + std::to_string(player1->getComponents<ShipComponent>()[0]->getBullet()._id + 4) + "]"; },
 			[]() 
@@ -223,7 +242,7 @@ void GameScene::load() {
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeDamage();
 		});
-		//Rate of Fire Upgrade
+		// Rate of Fire Upgrade
 		shopPanel->addButton(
 			[]() -> std::string { return "Firerate Up [$" + std::to_string((int)(80 - 100 * player1->getComponents<ShipComponent>()[0]->getReload())) + "]"; },
 			[]()
@@ -231,6 +250,7 @@ void GameScene::load() {
 			//if player has enough credits, purchase
 			player1->getComponents<PlayerComponent>()[0]->tryUpgradeROF();
 		});
+		// Ready
 		shopPanel->addButton("Ready", []() {
 			setShopVisible(false);
 			//Start next round
@@ -241,6 +261,28 @@ void GameScene::load() {
 		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 
 		setShopVisible(true);
+	}
+
+	// Gameover screen
+	{
+		gameOver1 = makeEntity();
+		gameOver1->setPosition(sf::Vector2f(GAMEX / 2 - 200.0f, GAMEY / 2 - 100.0f));
+		auto t = gameOver1->addComponent<TextComponent>();
+		t->setText("Game");
+		t->setSize(200.0f);
+
+		gameOver2 = makeEntity();
+		gameOver2->setPosition(sf::Vector2f(GAMEX / 2 + 200.0f, GAMEY / 2 - 100.0f));
+		t = gameOver2->addComponent<TextComponent>();
+		t->setText("Over");
+		t->setSize(200.0f);
+
+		auto go = makeEntity();
+		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 192.0f));
+		gameOverPanel = go->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+		gameOverPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+
+		setGameoverVisible(false);
 	}
 
 	//Edge Arrows
@@ -289,11 +331,10 @@ void GameScene::load() {
 	// Game panel
 	{
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(192.0f, 16.0f));
-		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 128.0f, true);
+		game->setPosition(sf::Vector2f(320.0f, 16.0f));
+		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 192.0f, true);
 		
 		// HP
-
 		gamePanel->addText([]() -> std::string {
 			stringstream ss;
 			ss << fixed << setprecision(1) << playerDestructible->getHp() << "/" << playerDestructible->getMaxHp();
@@ -303,6 +344,11 @@ void GameScene::load() {
 		//Credits
 		gamePanel->addText([]() -> std::string {
 			return "Credits: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getCoins());
+		});
+
+		//Score (Leave last as gets long!)
+		gamePanel->addText([]() -> std::string {
+			return "Score: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getScore());
 		});
 	}
 
@@ -504,6 +550,7 @@ void GameScene::update(const double& dt) {
 			//Damage to death all asteroid and bullet fragments
 			gameScene.destroyAll();
 			newRound = true;
+			maxAsteroidPop = 0;
 			//Go to shop
 			setShopVisible(true);
 		}
@@ -520,6 +567,19 @@ void pDThread()
 {
 	sf::sleep(sf::milliseconds(2000));
 	audioManager.playSound("game_over");
+	setGameoverVisible(true);
+
+	gameOver1->setVisible(true);
+	sf::sleep(sf::milliseconds(750));
+	gameOver2->setVisible(true);
+
+	maxAsteroidPop = 0;
+	gameScene.destroyAll();
+	sf::sleep(sf::milliseconds(100));
+	setShopVisible(false);
+	sf::sleep(sf::milliseconds(650));
+	gameOverPanel->setVisible(true);
+
 } sf::Thread pdthread(&pDThread);
 
 
@@ -536,7 +596,6 @@ void roundStartThread()
 		//Initialise round
 		curRound++;
 		curWave = 1;
-		maxAsteroidPop = 0;
 		//Countdown
 		audioManager.playSound("voice_3");
 		sf::sleep(sf::milliseconds(1000));
