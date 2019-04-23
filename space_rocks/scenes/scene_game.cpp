@@ -559,7 +559,6 @@ void GameScene::update(const double& dt) {
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
 	//world->DrawDebugData();
-	audioManager.update(dt);
 	Scene::update(dt);
 }
 
