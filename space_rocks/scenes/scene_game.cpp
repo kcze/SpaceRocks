@@ -205,6 +205,7 @@ void GameScene::load() {
 	cout << "Game Scene Load \n";
 	//Reset
 	{
+		destroyAll();
 		maxAsteroidPop = 0;
 		curRound = 0;
 		curWave = 1;
