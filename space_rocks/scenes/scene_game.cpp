@@ -339,11 +339,10 @@ void GameScene::load() {
 			arrows[i]->setVisible(false);
 	}
 
-
-	// Game panel
+	// Game panel (UI)
 	{
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(320.0f, 16.0f));
+		game->setPosition(sf::Vector2f(420.0f, 16.0f));
 		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 192.0f, true);
 		
 		// HP
@@ -361,6 +360,14 @@ void GameScene::load() {
 		//Score (Leave last as gets long!)
 		gamePanel->addText([]() -> std::string {
 			return "Score: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getScore());
+		});
+
+		//Highest Score
+		gamePanel->addText([]() -> std::string {
+			if(highscores.empty())
+				return "Highscore: 0";
+			else
+				return "Highscore: " + std::to_string((--highscores.end())->first);
 		});
 	}
 
@@ -610,6 +617,13 @@ void pDThread()
 
 void GameScene::playerDeath()
 {
+	//Add score to highscores.
+	//TODO: Ask player for name
+	highscores.emplace(player1->getComponents<PlayerComponent>()[0]->getScore(), "Temp Name");
+
+	if (highscores.size() > 10)
+		highscores.erase(highscores.begin());
+
 	pdthread.launch();
 	return;
 }
