@@ -205,6 +205,7 @@ void GameScene::load() {
 	cout << "Game Scene Load \n";
 	//Reset
 	{
+		std::queue<std::pair<unsigned int, unsigned int>>().swap(enemyQueue);
 		destroyAll();
 		maxAsteroidPop = 0;
 		curRound = 0;
