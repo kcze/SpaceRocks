@@ -22,41 +22,42 @@
 using namespace std;
 using namespace sf;
 
-std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
 
 std::shared_ptr<PanelComponent> gamePanel;
 std::shared_ptr<PanelComponent> shopPanel;
-bool shopVisible;
 
 std::shared_ptr<Entity> gameOver1;
 std::shared_ptr<Entity> gameOver2;
 std::shared_ptr<PanelComponent> gameOverPanel;
 
+std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::vector<std::shared_ptr<Entity>> enemies;
 std::queue< std::pair<unsigned int, unsigned int> > enemyQueue;
-unsigned int maxEnemyPop = 0;
 
-std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
+
 float PSI = Physics::physicsScaleInv;
 
-//TODO: Convert asteroid spawning to que system?
-unsigned int maxAsteroidPop = 0;
+unsigned int maxAsteroidPop;
+unsigned int curRound;
+unsigned int curWave;
+unsigned int maxEnemyPop;
 
-unsigned int curRound = 0;
-unsigned int curWave = 1;
-
-bool enemiesQueued = false;
-bool newRound = true;
+bool enemiesQueued;
+bool newRound;
+bool toMenu;
+bool shopVisible;
 
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
 
-bool toMenu = false;
+MyContactListener contactListenerInstance;
+DebugDraw debugDrawInstance;
+
 
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
@@ -178,8 +179,6 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 };
 
 
-MyContactListener contactListenerInstance;
-DebugDraw debugDrawInstance;
 
 void setShopVisible(bool visible)
 {
@@ -204,6 +203,16 @@ void setGameoverVisible(bool visible)
 
 void GameScene::load() {
 	cout << "Game Scene Load \n";
+	//Reset
+	{
+		maxAsteroidPop = 0;
+		curRound = 0;
+		curWave = 1;
+		maxEnemyPop = 0;
+		enemiesQueued = false;
+		newRound = true;
+		toMenu = false;
+	}
 
 	// Player ship
 	player1.swap(ShipFactory::makePlayer());
@@ -526,44 +535,48 @@ void GameScene::update(const double& dt) {
 		}
 	}
 
-	//Spawn Asteroids
-	if (asteroids.size() < maxAsteroidPop)
+	if (player1->isAlive())
+	{
+		//Spawn Asteroids
+		if (asteroids.size() < maxAsteroidPop)
 	{
 		spawnAsteroid();
 	}
 
-	//Spawn Enemies
-	while (!enemyQueue.empty())
-	{
-		//Get next enemy from spawn queue
-		auto enemyData = enemyQueue.front();
-		enemyQueue.pop();
-		spawnEnemy(enemyData.first, enemyData.second);
-	}
-	//When all enemies are dead, Spawn next wave
-	if (enemiesQueued && enemies.empty())
-	{
-		curWave++;
-
-		//Set EQ to false before wave spawn to syncronise threads
-		enemiesQueued = false;
-
-		//If still more waves to come
-		if (_waveData.count(make_pair(curRound, curWave)))
+		//Spawn Enemies
+		while (!enemyQueue.empty())
 		{
-			gameScene.roundwaveStart();
+			//Get next enemy from spawn queue
+			auto enemyData = enemyQueue.front();
+			enemyQueue.pop();
+			spawnEnemy(enemyData.first, enemyData.second);
 		}
-		//Else when all waves are complete, Round complete
-		else 
+		//When all enemies are dead, Spawn next wave
+		if (enemiesQueued && enemies.empty())
 		{
-			//Damage to death all asteroid and bullet fragments
-			gameScene.destroyAll();
-			newRound = true;
-			maxAsteroidPop = 0;
-			//Go to shop
-			setShopVisible(true);
+			curWave++;
+
+			//Set EQ to false before wave spawn to syncronise threads
+			enemiesQueued = false;
+
+			//If still more waves to come
+			if (_waveData.count(make_pair(curRound, curWave)))
+			{
+				gameScene.roundwaveStart();
+			}
+			//Else when all waves are complete, Round complete
+			else
+			{
+				//Damage to death all asteroid and bullet fragments
+				gameScene.destroyAll();
+				newRound = true;
+				maxAsteroidPop = 0;
+				//Go to shop
+				setShopVisible(true);
+			}
 		}
 	}
+
 
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
@@ -593,7 +606,6 @@ void pDThread()
 	gameOverPanel->setVisible(true);
 
 } sf::Thread pdthread(&pDThread);
-
 
 void GameScene::playerDeath()
 {
@@ -637,7 +649,6 @@ void GameScene::roundwaveStart()
 
 void GameScene::spawnWave() {
 
-
 	//Get data for current wave
 	auto etData = _waveData[std::make_pair(curRound, curWave)];
 	std::vector <unsigned int> sides;
@@ -658,10 +669,6 @@ void GameScene::spawnWave() {
 	//Sound
 	audioManager.playSound("wave_approaching");
 
-
-
-
-
 	for (unsigned int i = 0; i < 8; i++)
 	{
 		//Arrow flashes. Eight flashes to match SFX
@@ -676,7 +683,6 @@ void GameScene::spawnWave() {
 			arrows[sides[j] - 1]->setVisible(false);
 		sf::sleep(sf::milliseconds(125));
 	}
-
 
 	enemiesQueued = true;
 }
@@ -708,13 +714,15 @@ void GameScene::destroyAll()
 // Switch scene to menu safely
 void GameScene::gotoMenu()
 {
+	//Stop all threads
+	pdthread.terminate();
+	rst.terminate();
+
 	// Resetting all shared_ptr
 	player1->getComponents<PhysicsComponent>()[0]->~PhysicsComponent();
 	playerDestructible.reset();
 	player1->setForDelete();
 	player1.reset();
-
-	ssAsteroids.reset();
 
 	gamePanel.reset();
 	game->setForDelete();
