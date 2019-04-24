@@ -8,6 +8,10 @@ PlayerComponent::PlayerComponent(Entity* p, const int player) : Component(p)
 	_shipComponent = _parent->getComponents<ShipComponent>()[0];
 }
 
+PlayerComponent::~PlayerComponent() {
+	_shipComponent.reset();
+}
+
 void PlayerComponent::update(double dt)
 {
 	if (suppressPlayerControl)

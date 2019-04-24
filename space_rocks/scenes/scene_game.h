@@ -18,6 +18,7 @@ public:
   void roundwaveStart();
   void spawnWave();
   void destroyAll();
+  static void gotoMenu();
 
   void update(const double& dt) override;
 };

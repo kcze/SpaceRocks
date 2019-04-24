@@ -14,6 +14,7 @@
 class MyContactListener : public b2ContactListener {
 public:
 	MyContactListener() {};
+
 protected:
 	void BeginContact(b2Contact* contact);
 

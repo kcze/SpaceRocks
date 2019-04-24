@@ -16,5 +16,5 @@ public:
 	void update(double dt) override;
 	void render() override {}
 
-	~AiComponent() override = default;
+	~AiComponent() override;
 };

@@ -56,6 +56,8 @@ bool newRound = true;
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
 
+bool toMenu = false;
+
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
 	// ROUND 1 
@@ -204,7 +206,7 @@ void GameScene::load() {
 	cout << "Game Scene Load \n";
 
 	// Player ship
-	player1 = ShipFactory::makePlayer();
+	player1.swap(ShipFactory::makePlayer());
 	player1->getComponents<PhysicsComponent>()[0]->teleport(Vector2f(GAMEX / 2, GAMEY / 2));
 	playerDestructible = player1->getComponents<DestructibleComponent>()[0];
 
@@ -280,7 +282,7 @@ void GameScene::load() {
 		auto go = makeEntity();
 		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 192.0f));
 		gameOverPanel = go->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-		gameOverPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
+		gameOverPanel->addButton("Menu", []() { toMenu = true; });
 
 		setGameoverVisible(false);
 	}
@@ -476,10 +478,17 @@ void GameScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 	if (!gameScene.isLoaded())
 		return;
 
+	Input::KeyCode key = Input::getKeyCode(k);
+
+	// Handling game over controls
+	if (key == Input::P1_FIRE && gameOverPanel->isVisible())
+	{
+		gameOverPanel->executeButton();
+	}
+
+	// Handling shop controls
 	if (!shopVisible)
 		return;
-
-	Input::KeyCode key = Input::getKeyCode(k);
 
 	if (key == Input::P1_THRUST)
 	{
@@ -559,6 +568,10 @@ void GameScene::update(const double& dt) {
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
 	//world->DrawDebugData();
+
+	if (toMenu)
+		gotoMenu();
+
 	audioManager.update(dt);
 	Scene::update(dt);
 }
@@ -645,9 +658,16 @@ void GameScene::spawnWave() {
 
 	//Sound
 	audioManager.playSound("wave_approaching");
-	//Arrow flashes. Eight flashes to match SFX
+
+
+
+
+
 	for (unsigned int i = 0; i < 8; i++)
 	{
+		//Arrow flashes. Eight flashes to match SFX
+		if (arrows.size() == 0)
+			return;
 		//On
 		for(unsigned int j = 0; j < sides.size(); j++)
 			arrows[sides[j]-1]->setVisible(true);
@@ -681,5 +701,48 @@ void GameScene::destroyAll()
 			else
 				current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
 		}
+
+		current.reset();
 	}
+}
+
+// Switch scene to menu safely
+void GameScene::gotoMenu()
+{
+	// Resetting all shared_ptr
+	player1->getComponents<PhysicsComponent>()[0]->~PhysicsComponent();
+	playerDestructible.reset();
+	player1->setForDelete();
+	player1.reset();
+
+	ssAsteroids.reset();
+
+	gamePanel.reset();
+	game->setForDelete();
+
+	shopPanel.reset();
+	shop->setForDelete();
+
+	gameOverPanel.reset();
+	gameOver1->setForDelete();
+	gameOver2->setForDelete();
+
+	for (auto p : asteroids)
+		p->setForDelete();
+
+	asteroids.clear();
+
+	for (auto p : enemies)
+		p->setForDelete();
+
+	enemies.clear();
+
+	for (auto p : arrows)
+		p->setForDelete();
+
+	arrows.clear();
+
+	toMenu = false;
+
+	Engine::changeScene(&menuScene);
 }

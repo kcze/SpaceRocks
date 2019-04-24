@@ -139,5 +139,3 @@ void MyContactListener::coinDrop(Entity * entityB)
 		audioManager.playSound("pickup_coin");
 	}
 }
-
-

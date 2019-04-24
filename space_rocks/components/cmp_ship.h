@@ -23,7 +23,7 @@ public:
 	void rotate(bool right);
 	void shoot();
 
-	~ShipComponent() override = default;
+	~ShipComponent() override;
 
 protected:
 	float _speed;

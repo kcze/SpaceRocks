@@ -12,6 +12,7 @@ public:
 
 	void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
 	void onTextEntered(std::string text) override;
+	static void gotoGame();
 
 	void update(const double& dt) override;
 

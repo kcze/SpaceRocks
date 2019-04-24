@@ -111,7 +111,7 @@ void MenuScene::load() {
 	cout << "Menu Load \n";
 	
 	// Title
-	txtTitle = makeEntity();
+	txtTitle.swap(makeEntity());
 	auto txt = txtTitle->addComponent<TextComponent>("SPACE ROCKS");
 	txt->setSize(64);
 	txtTitle->setPosition(Vector2f(640.0f, 64.0f));
@@ -119,8 +119,8 @@ void MenuScene::load() {
 	// Menu
 	menu = makeEntity();
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
-	menuPanel = menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
-	menuPanel->addButton("Start", []() { Engine::changeScene(&gameScene); });
+	menuPanel = (menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
+	menuPanel->addButton("Start", []() { gotoGame(); });
 	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});
 	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
@@ -129,9 +129,9 @@ void MenuScene::load() {
 	switchPanel(menuPanel.get());
 	
 	// Settings
-	settings = makeEntity();
+	settings.swap(makeEntity());
 	settings->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
-	settingsPanel = settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	settingsPanel.swap(settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
 	settingsPanel->addText("Settings", 48.0f);
 	settingsPanel->addButton("Controls", []() { switchPanel(controlsPanel.get()); });
 	settingsPanel->addButton("1920x1080", []() { Engine::getWindow().setSize(sf::Vector2u(1920, 1080)); UpdateScaling(); });
@@ -141,9 +141,9 @@ void MenuScene::load() {
 	settingsPanel->setVisible(false);
 
 	// Controls
-	controls = makeEntity();
+	controls.swap(makeEntity());
 	controls->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
-	controlsPanel = controls->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
+	controlsPanel.swap(controls->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
 	//todo not enough space
 	//controlsPanel->addText("Controls", 48.0f);
 	controlsPanel->addButton(
@@ -263,4 +263,24 @@ void MenuScene::onTextEntered(std::string text)
 void MenuScene::update(const double& dt) {
   
 	Scene::update(dt);
+}
+
+// Switch scene to menu safely
+void MenuScene::gotoGame()
+{
+	// Resetting all shared_ptr
+	txtTitle.reset();
+
+	menuPanel.reset();
+	menu->setForDelete();
+
+	settingsPanel.reset();
+	settings->setForDelete();
+
+	controlsPanel.reset();
+	controls->setForDelete();
+
+	currentPanel = nullptr;
+
+	Engine::changeScene(&gameScene);
 }

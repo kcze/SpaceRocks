@@ -8,6 +8,14 @@ AiComponent::AiComponent(Entity* p) : Component(p) {
 	_players = gameScene.ents.find("Player");
 }
 
+AiComponent::~AiComponent() {
+	_shipComponent.reset();
+	_target.reset();
+
+	for (auto p : _players)
+		p.reset();
+}
+
 void AiComponent::update(double dt) {
 
 	// Return if there's no players alive

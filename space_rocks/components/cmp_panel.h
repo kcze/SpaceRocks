@@ -20,8 +20,9 @@ public:
 	void pointerNext();
 	void updatePositions();
 	void setVisible(bool visible);
+	bool isVisible() { return _visible; }
 
-	~PanelComponent();
+	~PanelComponent() override;
 
 private:
 	std::shared_ptr<Entity> _buttonPointer;
@@ -31,6 +32,7 @@ private:
 	sf::Vector2f _anchor;
 	bool _horizontal;// false = vertical
 	Scene* _panelScene;
+	bool _visible;
 
 	float _interval;
 };

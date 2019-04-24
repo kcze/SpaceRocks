@@ -20,6 +20,10 @@ TextComponent::TextComponent(Entity* const p, const std::string& str)
   _anchor = sf::Vector2f(0.5f, 0.5f);
 }
 
+TextComponent::~TextComponent() {
+	_font.reset();
+}
+
 void TextComponent::setText(const std::string& str) {
   _string = str;
   _text.setString(_string);

@@ -9,6 +9,7 @@ PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const
 	: Component(p), _anchor(anchor), _interval(interval), _horizontal(horizontal) {
 
 	_panelScene = Engine::getActiveScene();
+	_visible = true;
 	// Create and hide button pointer
 	_buttonPointer = _panelScene->makeEntity();
 	auto spr = _buttonPointer->addComponent<SpriteComponent>();
@@ -17,7 +18,16 @@ PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const
 	_buttonPointer->setVisible(false);
 }
 
-PanelComponent::~PanelComponent() { }
+PanelComponent::~PanelComponent() { 
+	_buttonPointer.reset();
+	_currentButton.reset();
+	
+	for (auto p : _buttons)
+		p.reset();
+
+	for (auto p : _elements)
+		p.reset();
+}
 
 void PanelComponent::update(double dt) { }
 
@@ -193,12 +203,16 @@ void PanelComponent::updatePositions()
 
 void PanelComponent::setVisible(bool visible)
 {
+	_visible = visible;
 	// Hide or expose all elements in the panel
 	for (std::shared_ptr<Entity> element : _elements)
 	{
 		element->setVisible(visible);
 		element->setAlive(visible);
 	}
-	_buttonPointer->setVisible(visible);
-	_buttonPointer->setAlive(visible);
+	if (_buttonPointer != NULL)
+	{
+		_buttonPointer->setVisible(visible);
+		_buttonPointer->setAlive(visible);
+	}
 }

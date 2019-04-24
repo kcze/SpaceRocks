@@ -25,7 +25,7 @@ public:
 	void addScore(unsigned int s) { _score += s; }
 
 
-	~PlayerComponent() override = default;
+	~PlayerComponent() override;
 
 protected:
 	int _player;
