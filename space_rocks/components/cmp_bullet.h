@@ -16,4 +16,5 @@ public:
   explicit BulletComponent(Entity* p, float damage);
   float getDamage();
   BulletComponent() = delete;
+  ~BulletComponent() override = default;
 };

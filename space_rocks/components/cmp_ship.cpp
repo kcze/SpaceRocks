@@ -14,6 +14,11 @@ ShipComponent::ShipComponent(Entity* p, const float speed, const float angularSp
 	_physicsComponent->setAngularDampening(80.0f);
 }
 
+ShipComponent::~ShipComponent() {
+	_physicsComponent.reset();
+	_thrusterSpriteComponent.reset();
+}
+
 void ShipComponent::setBullet(float damage, unsigned int id) {_bullet = { damage, id }; }
 
 void ShipComponent::thrust(double dt)
@@ -57,6 +62,4 @@ void ShipComponent::update(double dt)
 
 	if (_time > 0.0f)
 		_time -= dt;
-	else
-		_time = _reload;
 }

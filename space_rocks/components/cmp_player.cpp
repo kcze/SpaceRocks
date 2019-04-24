@@ -8,6 +8,10 @@ PlayerComponent::PlayerComponent(Entity* p, const int player) : Component(p)
 	_shipComponent = _parent->getComponents<ShipComponent>()[0];
 }
 
+PlayerComponent::~PlayerComponent() {
+	_shipComponent.reset();
+}
+
 void PlayerComponent::update(double dt)
 {
 	if (suppressPlayerControl)
@@ -32,4 +36,42 @@ void PlayerComponent::update(double dt)
 	{
 		_shipComponent->shoot();
 	}
+}
+
+bool PlayerComponent::tryPurchase(int cost)
+{
+	if (_coins >= cost)
+	{
+		audioManager.playSound("upgrade_purchased_2");
+		removeCoins(cost);
+		return true;
+	}
+	else
+	{
+		//Play audio
+		audioManager.playSound("not_enough_coins");
+		return false;
+	}
+}
+
+void PlayerComponent::tryUpgradeDamage()
+{
+	//Get current bullet
+	Bullet curBullet = _shipComponent->getBullet();
+
+	//If allready maxed (shouldn't ever run as button should be greyed out.)
+	if(curBullet._id == 34)
+		return;
+
+	//Else try purchase
+	if(tryPurchase(curBullet._id + 4))
+		_shipComponent->setBullet(curBullet._damage + 0.5f, curBullet._id + 10);
+}
+
+//Try to purchase and upgrade the Weapon's Rate of Fire
+void PlayerComponent::tryUpgradeROF()
+{
+	//If reload time > 0.1 and can afford cost, upgrade.
+	if (_shipComponent->getReload() > 0.1f && tryPurchase(80 - 100 * _shipComponent->getReload()))
+		_shipComponent->setReload(_shipComponent->getReload() - 0.1f);
 }
