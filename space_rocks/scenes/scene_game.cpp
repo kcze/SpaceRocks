@@ -572,7 +572,6 @@ void GameScene::update(const double& dt) {
 	if (toMenu)
 		gotoMenu();
 
-	audioManager.update(dt);
 	Scene::update(dt);
 }
 

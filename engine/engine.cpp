@@ -8,6 +8,8 @@
 #include <iostream>
 #include <stdexcept>
 #include "..\space_rocks\input.h"
+#include "..\space_rocks\audio_manager.h"
+#include "..\space_rocks\game.h"
 
 using namespace sf;
 using namespace std;
@@ -70,6 +72,7 @@ void Engine::update() {
 	else if (_activeScene != nullptr) {
 		Physics::update(dt);
 		_activeScene->update(dt);
+		audioManager.update(dt);
 	}
 }
 
