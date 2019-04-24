@@ -14,10 +14,11 @@ public:
   void spawnEnemy(unsigned int id, unsigned int dir);
   void createEdges();
   void playerDeath();
-  void onKeyPressed(Keyboard::Key key) override;
+  void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
   void roundwaveStart();
   void spawnWave();
   void destroyAll();
+  static void gotoMenu();
 
   void update(const double& dt) override;
 };

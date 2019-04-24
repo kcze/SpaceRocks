@@ -178,6 +178,9 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 	}
 };
 
+std::default_random_engine rG((int)time(NULL));
+std::uniform_real_distribution<float> tO(0.1f, 1.0f);
+
 
 std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vector2f coords)
 {
@@ -205,18 +208,26 @@ std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vecto
 		shape.Set(&_objectData[id]._coords.front(), _objectData[id]._coords.size());
 		//Assign shape to fixtureDef
 		fixtureDef.shape = &shape;
+		fixtureDef.density = 0.5f;
 		//Assign fixtureDef to physics component
 		phys->setFixtureDef(fixtureDef);
+		phys->setLinearDampening(0.0f);
+		phys->setAngularDampening(FLT_MAX);
 	}
 
 	// Destructible
 	{
+		std::shared_ptr<DestructibleComponent> des;
 		if(id == 11)
-			auto des = asteroid->addComponent<DestructibleComponent>(3.0f, id); //3 hp
+			des = asteroid->addComponent<DestructibleComponent>(3.0f, id); //3 hp
 		else if (id == 121 || 122 || 123)
-			auto des = asteroid->addComponent<DestructibleComponent>(2.0f, id); //2 hp
+			des = asteroid->addComponent<DestructibleComponent>(2.0f, id); //2 hp
 		else
-			auto des = asteroid->addComponent<DestructibleComponent>(1.0f, id); //1 hp
+			des = asteroid->addComponent<DestructibleComponent>(1.0f, id); //1 hp
+
+		//50% drop chance of 1 coin
+		des->setCoinDrop(0.5f, 1);
+		des->setScoreValue(100 * tO(rG));
 	}
 
 	return asteroid;
