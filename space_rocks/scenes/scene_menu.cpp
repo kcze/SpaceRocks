@@ -109,6 +109,9 @@ void switchPanel(PanelComponent* panel)
 
 void MenuScene::load() {
 	cout << "Menu Load \n";
+
+	// Loading data from files
+	Files::loadControls();
 	
 	// Title
 	txtTitle.swap(makeEntity());
@@ -171,7 +174,7 @@ void MenuScene::load() {
 		[]() { Input::keys[Input::KeyCode::P1_FIRE].second = "";
 				changeKeyCode = Input::KeyCode::P1_FIRE;
 	});
-	controlsPanel->addButton("Back", []() { switchPanel(settingsPanel.get()); });
+	controlsPanel->addButton("Back", []() { Files::saveControls(); switchPanel(settingsPanel.get()); });
 	controlsPanel->setVisible(false);
 
 	UpdateScaling();
