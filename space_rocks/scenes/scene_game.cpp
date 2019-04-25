@@ -22,41 +22,48 @@
 using namespace std;
 using namespace sf;
 
-std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
 
 std::shared_ptr<PanelComponent> gamePanel;
 std::shared_ptr<PanelComponent> shopPanel;
-bool shopVisible;
 
 std::shared_ptr<Entity> gameOver1;
 std::shared_ptr<Entity> gameOver2;
 std::shared_ptr<PanelComponent> gameOverPanel;
+std::shared_ptr<Entity> initial1;
+std::shared_ptr<Entity> initial2;
+std::shared_ptr<Entity> initial3;
+std::shared_ptr<Entity> carat;
 
+std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::vector<std::shared_ptr<Entity>> enemies;
 std::queue< std::pair<unsigned int, unsigned int> > enemyQueue;
-unsigned int maxEnemyPop = 0;
 
-std::shared_ptr<sf::Texture> ssAsteroids;
 default_random_engine randomGenerator((int)time(NULL));
 uniform_real_distribution<float> distrib(-1.0f, 1.0f);
+
 float PSI = Physics::physicsScaleInv;
 
-//TODO: Convert asteroid spawning to que system?
-unsigned int maxAsteroidPop = 0;
+unsigned int maxAsteroidPop;
+unsigned int curRound;
+unsigned int curWave;
+unsigned int maxEnemyPop;
 
-unsigned int curRound = 0;
-unsigned int curWave = 1;
-
-bool enemiesQueued = false;
-bool newRound = true;
+bool enemiesQueued;
+bool newRound;
+bool toMenu;
+bool shopVisible;
+bool enteringText;
 
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
+std::stringstream playerName;
 
-bool toMenu = false;
+MyContactListener contactListenerInstance;
+DebugDraw debugDrawInstance;
+
 
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
@@ -178,8 +185,6 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 };
 
 
-MyContactListener contactListenerInstance;
-DebugDraw debugDrawInstance;
 
 void setShopVisible(bool visible)
 {
@@ -195,6 +200,10 @@ void setGameoverVisible(bool visible)
 		gameOver1->setVisible(false);
 		gameOver2->setVisible(false);
 		gameOverPanel->setVisible(false);
+		initial1->setVisible(false);
+		initial2->setVisible(false);
+		initial3->setVisible(false);
+		carat->setVisible(false);
 	}
 	else
 	{
@@ -204,6 +213,22 @@ void setGameoverVisible(bool visible)
 
 void GameScene::load() {
 	cout << "Game Scene Load \n";
+	//Reset
+	{
+
+		std::queue<std::pair<unsigned int, unsigned int>>().swap(enemyQueue);
+		destroyAll();
+		maxAsteroidPop = 0;
+		curRound = 0;
+		curWave = 1;
+		maxEnemyPop = 0;
+		enteringText = false;
+		enemiesQueued = false;
+		newRound = true;
+		toMenu = false;
+		playerName.str("");
+		playerName.clear();
+	}
 
 	// Player ship
 	player1.swap(ShipFactory::makePlayer());
@@ -279,8 +304,32 @@ void GameScene::load() {
 		t->setText("Over");
 		t->setSize(200.0f);
 
+		initial1 = makeEntity();
+		initial1->setPosition(sf::Vector2f(GAMEX / 2 - 64.0f, GAMEY / 2 + 64.0f));
+		t = initial1->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);		
+		
+		carat = makeEntity();
+		carat->setPosition(sf::Vector2f(GAMEX / 2 - 64.0f, GAMEY / 2 + 112.0f));
+		t = carat->addComponent<TextComponent>();
+		t->setText("^");
+		t->setSize(100.0f);		
+		
+		initial2 = makeEntity();
+		initial2->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 64.0f));
+		t = initial2->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);
+
+		initial3 = makeEntity();
+		initial3->setPosition(sf::Vector2f(GAMEX / 2 + 64.0f, GAMEY / 2 + 64.0f));
+		t = initial3->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);
+
 		auto go = makeEntity();
-		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 192.0f));
+		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 256.0f));
 		gameOverPanel = go->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		gameOverPanel->addButton("Menu", []() { toMenu = true; });
 
@@ -329,11 +378,10 @@ void GameScene::load() {
 			arrows[i]->setVisible(false);
 	}
 
-
-	// Game panel
+	// Game panel (UI)
 	{
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(320.0f, 16.0f));
+		game->setPosition(sf::Vector2f(420.0f, 16.0f));
 		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 192.0f, true);
 		
 		// HP
@@ -351,6 +399,14 @@ void GameScene::load() {
 		//Score (Leave last as gets long!)
 		gamePanel->addText([]() -> std::string {
 			return "Score: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getScore());
+		});
+
+		//Highest Score
+		gamePanel->addText([]() -> std::string {
+			if(highscores.empty())
+				return "Highscore: 0";
+			else
+				return "Highscore: " + std::to_string((--highscores.end())->first);
 		});
 	}
 
@@ -526,44 +582,48 @@ void GameScene::update(const double& dt) {
 		}
 	}
 
-	//Spawn Asteroids
-	if (asteroids.size() < maxAsteroidPop)
+	if (player1->isAlive())
+	{
+		//Spawn Asteroids
+		if (asteroids.size() < maxAsteroidPop)
 	{
 		spawnAsteroid();
 	}
 
-	//Spawn Enemies
-	while (!enemyQueue.empty())
-	{
-		//Get next enemy from spawn queue
-		auto enemyData = enemyQueue.front();
-		enemyQueue.pop();
-		spawnEnemy(enemyData.first, enemyData.second);
-	}
-	//When all enemies are dead, Spawn next wave
-	if (enemiesQueued && enemies.empty())
-	{
-		curWave++;
-
-		//Set EQ to false before wave spawn to syncronise threads
-		enemiesQueued = false;
-
-		//If still more waves to come
-		if (_waveData.count(make_pair(curRound, curWave)))
+		//Spawn Enemies
+		while (!enemyQueue.empty())
 		{
-			gameScene.roundwaveStart();
+			//Get next enemy from spawn queue
+			auto enemyData = enemyQueue.front();
+			enemyQueue.pop();
+			spawnEnemy(enemyData.first, enemyData.second);
 		}
-		//Else when all waves are complete, Round complete
-		else 
+		//When all enemies are dead, Spawn next wave
+		if (enemiesQueued && enemies.empty())
 		{
-			//Damage to death all asteroid and bullet fragments
-			gameScene.destroyAll();
-			newRound = true;
-			maxAsteroidPop = 0;
-			//Go to shop
-			setShopVisible(true);
+			curWave++;
+
+			//Set EQ to false before wave spawn to syncronise threads
+			enemiesQueued = false;
+
+			//If still more waves to come
+			if (_waveData.count(make_pair(curRound, curWave)))
+			{
+				gameScene.roundwaveStart();
+			}
+			//Else when all waves are complete, Round complete
+			else
+			{
+				//Damage to death all asteroid and bullet fragments
+				gameScene.destroyAll();
+				newRound = true;
+				maxAsteroidPop = 0;
+				//Go to shop
+				setShopVisible(true);
+			}
 		}
 	}
+
 
 	//TODO: Less hacky way of getting world, similar is also used in load
 	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
@@ -572,8 +632,54 @@ void GameScene::update(const double& dt) {
 	if (toMenu)
 		gotoMenu();
 
-	audioManager.update(dt);
 	Scene::update(dt);
+}
+
+void GameScene::onTextEntered(std::string text)
+{
+	if (!enteringText)
+		return;
+	
+	cout << "Enter Initals" << endl;
+
+	//If all 3 entered then return
+	if (playerName.str().size() >= 3)
+	{
+		enteringText = false;
+		return;
+	}
+
+	//Only accept letters
+	if (!isalpha(text[0]))
+		return;
+
+	// Add character to name
+	playerName << text;
+	// Display character
+	switch (playerName.str().size())
+	{
+	case 1:
+		initial1->getComponents<TextComponent>()[0]->setText(text);
+		break;
+	case 2:
+		initial2->getComponents<TextComponent>()[0]->setText(text);
+		break;
+	case 3: 
+		initial3->getComponents<TextComponent>()[0]->setText(text);
+		carat->setVisible(false);
+
+		//Add score to highscores.
+		const std::string& s = playerName.str();
+		highscores.emplace(player1->getComponents<PlayerComponent>()[0]->getScore(), s);
+
+		if (highscores.size() > 10)
+			highscores.erase(highscores.begin());
+
+		return;
+	}
+
+	//Move Carat along
+	carat->setPosition(sf::Vector2f(carat->getPosition().x + 64.0f, carat->getPosition().y));
 }
 
 void pDThread()
@@ -592,12 +698,21 @@ void pDThread()
 	setShopVisible(false);
 	sf::sleep(sf::milliseconds(650));
 	gameOverPanel->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial1->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial2->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial3->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	carat->setVisible(true);
+	enteringText = true;
 
 } sf::Thread pdthread(&pDThread);
 
-
 void GameScene::playerDeath()
 {
+
 	pdthread.launch();
 	return;
 }
@@ -638,7 +753,6 @@ void GameScene::roundwaveStart()
 
 void GameScene::spawnWave() {
 
-
 	//Get data for current wave
 	auto etData = _waveData[std::make_pair(curRound, curWave)];
 	std::vector <unsigned int> sides;
@@ -659,10 +773,6 @@ void GameScene::spawnWave() {
 	//Sound
 	audioManager.playSound("wave_approaching");
 
-
-
-
-
 	for (unsigned int i = 0; i < 8; i++)
 	{
 		//Arrow flashes. Eight flashes to match SFX
@@ -677,7 +787,6 @@ void GameScene::spawnWave() {
 			arrows[sides[j] - 1]->setVisible(false);
 		sf::sleep(sf::milliseconds(125));
 	}
-
 
 	enemiesQueued = true;
 }
@@ -709,13 +818,15 @@ void GameScene::destroyAll()
 // Switch scene to menu safely
 void GameScene::gotoMenu()
 {
+	//Stop all threads
+	pdthread.terminate();
+	rst.terminate();
+
 	// Resetting all shared_ptr
 	player1->getComponents<PhysicsComponent>()[0]->~PhysicsComponent();
 	playerDestructible.reset();
 	player1->setForDelete();
 	player1.reset();
-
-	ssAsteroids.reset();
 
 	gamePanel.reset();
 	game->setForDelete();
