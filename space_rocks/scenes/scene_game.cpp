@@ -208,6 +208,7 @@ void setGameoverVisible(bool visible)
 	else
 	{
 		suppressPlayerControl = true;
+		setShopVisible(false);
 	}
 }
 
@@ -423,9 +424,6 @@ void GameScene::load() {
 	world->SetDebugDraw(&debugDrawInstance);
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
 
-	//Start Round 1
-	//gameScene.roundwaveStart();
-
 	setLoaded(true);
 }
 
@@ -614,6 +612,15 @@ void GameScene::update(const double& dt) {
 			//Else when all waves are complete, Round complete
 			else
 			{
+				//If there is no next round
+				if (!_waveData.count(make_pair(curRound + 1, 1)))
+				{
+					//Game over, player wins!
+					gameOver1->getComponents<TextComponent>()[0]->setText("You");
+					gameOver2->getComponents<TextComponent>()[0]->setText("Win!");
+					player1->getComponents<DestructibleComponent>()[0]->damage(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
+				}
+				
 				//Damage to death all asteroid and bullet fragments
 				gameScene.destroyAll();
 				newRound = true;
@@ -808,7 +815,7 @@ void GameScene::destroyAll()
 
 			//Else kill
 			else
-				current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
+				current->getComponents<DestructibleComponent>()[0]->damage(FLT_MAX);
 		}
 
 		current.reset();
