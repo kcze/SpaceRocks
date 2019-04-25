@@ -31,6 +31,10 @@ std::shared_ptr<PanelComponent> shopPanel;
 std::shared_ptr<Entity> gameOver1;
 std::shared_ptr<Entity> gameOver2;
 std::shared_ptr<PanelComponent> gameOverPanel;
+std::shared_ptr<Entity> initial1;
+std::shared_ptr<Entity> initial2;
+std::shared_ptr<Entity> initial3;
+std::shared_ptr<Entity> carat;
 
 std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
 std::vector<std::shared_ptr<Entity>> asteroids;
@@ -51,9 +55,11 @@ bool enemiesQueued;
 bool newRound;
 bool toMenu;
 bool shopVisible;
+bool enteringText;
 
 std::shared_ptr<DestructibleComponent> playerDestructible;
 std::string str;
+std::stringstream playerName;
 
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
@@ -194,6 +200,10 @@ void setGameoverVisible(bool visible)
 		gameOver1->setVisible(false);
 		gameOver2->setVisible(false);
 		gameOverPanel->setVisible(false);
+		initial1->setVisible(false);
+		initial2->setVisible(false);
+		initial3->setVisible(false);
+		carat->setVisible(false);
 	}
 	else
 	{
@@ -205,14 +215,19 @@ void GameScene::load() {
 	cout << "Game Scene Load \n";
 	//Reset
 	{
+
+		std::queue<std::pair<unsigned int, unsigned int>>().swap(enemyQueue);
 		destroyAll();
 		maxAsteroidPop = 0;
 		curRound = 0;
 		curWave = 1;
 		maxEnemyPop = 0;
+		enteringText = false;
 		enemiesQueued = false;
 		newRound = true;
 		toMenu = false;
+		playerName.str("");
+		playerName.clear();
 	}
 
 	// Player ship
@@ -289,8 +304,32 @@ void GameScene::load() {
 		t->setText("Over");
 		t->setSize(200.0f);
 
+		initial1 = makeEntity();
+		initial1->setPosition(sf::Vector2f(GAMEX / 2 - 64.0f, GAMEY / 2 + 64.0f));
+		t = initial1->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);		
+		
+		carat = makeEntity();
+		carat->setPosition(sf::Vector2f(GAMEX / 2 - 64.0f, GAMEY / 2 + 112.0f));
+		t = carat->addComponent<TextComponent>();
+		t->setText("^");
+		t->setSize(100.0f);		
+		
+		initial2 = makeEntity();
+		initial2->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 64.0f));
+		t = initial2->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);
+
+		initial3 = makeEntity();
+		initial3->setPosition(sf::Vector2f(GAMEX / 2 + 64.0f, GAMEY / 2 + 64.0f));
+		t = initial3->addComponent<TextComponent>();
+		t->setText("A");
+		t->setSize(100.0f);
+
 		auto go = makeEntity();
-		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 192.0f));
+		go->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 256.0f));
 		gameOverPanel = go->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f);
 		gameOverPanel->addButton("Menu", []() { toMenu = true; });
 
@@ -339,11 +378,10 @@ void GameScene::load() {
 			arrows[i]->setVisible(false);
 	}
 
-
-	// Game panel
+	// Game panel (UI)
 	{
 		game = makeEntity();
-		game->setPosition(sf::Vector2f(320.0f, 16.0f));
+		game->setPosition(sf::Vector2f(420.0f, 16.0f));
 		gamePanel = game->addComponent<PanelComponent>(sf::Vector2f(0.0f, 0.0f), 192.0f, true);
 		
 		// HP
@@ -361,6 +399,14 @@ void GameScene::load() {
 		//Score (Leave last as gets long!)
 		gamePanel->addText([]() -> std::string {
 			return "Score: " + std::to_string(player1->getComponents<PlayerComponent>()[0]->getScore());
+		});
+
+		//Highest Score
+		gamePanel->addText([]() -> std::string {
+			if(highscores.empty())
+				return "Highscore: 0";
+			else
+				return "Highscore: " + std::to_string((--highscores.end())->first);
 		});
 	}
 
@@ -589,6 +635,53 @@ void GameScene::update(const double& dt) {
 	Scene::update(dt);
 }
 
+void GameScene::onTextEntered(std::string text)
+{
+	if (!enteringText)
+		return;
+	
+	cout << "Enter Initals" << endl;
+
+	//If all 3 entered then return
+	if (playerName.str().size() >= 3)
+	{
+		enteringText = false;
+		return;
+	}
+
+	//Only accept letters
+	if (!isalpha(text[0]))
+		return;
+
+	// Add character to name
+	playerName << text;
+	// Display character
+	switch (playerName.str().size())
+	{
+	case 1:
+		initial1->getComponents<TextComponent>()[0]->setText(text);
+		break;
+	case 2:
+		initial2->getComponents<TextComponent>()[0]->setText(text);
+		break;
+	case 3: 
+		initial3->getComponents<TextComponent>()[0]->setText(text);
+		carat->setVisible(false);
+
+		//Add score to highscores.
+		const std::string& s = playerName.str();
+		highscores.emplace(player1->getComponents<PlayerComponent>()[0]->getScore(), s);
+
+		if (highscores.size() > 10)
+			highscores.erase(highscores.begin());
+
+		return;
+	}
+
+	//Move Carat along
+	carat->setPosition(sf::Vector2f(carat->getPosition().x + 64.0f, carat->getPosition().y));
+}
+
 void pDThread()
 {
 	sf::sleep(sf::milliseconds(2000));
@@ -605,11 +698,21 @@ void pDThread()
 	setShopVisible(false);
 	sf::sleep(sf::milliseconds(650));
 	gameOverPanel->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial1->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial2->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	initial3->setVisible(true);
+	sf::sleep(sf::milliseconds(150));
+	carat->setVisible(true);
+	enteringText = true;
 
 } sf::Thread pdthread(&pDThread);
 
 void GameScene::playerDeath()
 {
+
 	pdthread.launch();
 	return;
 }

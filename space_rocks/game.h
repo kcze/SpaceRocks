@@ -12,6 +12,7 @@ extern MenuScene menuScene;
 extern GameScene gameScene;
 extern std::shared_ptr<Entity> player1;
 extern bool suppressPlayerControl;
+extern std::multimap<unsigned int, std::string> highscores;
 
 enum _collisionFlags
 {
