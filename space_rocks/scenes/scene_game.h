@@ -21,5 +21,6 @@ public:
   static void gotoMenu();
 
   void update(const double& dt) override;
+  void onTextEntered(std::string text);
 };
 
