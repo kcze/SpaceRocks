@@ -61,6 +61,54 @@ void Files::saveControls() {
 	file.close();
 }
 
+// Load settings and automatically
+bool Files::loadSettings() {
+	std::ifstream file;
+	file.open("settings.dat");
+
+	// If file doesn't exist, return
+	if (!file.good())
+	{
+		file.close();
+		return true;
+	}
+
+	// Loading data
+	bool windowed = false;
+	file >> windowed;
+
+	sf::Vector2u resolution;
+
+	file >> resolution.x;
+	file >> resolution.y;
+
+	// Fullscreen or change resolution
+	if (windowed)
+		Engine::getWindow().setSize(resolution);
+
+	file.close();
+
+	return windowed;
+}
+
+
+// Save settings
+void Files::saveSettings() {
+	std::ofstream file;
+	file.open("settings.dat");
+
+	// Saving fullscreen state
+	if (Engine::isWindowed())
+		file << true << " ";
+	else
+		file << false << " ";
+
+	// Saving resolution
+	file << Engine::getWindowSize().x << " " << Engine::getWindowSize().y;
+
+	file.close();
+}
+
 // Loads highscores from a file
 std::multimap<unsigned int, std::string> Files::loadHighscores() {
 	std::multimap<unsigned int, std::string> highscores;

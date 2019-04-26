@@ -16,14 +16,18 @@ std::shared_ptr<Entity> menu;
 std::shared_ptr<Entity> settings;
 std::shared_ptr<Entity> controls;
 std::shared_ptr<Entity> high;
+std::shared_ptr<Entity> graphics;
 std::shared_ptr<PanelComponent> menuPanel;
 std::shared_ptr<PanelComponent> settingsPanel;
 std::shared_ptr<PanelComponent> controlsPanel;
 std::shared_ptr<PanelComponent> highscoresPanel;
+std::shared_ptr<PanelComponent> graphicsPanel;
 PanelComponent* currentPanel;
 
 Input::KeyCode changeKeyCode = (Input::KeyCode)-1;
 Input::KeyCode changeTextEntered = (Input::KeyCode)-1;
+
+bool switchWindow = false;
 
 // Create FloatRect to fits Game into Screen while preserving aspect
 sf::FloatRect CalculateViewport(const sf::Vector2u& screensize,
@@ -115,6 +119,7 @@ void MenuScene::load() {
 	// Loading data from files
 	Files::loadControls();
 	highscores = Files::loadHighscores();
+
 	
 	// Title
 	txtTitle.swap(makeEntity());
@@ -139,11 +144,21 @@ void MenuScene::load() {
 	settingsPanel.swap(settings->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
 	settingsPanel->addText("Settings", 48.0f);
 	settingsPanel->addButton("Controls", []() { switchPanel(controlsPanel.get()); });
-	settingsPanel->addButton("1920x1080", []() { Engine::getWindow().setSize(sf::Vector2u(1920, 1080)); UpdateScaling(); });
-	settingsPanel->addButton("1280x720", []() { Engine::getWindow().setSize(sf::Vector2u(1280, 720)); UpdateScaling(); });
-	settingsPanel->addButton("Window Mode", []() { Engine::switchWindowMode(); UpdateScaling(); });
+	settingsPanel->addButton("Graphics", []() { switchPanel(graphicsPanel.get()); });
 	settingsPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
 	settingsPanel->setVisible(false);
+
+	// Graphics
+	graphics.swap(makeEntity());
+	graphics->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
+	graphicsPanel.swap(graphics->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
+	graphicsPanel->addText("Graphics", 48.0f);
+	graphicsPanel->addButton("1920x1080", []() { Engine::getWindow().setSize(sf::Vector2u(1920, 1080)); UpdateScaling(); });
+	graphicsPanel->addButton("1600x900", []() { Engine::getWindow().setSize(sf::Vector2u(1600, 900)); UpdateScaling(); });
+	graphicsPanel->addButton("1280x720", []() { Engine::getWindow().setSize(sf::Vector2u(1280, 720)); UpdateScaling(); });
+	graphicsPanel->addButton("Window Mode", []() { Engine::switchWindowMode(); UpdateScaling(); });
+	graphicsPanel->addButton("Back", []() { Files::saveSettings(); switchPanel(settingsPanel.get()); });
+	graphicsPanel->setVisible(false);
 
 	// Controls
 	controls.swap(makeEntity());
@@ -200,6 +215,9 @@ void MenuScene::load() {
 	highscoresPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
 	highscoresPanel->setVisible(false);
 
+	// Load graphics settings
+	if (!Files::loadSettings())
+		switchWindow = true;
 	UpdateScaling();
 	setLoaded(true);
 }
@@ -288,6 +306,12 @@ void MenuScene::onTextEntered(std::string text)
 
 void MenuScene::update(const double& dt) {
   
+	if (switchWindow)
+	{
+		Engine::switchWindowMode();
+		UpdateScaling();
+		switchWindow = false;
+	}
 	Scene::update(dt);
 }
 
@@ -302,6 +326,9 @@ void MenuScene::gotoGame()
 
 	settingsPanel.reset();
 	settings->setForDelete();
+
+	graphicsPanel.reset();
+	graphics->setForDelete();
 
 	controlsPanel.reset();
 	controls->setForDelete();

@@ -39,10 +39,12 @@ public:
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
   static void switchWindowMode();
+  static bool isWindowed() { return _windowed; }
 
 private:
   static Scene* _activeScene;
   static std::string _gameName;
+  static bool _windowed;
   static void update();
   static void render(sf::RenderWindow& window);
 };

@@ -15,12 +15,13 @@ using namespace sf;
 using namespace std;
 Scene* Engine::_activeScene = nullptr;
 std::string Engine::_gameName;
+bool Engine::_windowed;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
-static bool windowed;
+
 
 void Loading_update(float dt, const Scene* const scn) {
 	//  cout << "Eng: Loading Screen\n";
@@ -40,7 +41,7 @@ void Loading_render() {
 	octagon.setRotation(loadingspinner);
 	octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * .5f);
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
-	static Text t("Loading", *Resources::get<sf::Font>("RobotoMono-Regular.ttf"));
+	static Text t("Loading", *Resources::get<sf::Font>("Acuter.ttf"));
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
 	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
 	Renderer::queue(&t);
@@ -92,7 +93,7 @@ void Engine::start(unsigned int width, unsigned int height,
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
-	windowed = true;
+	_windowed = true;
 	Renderer::initialise(window);
 	Physics::initialise();
 	changeScene(scn);
@@ -139,8 +140,8 @@ void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
 void Engine::switchWindowMode()
 {
-	windowed = !windowed;
-	if (windowed)
+	_windowed = !_windowed;
+	if (_windowed)
 	{
 		_window->create(VideoMode(1280, 720), _gameName);
 	}
