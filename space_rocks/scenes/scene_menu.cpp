@@ -126,7 +126,7 @@ void MenuScene::load() {
 	menuPanel->addButton("Start", []() { gotoGame(); });
 	menuPanel->addButton("High Scores", []() {});
 	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
-	menuPanel->addButton("Exit", []() {});
+	menuPanel->addButton("Exit", []() { Engine::getWindow().close(); });
 	menuPanel->setVisible(true);
 	switchPanel(menuPanel.get());
 	
