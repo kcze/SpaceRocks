@@ -6,7 +6,7 @@ configuration:
 - Debug
 
 init:
-- ps: $env:APPVEYOR_CACHE_SKIP_SAVE = "true"
+- ps: $env:APPVEYOR_CACHE_SKIP_RESTORE = "true"
 
 before_build:
 - cmd: >-
