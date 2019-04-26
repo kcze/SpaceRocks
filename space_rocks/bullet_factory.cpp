@@ -13,7 +13,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{1.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(0, 64, 64, 64)
@@ -31,7 +31,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{2.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(64, 64, 64, 64)
@@ -49,7 +49,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{3.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(128, 64, 64, 64)
@@ -69,7 +69,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{1.0f * PSI4, 1.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(0, 128, 64, 64)
@@ -89,7 +89,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{1.0f * PSI4, 1.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(64, 128, 64, 64)
@@ -109,7 +109,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{2.0f * PSI4, 2.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(128, 128, 64, 64)
@@ -129,7 +129,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{1.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(0, 192, 64, 64)
@@ -147,7 +147,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{2.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(64, 192, 64, 64)
@@ -165,7 +165,7 @@ std::map < unsigned int, ObjectData > BulletFactory::_objectData =
 				{2.0f * PSI4, 0.0f * PSI4}
 			},
 			{
-				Resources::load<sf::Texture>("projectiles.png")
+				Resources::get<sf::Texture>("projectiles.png")
 			},
 			{
 				sf::IntRect(128, 192, 64, 64)
