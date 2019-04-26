@@ -12,6 +12,7 @@
 #include "system_resources.h"
 #include <string>
 #include "factory.h"
+#include <random>
 
 class AsteroidFactory : Factory {
 public:

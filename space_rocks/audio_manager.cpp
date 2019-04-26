@@ -89,16 +89,42 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 	{
 		"asteroid_broken",
 		*Resources::get<sf::SoundBuffer>("asteroid_broken.wav")
-	}
+	},
+	{
+		"bullet_x_bullet",
+		*Resources::get<sf::SoundBuffer>("bullet_x_bullet.wav")
+	},
+	{
+		"not_enough_coins",
+		*Resources::get<sf::SoundBuffer>("not_enough_coins.wav")
+	}	
 };
 
-sf::Sound AudioManager::_sounds[10] = { sf::Sound()};
+sf::Sound AudioManager::_sounds[20] = { sf::Sound()};
 
 void AudioManager::playSound(std::string name) { 
-	_soundIndex = _soundIndex > 9 ? 0 : _soundIndex;
-	_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
-	_sounds[_soundIndex].play();
-	_soundIndex++;
+	_soundQueue.push(name);
+}
+
+void AudioManager::update(double dt)
+{
+	_playSound();
+}
+
+
+
+void AudioManager::_playSound()
+{
+	while (!_soundQueue.empty())
+	{
+		std::string name = _soundQueue.front();
+		_soundQueue.pop();
+		_soundIndex = _soundIndex > 19 ? 0 : _soundIndex;
+		_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
+		_sounds[_soundIndex].play();
+		_soundIndex++;
+		std::cout << "Playing Sound: " << name << std::endl;
+	}
 }
 
 AudioManager audioManager;

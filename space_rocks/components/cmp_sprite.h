@@ -28,6 +28,8 @@ public:
   void setOrigin(const sf::Vector2f origin);
   void setDraw(bool draw);
   void setColor(sf::Color color);
+
+  ~SpriteComponent() override;
 };
 
 // Shape
@@ -49,6 +51,8 @@ public:
   void render() override;
   
   sf::Shape& getShape() const;
+
+  ~ShapeComponent() override;
   
   template <typename T, typename... Targs> void setShape(Targs... params) {
     _shape.reset(new T(params...));

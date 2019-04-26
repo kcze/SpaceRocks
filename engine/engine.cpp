@@ -8,6 +8,8 @@
 #include <iostream>
 #include <stdexcept>
 #include "..\space_rocks\input.h"
+#include "..\space_rocks\audio_manager.h"
+#include "..\space_rocks\game.h"
 
 using namespace sf;
 using namespace std;
@@ -70,6 +72,7 @@ void Engine::update() {
 	else if (_activeScene != nullptr) {
 		Physics::update(dt);
 		_activeScene->update(dt);
+		audioManager.update(dt);
 	}
 }
 
@@ -104,6 +107,10 @@ void Engine::start(unsigned int width, unsigned int height,
 			case sf::Event::MouseButtonReleased:Input::onMouseReleased(event);	break;
 			case sf::Event::MouseMoved:			Input::onMouseMoved(event);		break;
 			case sf::Event::Resized:			Input::onResized(event);		break;
+			case sf::Event::TextEntered:		Input::onTextEntered(event);	break;
+			case sf::Event::JoystickButtonPressed: Input::onKeyPressed(event);	break;
+			case sf::Event::JoystickButtonReleased: Input::onKeyReleased(event);break;
+			case sf::Event::JoystickMoved:		Input::onKeyPressed(event);	Input::onKeyReleased(event); break;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) {

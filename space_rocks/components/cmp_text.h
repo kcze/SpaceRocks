@@ -11,7 +11,7 @@ public:
 
   void render() override;
 
-  ~TextComponent() override = default;
+  ~TextComponent() override;
 
   void setText(const std::string& str);
   void TextComponent::setAnchor(sf::Vector2f vec);

@@ -28,6 +28,11 @@ void SpriteComponent::setColor(sf::Color color) { _sprite->setColor(color); }
 SpriteComponent::SpriteComponent(Entity* p)
     : Component(p), _sprite(make_shared<sf::Sprite>()), _draw(true) {}
 
+SpriteComponent::~SpriteComponent() {
+	_sprite.reset();
+	_texture.reset();
+}
+
 // Set anchor:
 // 0.0, 0.0	= top left
 // 0.5, 0.5	= center
@@ -51,7 +56,6 @@ void SpriteComponent::setAnchor(sf::Vector2f vec)
 	_sprite->setOrigin(sf::Vector2f(
 		_anchor.x * bounds.width,
 		_anchor.y * bounds.height));
-	cout << "Origin set to: " << _anchor.x * bounds.width << ", " << _anchor.y * bounds.height << endl;
 }
 
 void SpriteComponent::update(double dt) {
@@ -87,6 +91,10 @@ sf::Shape& ShapeComponent::getShape() const { return *_shape; }
 ShapeComponent::ShapeComponent(Entity* p)
 	: Component(p), _shape(make_shared<sf::CircleShape>()) {
 	_anchor = sf::Vector2f(0.5f, 0.5f);
+}
+
+ShapeComponent::~ShapeComponent() {
+	_shape.reset();
 }
 
 sf::Sprite& SpriteComponent::getSprite() const { return *_sprite; }

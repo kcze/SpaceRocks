@@ -1,8 +1,9 @@
 #pragma once
 
 #include "engine.h"
+#include "..\input.h"
 
-class GameScene : public Scene {
+class GameScene : public Scene, public InputEvents {
 public:
 	GameScene() = default;
   ~GameScene() override = default;
@@ -10,10 +11,16 @@ public:
   void load() override;
 
   void spawnAsteroid();
+  void spawnEnemy(unsigned int id, unsigned int dir);
   void createEdges();
   void playerDeath();
-  void roundStart();
+  void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
+  void roundwaveStart();
+  void spawnWave();
+  void destroyAll();
+  static void gotoMenu();
 
   void update(const double& dt) override;
-
+  void onTextEntered(std::string text);
 };
+

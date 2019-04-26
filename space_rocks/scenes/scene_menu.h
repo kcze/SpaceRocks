@@ -2,6 +2,7 @@
 
 #include "engine.h"
 #include "..\input.h"
+#include "..\files.h"
 
 class MenuScene : public Scene, public InputEvents {
 public:
@@ -10,7 +11,9 @@ public:
 
 	void load() override;
 
-	void onKeyPressed(Keyboard::Key key) override;
+	void onKeyPressed(std::variant<Keyboard::Key, unsigned int> k) override;
+	void onTextEntered(std::string text) override;
+	static void gotoGame();
 
 	void update(const double& dt) override;
 
