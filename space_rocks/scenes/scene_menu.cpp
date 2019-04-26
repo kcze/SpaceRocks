@@ -124,7 +124,6 @@ void MenuScene::load() {
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	menuPanel = (menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
 	menuPanel->addButton("Start", []() { gotoGame(); });
-	menuPanel->addButton("Load", []() {});
 	menuPanel->addButton("High Scores", []() {});
 	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
 	menuPanel->addButton("Exit", []() {});
