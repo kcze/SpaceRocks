@@ -40,7 +40,6 @@ public:
 
 	static void keyPressed(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
 	static void keyReleased(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
-	//static void key(void(*handler)(std::variant<Keyboard::Key, unsigned int>));
 	static void mousePressed(void(*handler)(Mouse::Button));
 	static void mouseReleased(void(*handler)(Mouse::Button));
 	static void mouse(void(*handler)(Mouse::Button));
@@ -56,7 +55,6 @@ private:
 
 	static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyPressedHandlers;
 	static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyReleasedHandlers;
-	//static std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		keyHandlers;
 	static std::list<void(*)(Mouse::Button)>	mousePressedHandlers;
 	static std::list<void(*)(Mouse::Button)>	mouseReleasedHandlers;
 	static std::list<void(*)(Mouse::Button)>	mouseHandlers;
@@ -88,7 +86,6 @@ public:
 
 	virtual void onKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {}
 	virtual void onKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {}
-	//virtual void onKey(std::variant<Keyboard::Key, unsigned int> key) {}
 	virtual void onMousePressed(Mouse::Button button) {}
 	virtual void onMouseReleased(Mouse::Button button) {}
 	virtual void onMouse(Mouse::Button button) {}

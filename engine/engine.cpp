@@ -126,7 +126,6 @@ void Engine::start(unsigned int width, unsigned int height,
 	}
 	window.close();
 	Physics::shutdown();
-	//todo why is it commented out?
 	// Render::shutdown();
 }
 

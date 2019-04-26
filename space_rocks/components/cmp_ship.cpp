@@ -56,8 +56,6 @@ void ShipComponent::shoot()
 
 void ShipComponent::update(double dt)
 {
-	//todo may override thrust() and always be false
-	// works because player fires thrust() after this update
 	_thrusterSpriteComponent->setDraw(false);
 
 	if (_time > 0.0f)

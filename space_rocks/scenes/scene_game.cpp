@@ -189,7 +189,7 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 void setShopVisible(bool visible)
 {
 	suppressPlayerControl = visible;
-	shopVisible = visible;//todo maybe not needed?
+	shopVisible = visible;
 	shopPanel->setVisible(visible);
 }
 
@@ -284,9 +284,6 @@ void GameScene::load() {
 			//Start next round
 			gameScene.roundwaveStart();
 		});
-
-		//TODO: Fix navigation back to menu and add Save button
-		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 
 		setShopVisible(true);
 	}
@@ -630,11 +627,6 @@ void GameScene::update(const double& dt) {
 			}
 		}
 	}
-
-
-	//TODO: Less hacky way of getting world, similar is also used in load
-	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
-	//world->DrawDebugData();
 
 	if (toMenu)
 		gotoMenu();
