@@ -114,6 +114,7 @@ void MenuScene::load() {
 
 	// Loading data from files
 	Files::loadControls();
+	highscores = Files::loadHighscores();
 	
 	// Title
 	txtTitle.swap(makeEntity());
@@ -178,20 +179,21 @@ void MenuScene::load() {
 
 	// Highscores
 	high.swap(makeEntity());
-	high->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
-	highscoresPanel.swap(high->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 48.0f));
-	highscoresPanel->addText("Highscores", 48.0f);
+	high->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 64.0f));
+	highscoresPanel.swap(high->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 38.0f));
+	highscoresPanel->addText("High Scores", 48.0f);
+	highscoresPanel->addText("", 8.0f);
 	// Adding highscores
 	if (highscores.size() == 0)
 	{
 		// Add text to indicate that there's no highscores so far
-		highscoresPanel->addText("No highscores!");
+		highscoresPanel->addText("No high scores!", 32.0f);
 	}
 	else
 	{
 		// Display highscores
 		for(auto it = highscores.rbegin(); it != highscores.rend(); ++it)
-			highscoresPanel->addText(it->second + "\t" + std::to_string(it->first));
+			highscoresPanel->addText(it->second + "\t" + std::to_string(it->first), 32.0f);
 	}
 	// Add empty text to fit the back button
 	highscoresPanel->addText("");

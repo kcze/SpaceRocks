@@ -60,3 +60,56 @@ void Files::saveControls() {
 
 	file.close();
 }
+
+// Loads highscores from a file
+std::multimap<unsigned int, std::string> Files::loadHighscores() {
+	std::multimap<unsigned int, std::string> highscores;
+
+	std::ifstream file;
+	file.open("highscores.dat");
+
+	// If file doesn't exist, return
+	if (!file.good())
+	{
+		file.close();
+		return highscores;
+	}
+
+	// Loading data
+	while (!file.eof())
+	{
+		// Loading score
+		unsigned int score = 0;
+		file >> score;
+
+		// Reached the last line
+		if (score == 0)
+			return highscores;
+
+		// Loading name
+		std::string name;
+		file >> name;
+		highscores.emplace(score, name);
+	}
+
+	file.close();
+
+	return highscores;
+}
+
+// Saves highscores to a file
+void Files::saveHighscores(std::multimap<unsigned int, std::string> highscores) {
+
+	std::ofstream file;
+	file.open("highscores.dat");
+
+	for (auto pair : highscores)
+	{
+		// Saving score
+		file << pair.first << " ";
+		// Saving name string
+		file << pair.second << std::endl;
+	}
+
+	file.close();
+}

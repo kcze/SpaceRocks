@@ -682,6 +682,9 @@ void GameScene::onTextEntered(std::string text)
 		if (highscores.size() > 10)
 			highscores.erase(highscores.begin());
 
+		// Save highscores to file
+		Files::saveHighscores(highscores);
+
 		return;
 	}
 

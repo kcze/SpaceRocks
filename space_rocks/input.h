@@ -3,7 +3,6 @@
 #include <SFML/Window.hpp>
 #include <map>
 #include <variant>
-#include "engine.h"
 
 constexpr auto AXIS_THRESHOLD = 50;
 
