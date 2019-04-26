@@ -20,7 +20,7 @@ before_build:
     cmake -G "Visual Studio 15 2017 Win64" ../
     
 build:
-  project: C:\projects\spacerocks\build\SPACE_ROCKS.vcxproj
+  project: C:\projects\spacerocks\build\PACKAGE.vcxproj
   parallel: true
   verbosity: minimal
   
