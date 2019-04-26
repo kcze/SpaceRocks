@@ -15,9 +15,11 @@ std::shared_ptr<Entity> txtTitle;
 std::shared_ptr<Entity> menu;
 std::shared_ptr<Entity> settings;
 std::shared_ptr<Entity> controls;
+std::shared_ptr<Entity> high;
 std::shared_ptr<PanelComponent> menuPanel;
 std::shared_ptr<PanelComponent> settingsPanel;
 std::shared_ptr<PanelComponent> controlsPanel;
+std::shared_ptr<PanelComponent> highscoresPanel;
 PanelComponent* currentPanel;
 
 Input::KeyCode changeKeyCode = (Input::KeyCode)-1;
@@ -124,7 +126,7 @@ void MenuScene::load() {
 	menu->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	menuPanel = (menu->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
 	menuPanel->addButton("Start", []() { gotoGame(); });
-	menuPanel->addButton("High Scores", []() {});
+	menuPanel->addButton("High Scores", []() { switchPanel(highscoresPanel.get()); });
 	menuPanel->addButton("Settings", []() { switchPanel(settingsPanel.get()); });
 	menuPanel->addButton("Exit", []() { Engine::getWindow().close(); });
 	menuPanel->setVisible(true);
@@ -146,8 +148,6 @@ void MenuScene::load() {
 	controls.swap(makeEntity());
 	controls->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
 	controlsPanel.swap(controls->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 96.0f));
-	//todo not enough space
-	//controlsPanel->addText("Controls", 48.0f);
 	controlsPanel->addButton(
 		[]() -> std::string { return "Thrust/Up: " + Input::keys[Input::KeyCode::P1_THRUST].second; },
 		[]() { Input::keys[Input::KeyCode::P1_THRUST].second = "";
@@ -175,6 +175,28 @@ void MenuScene::load() {
 	});
 	controlsPanel->addButton("Back", []() { Files::saveControls(); switchPanel(settingsPanel.get()); });
 	controlsPanel->setVisible(false);
+
+	// Highscores
+	high.swap(makeEntity());
+	high->setPosition(sf::Vector2f(GAMEX / 2, GAMEY / 2 + 96.0f));
+	highscoresPanel.swap(high->addComponent<PanelComponent>(sf::Vector2f(0.5f, 0.5f), 48.0f));
+	highscoresPanel->addText("Highscores", 48.0f);
+	// Adding highscores
+	if (highscores.size() == 0)
+	{
+		// Add text to indicate that there's no highscores so far
+		highscoresPanel->addText("No highscores!");
+	}
+	else
+	{
+		// Display highscores
+		for(auto it = highscores.rbegin(); it != highscores.rend(); ++it)
+			highscoresPanel->addText(it->second + "\t" + std::to_string(it->first));
+	}
+	// Add empty text to fit the back button
+	highscoresPanel->addText("");
+	highscoresPanel->addButton("Back", []() { switchPanel(menuPanel.get()); });
+	highscoresPanel->setVisible(false);
 
 	UpdateScaling();
 	setLoaded(true);
@@ -281,6 +303,9 @@ void MenuScene::gotoGame()
 
 	controlsPanel.reset();
 	controls->setForDelete();
+
+	highscoresPanel.reset();
+	high->setForDelete();
 
 	currentPanel = nullptr;
 
