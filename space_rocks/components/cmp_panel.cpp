@@ -159,12 +159,6 @@ void PanelComponent::pointerNext()
 		_currentButton = _buttons.front();
 	else
 	{
-		/*std::vector<std::shared_ptr<Entity>>::iterator it = std::find(_buttons.begin(), _buttons.end(), _currentButton);
-
-		int i = std::distance(_buttons.begin(), it);
-
-		_currentButton = _buttons.at(i + 1);//*/
-
 		for (int i = 0; i < _buttons.size(); i++)
 		{
 			if (_currentButton == _buttons[i])

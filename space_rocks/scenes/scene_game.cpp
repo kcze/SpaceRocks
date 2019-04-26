@@ -439,7 +439,6 @@ void GameScene::spawnAsteroid()
 	auto asteroid = AsteroidFactory::makeAsteroid(11, center + dir * 770.0f);
 
 	//Set velocity back towards center
-	//TODO: Random variation to prevent all asteroids heading straight to center.
 	asteroid->getComponents<PhysicsComponent>()[0]->setVelocity(sf::Vector2f(dir.x, -dir.y) * -50.0f);
 
 	//Add to collection

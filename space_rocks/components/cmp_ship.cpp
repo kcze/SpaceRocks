@@ -38,7 +38,6 @@ void ShipComponent::shoot()
 		return;
 
 	//Play one of two light weapon shots
-	//TODO: Add variation for medium and heavy weapons
 	std::default_random_engine r((int)time(NULL));
 	std::uniform_int_distribution<int> dI(0, 1);
 	if(dI(r))
