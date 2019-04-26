@@ -216,7 +216,7 @@ void MenuScene::load() {
 	highscoresPanel->setVisible(false);
 
 	// Load graphics settings
-	if (!Files::loadSettings())
+	if (!Files::loadSettings() && Engine::isWindowed())
 		switchWindow = true;
 	UpdateScaling();
 	setLoaded(true);
