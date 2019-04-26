@@ -6,7 +6,6 @@ configuration:
 - Debug
 
 cache:
-- build/lib -> appveyor.yml
 
 before_build:
 - cmd: >-
