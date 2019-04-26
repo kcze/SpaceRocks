@@ -5,7 +5,8 @@ configuration:
 - Release
 - Debug
 
-cache:
+init:
+- ps: $env:APPVEYOR_CACHE_SKIP_SAVE = "true"
 
 before_build:
 - cmd: >-
