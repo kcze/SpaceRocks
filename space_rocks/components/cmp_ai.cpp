@@ -56,7 +56,6 @@ void AiComponent::update(double dt) {
 	}
 	else
 	{
-		//todo shoot only if is aiming at player
 		_shipComponent->shoot();
 	}
 	

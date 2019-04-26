@@ -12,7 +12,6 @@ std::map<Input::KeyCode, std::pair<std::variant<Keyboard::Key, unsigned int>, st
 
 std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		Input::keyPressedHandlers;
 std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		Input::keyReleasedHandlers;
-//std::list<void(*)(std::variant<Keyboard::Key, unsigned int>)>		Input::keyHandlers;
 std::list<void(*)(Mouse::Button)>	Input::mousePressedHandlers;
 std::list<void(*)(Mouse::Button)>	Input::mouseReleasedHandlers;
 std::list<void(*)(Mouse::Button)>	Input::mouseHandlers;
@@ -21,8 +20,8 @@ std::list<void(*)(int, int)>		Input::resizeHandlers;
 std::list<void(*)(std::string)>		Input::textEnteredHandlers;
 std::list<InputEvents*>				Input::handlers;
 
-std::variant<Keyboard::Key, unsigned int> Input::lastKey = Keyboard::Key::Unknown;//todo change to vector
-Mouse::Button Input::lastButton = (sf::Mouse::Button)-1;//todo change to vector
+std::variant<Keyboard::Key, unsigned int> Input::lastKey = Keyboard::Key::Unknown;
+Mouse::Button Input::lastButton = (sf::Mouse::Button)-1;
 Vector2f Input::lastMousePos;
 std::map<int, bool> Input::joystickAxes =
 {
@@ -109,7 +108,6 @@ bool Input::isKeyUp(Input::KeyCode keyCode) {
 
 
 Vector2f Input::mousePosition() {
-	//todo not implemented
 	//Vector2f pos = sf::Mouse::getPosition(WINDOW);
 	
 	return Vector2f(0.0f, 0.0f);
@@ -208,12 +206,7 @@ void Input::onKeyReleased(sf::Event event) {
 		}
 
 	}
-	//todo useless
-	/*if (std::get<Keyboard::Key>(lastKey) == (Keyboard::Key)event.key.code) {
-		lastKey = Keyboard::Key::Unknown;
-		for (auto func : keyHandlers) func((Keyboard::Key)event.key.code);
-		for (auto handler : handlers) handler->onKey((Keyboard::Key)event.key.code);
-	}*/
+
 }
 
 void Input::onMousePressed(sf::Event event) {
@@ -246,7 +239,6 @@ void Input::onMouseMoved(sf::Event event) {
 void Input::onResized(sf::Event event) {
 	for (auto func : resizeHandlers) func(event.size.width, event.size.height);
 	for (auto handler : handlers) handler->onResize(event.size.width, event.size.height);
-	//todo refresh window
 }
 
 void Input::onTextEntered(sf::Event event) {
@@ -258,7 +250,6 @@ void Input::onTextEntered(sf::Event event) {
 
 void Input::keyPressed(void(*handler)(std::variant<Keyboard::Key, unsigned int>)) { keyPressedHandlers.push_back(handler); }
 void Input::keyReleased(void(*handler)(std::variant<Keyboard::Key, unsigned int>)) { keyReleasedHandlers.push_back(handler); }
-//void Input::key(void(*handler)(std::variant<Keyboard::Key, unsigned int>)) { keyHandlers.push_back(handler); }
 void Input::mousePressed(void(*handler)(Mouse::Button)) { mousePressedHandlers.push_back(handler); }
 void Input::mouseReleased(void(*handler)(Mouse::Button)) { mouseReleasedHandlers.push_back(handler); }
 void Input::mouse(void(*handler)(Mouse::Button)) { mouseHandlers.push_back(handler); }

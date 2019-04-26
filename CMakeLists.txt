@@ -59,6 +59,10 @@ set(EXECUTABLES ${EXECUTABLES} SPACE_ROCKS)
   add_custom_target(copy_resources ALL 
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res)
 	
+#### Target for copying dll####
+  add_custom_target(copy_dll ALL 
+    COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/lib/sfml/extlibs/bin/x86/openal32.dll" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
+	
 #### Link Dependencies ####
 foreach (exe ${EXECUTABLES})
   #Set working directory to build dir in visual studio
@@ -80,7 +84,7 @@ foreach (exe ${EXECUTABLES})
   set_target_properties(${exe} PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
   endif(MSVC)
 
-  add_dependencies(${exe} sfml-graphics sfml-audio copy_resources)
+  add_dependencies(${exe} sfml-graphics sfml-audio copy_resources copy_dll)
 endforeach ()
 
 #Install directory within build folder, so it doesn't go into /lib or program-files
@@ -109,7 +113,7 @@ foreach (exe ${EXECUTABLES})
   #set(CPACK_INSTALL_CMAKE_PROJECTS ${CPACK_INSTALL_CMAKE_PROJECTS};${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};${exe}_cmpt;/)
   set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} ${exe}_cmpt)
   set(CPACK_COMPONENT_${exe}_CMPT_DEPENDS resources_cmpt libs_cmpt)
-  set(CPACK_COMPONENT_${exe}_CMPT_GROUP "Labs")
+  set(CPACK_COMPONENT_${exe}_CMPT_GROUP "Space Rocks")
 endforeach ()
 
 
@@ -123,7 +127,7 @@ ELSE()
   set(CPACK_GENERATOR ZIP)
 ENDIF(WIN32)
 
-set(CPACK_PACKAGE_NAME "SPACE ROCKS")
+set(CPACK_PACKAGE_NAME "Space Rocks")
 set(CPACK_PACKAGE_FILE_NAME ${CMAKE_PROJECT_NAME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "set09119")
 set(CPACK_PACKAGE_VENDOR "Edinburgh Napier University")
@@ -131,8 +135,8 @@ find_file (LICENSE NAMES LICENSE LICENSE.txt PATHS  "${CMAKE_SOURCE_DIR}/../" "$
 if(${LICENSE})
   set(CPACK_RESOURCE_FILE_LICENSE ${LICENSE})
 endif(${LICENSE})
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
 INCLUDE(CPack)

@@ -2,6 +2,7 @@
 
 #include "engine.h"
 #include "..\input.h"
+#include "..\files.h"
 
 class MenuScene : public Scene, public InputEvents {
 public:

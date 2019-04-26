@@ -189,7 +189,7 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 void setShopVisible(bool visible)
 {
 	suppressPlayerControl = visible;
-	shopVisible = visible;//todo maybe not needed?
+	shopVisible = visible;
 	shopPanel->setVisible(visible);
 }
 
@@ -208,6 +208,7 @@ void setGameoverVisible(bool visible)
 	else
 	{
 		suppressPlayerControl = true;
+		setShopVisible(false);
 	}
 }
 
@@ -283,9 +284,6 @@ void GameScene::load() {
 			//Start next round
 			gameScene.roundwaveStart();
 		});
-
-		//TODO: Fix navigation back to menu and add Save button
-		//shopPanel->addButton("Menu", []() { Engine::changeScene(&menuScene); });
 
 		setShopVisible(true);
 	}
@@ -422,9 +420,6 @@ void GameScene::load() {
 	//Set Debug Draw
 	world->SetDebugDraw(&debugDrawInstance);
 	debugDrawInstance.SetFlags(b2Draw::e_shapeBit);
-
-	//Start Round 1
-	//gameScene.roundwaveStart();
 
 	setLoaded(true);
 }
@@ -614,6 +609,15 @@ void GameScene::update(const double& dt) {
 			//Else when all waves are complete, Round complete
 			else
 			{
+				//If there is no next round
+				if (!_waveData.count(make_pair(curRound + 1, 1)))
+				{
+					//Game over, player wins!
+					gameOver1->getComponents<TextComponent>()[0]->setText("You");
+					gameOver2->getComponents<TextComponent>()[0]->setText("Win!");
+					player1->getComponents<DestructibleComponent>()[0]->damage(player1->getComponents<DestructibleComponent>()[0]->getMaxHp());
+				}
+				
 				//Damage to death all asteroid and bullet fragments
 				gameScene.destroyAll();
 				newRound = true;
@@ -623,11 +627,6 @@ void GameScene::update(const double& dt) {
 			}
 		}
 	}
-
-
-	//TODO: Less hacky way of getting world, similar is also used in load
-	//auto world = asteroids[0]->getComponents<PhysicsComponent>()[0]->getBody()->GetWorld();
-	//world->DrawDebugData();
 
 	if (toMenu)
 		gotoMenu();
@@ -674,6 +673,9 @@ void GameScene::onTextEntered(std::string text)
 
 		if (highscores.size() > 10)
 			highscores.erase(highscores.begin());
+
+		// Save highscores to file
+		Files::saveHighscores(highscores);
 
 		return;
 	}
@@ -808,7 +810,7 @@ void GameScene::destroyAll()
 
 			//Else kill
 			else
-				current->getComponents<DestructibleComponent>()[0]->damage(100.0f);
+				current->getComponents<DestructibleComponent>()[0]->damage(FLT_MAX);
 		}
 
 		current.reset();

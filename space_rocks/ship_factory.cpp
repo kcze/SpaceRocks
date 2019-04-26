@@ -160,7 +160,7 @@ std::shared_ptr<Entity> ShipFactory::makeEnemy(unsigned int type)
 		fixtureDef.shape = &Shape;
 		//Assign fixtureDef to physics component
 		enemy->getComponents<PhysicsComponent>()[0]->setFixtureDef(fixtureDef);
-		enemy->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);			//<-- TODO: SET THIS WHEN DOING AI
+		enemy->getComponents<PhysicsComponent>()[0]->setLinearDampening(0.1f);
 	}
 
 	//Destructible
