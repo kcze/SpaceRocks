@@ -164,7 +164,7 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			AsteroidFactory::makeAsteroid(1332, coords);
 			break;
 		default:
-			std::cout << "Trying to spawn fragments that don't exist." << std::endl;
+			break;
 	}
 }
 

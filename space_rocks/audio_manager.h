@@ -5,6 +5,7 @@
 #include "engine.h"
 #include <queue>
 
+// Plays all sounds
 class AudioManager {
 public:
 

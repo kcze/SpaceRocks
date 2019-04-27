@@ -4,6 +4,7 @@
 #include "ecm.h"
 #include <Box2D/Dynamics/b2Body.h>
 
+// Physics Component
 class PhysicsComponent : public Component {
 protected:
   b2Body* _body;

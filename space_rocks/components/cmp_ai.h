@@ -3,6 +3,7 @@
 #include <ecm.h>
 #include "components.h"
 
+// Controls enemy behaviour
 class AiComponent : public Component {
 protected:
 	std::shared_ptr<ShipComponent> _shipComponent;

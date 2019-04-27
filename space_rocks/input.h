@@ -4,17 +4,20 @@
 #include <map>
 #include <variant>
 
+// Threshold for joystick axes from which button pressed event should be triggered
 constexpr auto AXIS_THRESHOLD = 50;
 
 using namespace sf;
 
 class InputEvents;
 
+// Static class that handles all input
 class Input {
 	friend class InputEvents;
 	friend class Engine;
 
 public:
+	// Key codes for player input
 	enum KeyCode {
 		NONE,
 		P1_LEFT,
@@ -80,6 +83,7 @@ private:
 
 };
 
+// Class working as an interface for handling input
 class InputEvents {
 public:
 	InputEvents() { Input::registerHandler(this); }

@@ -1,5 +1,6 @@
 #include "audio_manager.h"
 
+// Sounds
 std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 {
 	{
@@ -102,16 +103,16 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 
 sf::Sound AudioManager::_sounds[20] = { sf::Sound()};
 
+// Play a sound
 void AudioManager::playSound(std::string name) { 
 	_soundQueue.push(name);
 }
 
+// Audio Manager update
 void AudioManager::update(double dt)
 {
 	_playSound();
 }
-
-
 
 void AudioManager::_playSound()
 {
@@ -123,7 +124,6 @@ void AudioManager::_playSound()
 		_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
 		_sounds[_soundIndex].play();
 		_soundIndex++;
-		std::cout << "Playing Sound: " << name << std::endl;
 	}
 }
 

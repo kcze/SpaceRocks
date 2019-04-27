@@ -21,17 +21,20 @@ ShipComponent::~ShipComponent() {
 
 void ShipComponent::setBullet(float damage, unsigned int id) {_bullet = { damage, id }; }
 
+// Go forward
 void ShipComponent::thrust(double dt)
 {
 	_physicsComponent->impulseRelative(sf::Vector2f(0.0f, -_speed * dt));
 	_thrusterSpriteComponent->setDraw(true);
 }
 
+// Rotate
 void ShipComponent::rotate(bool right)
 {
 	_physicsComponent->setAngularVelocity(right ? _angularSpeed : -_angularSpeed);
 }
 
+// Try to shoot
 void ShipComponent::shoot()
 {
 	if (_time > 0.0f)

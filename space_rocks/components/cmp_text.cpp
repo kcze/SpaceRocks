@@ -24,6 +24,7 @@ TextComponent::~TextComponent() {
 	_font.reset();
 }
 
+// Change text
 void TextComponent::setText(const std::string& str) {
   _string = str;
   _text.setString(_string);

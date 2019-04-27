@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <ecm.h>
 
+// Simple text
 class TextComponent : public Component {
 public:
   TextComponent() = delete;

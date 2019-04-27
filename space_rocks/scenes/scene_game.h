@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "..\input.h"
 
+// Game scene
 class GameScene : public Scene, public InputEvents {
 public:
 	GameScene() = default;

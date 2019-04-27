@@ -61,7 +61,7 @@ void Files::saveControls() {
 	file.close();
 }
 
-// Load settings and automatically
+// Load settings
 bool Files::loadSettings() {
 	std::ifstream file;
 	file.open("settings.dat");

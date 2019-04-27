@@ -22,6 +22,7 @@
 using namespace std;
 using namespace sf;
 
+// UI
 std::shared_ptr<Entity> game;
 std::shared_ptr<Entity> shop;
 
@@ -37,6 +38,8 @@ std::shared_ptr<Entity> initial3;
 std::shared_ptr<Entity> carat;
 
 std::vector < std::shared_ptr<Entity> > arrows; //Up, Right, Down, Left
+
+// Game objects
 std::vector<std::shared_ptr<Entity>> asteroids;
 std::vector<std::shared_ptr<Entity>> enemies;
 std::queue< std::pair<unsigned int, unsigned int> > enemyQueue;
@@ -64,7 +67,7 @@ std::stringstream playerName;
 MyContactListener contactListenerInstance;
 DebugDraw debugDrawInstance;
 
-
+// Data about all enemy waves
 static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple<unsigned int, unsigned int, unsigned int> > > _waveData =
 {
 	// ROUND 1 
@@ -184,8 +187,7 @@ static std::map < std::pair<unsigned int, unsigned int>, std::vector< std::tuple
 	}
 };
 
-
-
+// Displays or hides in-game shop
 void setShopVisible(bool visible)
 {
 	suppressPlayerControl = visible;
@@ -193,6 +195,7 @@ void setShopVisible(bool visible)
 	shopPanel->setVisible(visible);
 }
 
+// Displays or hides Game Over screen
 void setGameoverVisible(bool visible)
 {
 	if (!visible)
@@ -212,6 +215,7 @@ void setGameoverVisible(bool visible)
 	}
 }
 
+// Sets up Game Scene
 void GameScene::load() {
 	cout << "Game Scene Load \n";
 	//Reset
@@ -478,7 +482,6 @@ void GameScene::spawnEnemy(unsigned int id, unsigned int dir)
 	};
 
 	//Make Enemy
-	std::cout << "Enemy spawned at: " << pos << std::endl;
 	auto enemy = ShipFactory::makeEnemy(id);
 	enemy->getComponents<PhysicsComponent>()[0]->teleport(pos);
 	//Add to collection
@@ -523,6 +526,7 @@ void GameScene::createEdges()
 
 }
 
+// Handles input
 void GameScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 {
 	if (!gameScene.isLoaded())
@@ -555,6 +559,7 @@ void GameScene::onKeyPressed(std::variant<Keyboard::Key, unsigned int> k)
 
 }
 
+// Game Scene update loop
 void GameScene::update(const double& dt) {
 	 
 	//Check for deleted asteroids
@@ -633,12 +638,11 @@ void GameScene::update(const double& dt) {
 	Scene::update(dt);
 }
 
+// Handling 
 void GameScene::onTextEntered(std::string text)
 {
 	if (!enteringText)
 		return;
-	
-	cout << "Enter Initals" << endl;
 
 	//If all 3 entered then return
 	if (playerName.str().size() >= 3)
@@ -683,6 +687,7 @@ void GameScene::onTextEntered(std::string text)
 	carat->setPosition(sf::Vector2f(carat->getPosition().x + 64.0f, carat->getPosition().y));
 }
 
+// Player Death Thread
 void pDThread()
 {
 	sf::sleep(sf::milliseconds(2000));
@@ -711,13 +716,14 @@ void pDThread()
 
 } sf::Thread pdthread(&pDThread);
 
+// Launching Player Death thread
 void GameScene::playerDeath()
 {
-
 	pdthread.launch();
 	return;
 }
 
+// Counting down and starting a wave
 void roundStartThread()
 {
 	if (newRound)
@@ -745,13 +751,14 @@ void roundStartThread()
 
 } sf::Thread rst(&roundStartThread);
 
+// Launch a wave
 void GameScene::roundwaveStart()
 {
-
 	rst.launch();
 	return;
 }
 
+// Spawn enemies in a wave
 void GameScene::spawnWave() {
 
 	//Get data for current wave

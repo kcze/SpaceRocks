@@ -11,6 +11,7 @@
 
 #include <random>
 
+// Handles collisions
 class MyContactListener : public b2ContactListener {
 public:
 	MyContactListener() {};

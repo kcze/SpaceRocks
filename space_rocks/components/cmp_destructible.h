@@ -6,6 +6,7 @@
 #include "..\particle_factory.h"
 #include "time.h"
 
+// Component for all objects that can be destroyed
 class DestructibleComponent : public Component {
 
 public:

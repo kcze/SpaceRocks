@@ -3,6 +3,7 @@
 #include "components.h"
 #include <ecm.h>
 
+// UI Component that can hold texts and buttons, display them, navigate and execute
 class PanelComponent : public Component {
 public:
 	PanelComponent() = delete;
@@ -25,10 +26,10 @@ public:
 	~PanelComponent() override;
 
 private:
-	std::shared_ptr<Entity> _buttonPointer;
-	std::shared_ptr<Entity> _currentButton;
-	std::vector<std::shared_ptr<Entity>> _buttons;
-	std::vector<std::shared_ptr<Entity>> _elements;
+	std::shared_ptr<Entity> _buttonPointer;// Selected button graphics
+	std::shared_ptr<Entity> _currentButton;// Currently selected button
+	std::vector<std::shared_ptr<Entity>> _buttons;// Buttons
+	std::vector<std::shared_ptr<Entity>> _elements;// All elements, including buttons
 	sf::Vector2f _anchor;
 	bool _horizontal;// false = vertical
 	Scene* _panelScene;

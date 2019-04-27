@@ -10,6 +10,7 @@
 #include "system_physics.h"
 #include "factory.h"
 
+// Creates ships
 class ShipFactory : Factory {
 public:
 	static std::shared_ptr<Entity> makePlayer();

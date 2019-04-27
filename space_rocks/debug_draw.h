@@ -3,6 +3,7 @@
 #include "Box2D/Common/b2Draw.h"
 #include "Box2D/Box2D.h"
 
+// Draws debug shapes
 class DebugDraw : public b2Draw
 {
 public:

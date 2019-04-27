@@ -33,6 +33,7 @@ std::map<int, bool> Input::joystickAxes =
 
 void Input::init() { }
 
+// Returns KeyCode for given keyboard key or joystick button/axis
 Input::KeyCode Input::getKeyCode(std::variant<Keyboard::Key, unsigned int> key) {
 	std::map<Input::KeyCode, std::pair<std::variant<Keyboard::Key, unsigned int>, std::string>>::iterator iterator = Input::keys.begin();
 
@@ -47,6 +48,7 @@ Input::KeyCode Input::getKeyCode(std::variant<Keyboard::Key, unsigned int> key) 
 	return Input::KeyCode::NONE;
 }
 
+// Returns true if keyboard key or joystick button/axis is pressed
 bool Input::isKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {
 	if (std::holds_alternative<Keyboard::Key>(key))
 		return sf::Keyboard::isKeyPressed(std::get<Keyboard::Key>(key));
@@ -62,6 +64,7 @@ bool Input::isKeyPressed(std::variant<Keyboard::Key, unsigned int> key) {
 	}
 }
 
+// Returns true if keyboard key or joystick button/axis is released
 bool Input::isKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {
 	if (std::holds_alternative<Keyboard::Key>(key))
 		return !sf::Keyboard::isKeyPressed(std::get<Keyboard::Key>(key));
@@ -80,6 +83,7 @@ bool Input::isKeyReleased(std::variant<Keyboard::Key, unsigned int> key) {
 bool Input::isMousePressed(Mouse::Button button) { return  sf::Mouse::isButtonPressed((sf::Mouse::Button)button); }
 bool Input::isMouseReleased(Mouse::Button button) { return !sf::Mouse::isButtonPressed((sf::Mouse::Button)button); }
 
+// Returns true if KeyCode key is down
 bool Input::isKeyDown(Input::KeyCode keyCode) {
 	std::map<Input::KeyCode, std::pair<std::variant<Keyboard::Key, unsigned int>, std::string>>::iterator iterator = Input::keys.find(keyCode);
 	
@@ -93,6 +97,7 @@ bool Input::isKeyDown(Input::KeyCode keyCode) {
 		return Input::isKeyPressed(std::get<unsigned int>(iterator->second.first));
 }
 
+// Returns true if KeyCode key is up
 bool Input::isKeyUp(Input::KeyCode keyCode) {
 	std::map<Input::KeyCode, std::pair<std::variant<Keyboard::Key, unsigned int>, std::string>>::iterator iterator = Input::keys.find(keyCode);
 
@@ -113,6 +118,7 @@ Vector2f Input::mousePosition() {
 	return Vector2f(0.0f, 0.0f);
 }
 
+// Handles sfml input events
 void Input::onKeyPressed(sf::Event event) {
 	// Keyboard
 	if (event.type == sf::Event::KeyPressed)
@@ -156,6 +162,7 @@ void Input::onKeyPressed(sf::Event event) {
 	}
 }
 
+// Handles sfml input events
 void Input::onKeyReleased(sf::Event event) {
 	// Keyboard
 	if (event.type == sf::Event::KeyReleased)
@@ -241,6 +248,7 @@ void Input::onResized(sf::Event event) {
 	for (auto handler : handlers) handler->onResize(event.size.width, event.size.height);
 }
 
+// Handles OnTextEntered sfml event
 void Input::onTextEntered(sf::Event event) {
 	std::string str = ((sf::String)(event.text.unicode)).toAnsiString();
 

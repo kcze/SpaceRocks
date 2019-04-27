@@ -13,6 +13,7 @@
 #include "system_physics.h"
 #include "factory.h"
 
+// Creates projectiles
 class BulletFactory : Factory {
 public:
 	static std::shared_ptr<Entity> makeBullet(Bullet b);

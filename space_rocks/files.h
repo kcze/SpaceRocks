@@ -5,6 +5,7 @@
 #include "engine.h"
 #include <map>
 
+// Static methods for loading and saving data to files
 class Files {
 public:
 

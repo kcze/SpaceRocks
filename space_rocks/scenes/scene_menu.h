@@ -4,6 +4,7 @@
 #include "..\input.h"
 #include "..\files.h"
 
+// Menu scene
 class MenuScene : public Scene, public InputEvents {
 public:
 	MenuScene() = default;

@@ -12,6 +12,7 @@ PlayerComponent::~PlayerComponent() {
 	_shipComponent.reset();
 }
 
+// Update loop
 void PlayerComponent::update(double dt)
 {
 	if (suppressPlayerControl)
@@ -20,6 +21,7 @@ void PlayerComponent::update(double dt)
 		return;
 	}
 
+	// Moving and shooting
 	if (Input::isKeyDown(Input::KeyCode::P1_THRUST))
 	{
 		_shipComponent->thrust(dt);
@@ -38,6 +40,7 @@ void PlayerComponent::update(double dt)
 	}
 }
 
+// Checks if player has enough coins
 bool PlayerComponent::tryPurchase(int cost)
 {
 	if (_coins >= cost)
@@ -54,6 +57,7 @@ bool PlayerComponent::tryPurchase(int cost)
 	}
 }
 
+// Tries to upgrade player damage (bullet)
 void PlayerComponent::tryUpgradeDamage()
 {
 	//Get current bullet

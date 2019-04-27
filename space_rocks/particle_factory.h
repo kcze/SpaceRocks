@@ -11,6 +11,7 @@
 #include "Box2D/Box2D.h"
 #include "system_physics.h"
 
+// Creates particles
 class ParticleFactory : Factory {
 public:
 	static std::shared_ptr<Entity> makeParticle(unsigned int type);

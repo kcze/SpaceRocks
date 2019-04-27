@@ -8,6 +8,7 @@
 #include "cmp_bullet.h"
 #include <random>
 
+// Ship controller
 class ShipComponent : public Component {
 
 public:

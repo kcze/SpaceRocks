@@ -31,6 +31,7 @@ PanelComponent::~PanelComponent() {
 
 void PanelComponent::update(double dt) { }
 
+// Adds a button
 void PanelComponent::addButton(const std::string text, std::function<void()> function) {
 
 	// Create text for the button
@@ -56,6 +57,7 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	updatePositions();
 }
 
+// Adds a button with dynamic text
 void PanelComponent::addButton(std::function<std::string()> text, std::function<void()> function) {
 
 	// Create text for the button
@@ -88,6 +90,7 @@ void PanelComponent::addButton(std::function<std::string()> text, std::function<
 	updatePositions();
 }
 
+// Adds text
 std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const float size) {
 
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
@@ -101,6 +104,7 @@ std::shared_ptr<Entity> PanelComponent::addText(const std::string text, const fl
 	return entity;
 }
 
+// Adds dynamic text
 std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> function, const float size) {
 
 	std::shared_ptr<Entity> entity = _panelScene->makeEntity();
@@ -118,6 +122,7 @@ std::shared_ptr<Entity> PanelComponent::addText(std::function<std::string()> fun
 	return entity;
 }
 
+// Executes a function associated with currently selected button
 void PanelComponent::executeButton()
 {
 	if (_currentButton != NULL)
@@ -128,6 +133,7 @@ void PanelComponent::executeButton()
 
 }
 
+// Moves pointer to a previous button
 void PanelComponent::pointerPrevious()
 {
 	if (_buttons.size() < 2)
@@ -150,6 +156,7 @@ void PanelComponent::pointerPrevious()
 	updatePositions();
 }
 
+// Moves pointer to a next button
 void PanelComponent::pointerNext()
 {
 	if (_buttons.size() < 2)
@@ -172,6 +179,7 @@ void PanelComponent::pointerNext()
 	updatePositions();
 }
 
+// Places all elements properly
 void PanelComponent::updatePositions()
 {
 	if (_elements.size() == 0)
@@ -195,6 +203,7 @@ void PanelComponent::updatePositions()
 
 }
 
+// Hides or displays all elements
 void PanelComponent::setVisible(bool visible)
 {
 	_visible = visible;

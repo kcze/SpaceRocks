@@ -4,6 +4,7 @@
 #include "components.h"
 #include <ecm.h>
 
+// Holds pointers to different functions needed for UI system to work
 class UiComponent : public Component {
 public:
 	UiComponent() = delete;

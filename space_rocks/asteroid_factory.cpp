@@ -1,6 +1,6 @@
 #include "asteroid_factory.h"
 
-
+// Asteroids data
 std::map < unsigned int, ObjectData> AsteroidFactory::_objectData = 
 {	
 	//11: Asteroid 1, Size 1
@@ -181,7 +181,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 std::default_random_engine rG((int)time(NULL));
 std::uniform_real_distribution<float> tO(0.1f, 1.0f);
 
-
+// Creates an asteroid
 std::shared_ptr<Entity> AsteroidFactory::makeAsteroid(unsigned int id, sf::Vector2f coords)
 {
 	//Make entity
