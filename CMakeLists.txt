@@ -60,8 +60,8 @@ set(EXECUTABLES ${EXECUTABLES} SPACE_ROCKS)
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/res" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res)
 	
 #### Target for copying dll####
-  add_custom_target(copy_dll ALL 
-    COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/lib/sfml/extlibs/bin/x86/openal32.dll" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
+#  add_custom_target(copy_dll ALL 
+#    COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/lib/sfml/extlibs/bin/x86/openal32.dll" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
 	
 #### Link Dependencies ####
 foreach (exe ${EXECUTABLES})
@@ -84,8 +84,8 @@ foreach (exe ${EXECUTABLES})
   set_target_properties(${exe} PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
   endif(MSVC)
 
-  add_dependencies(${exe} sfml-graphics sfml-audio copy_resources copy_dll)
-
+  add_dependencies(${exe} sfml-graphics sfml-audio copy_resources)
+#copy_dll
 endforeach ()
 
 #Install directory within build folder, so it doesn't go into /lib or program-files
