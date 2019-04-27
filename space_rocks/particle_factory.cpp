@@ -9,7 +9,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				//No Collider
 			},
 			{
-				Resources::load<sf::Texture>("particles.png")
+				Resources::get<sf::Texture>("particles.png")
 			},
 			{
 				sf::IntRect(0, 0, 16, 16)
@@ -23,7 +23,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				//No Collider
 			},
 			{
-				Resources::load<sf::Texture>("particles.png")
+				Resources::get<sf::Texture>("particles.png")
 			},
 			{
 				sf::IntRect(16, 0, 16, 16)
@@ -37,7 +37,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				//No Collider
 			},
 			{
-				Resources::load<sf::Texture>("particles.png")
+				Resources::get<sf::Texture>("particles.png")
 			},
 			{
 				sf::IntRect(32, 0, 16, 16)
@@ -51,7 +51,7 @@ std::map < unsigned int, ObjectData > ParticleFactory::_objectData =
 				//No Collider
 			},
 			{
-				Resources::load<sf::Texture>("particles.png")
+				Resources::get<sf::Texture>("particles.png")
 			},
 			{
 				sf::IntRect(48, 0, 16, 16)

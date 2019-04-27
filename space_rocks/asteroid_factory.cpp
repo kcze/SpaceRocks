@@ -17,7 +17,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{4.0f * PSI16, 4.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(0, 0, 256, 256)
@@ -34,7 +34,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{0.0f * PSI16, 1.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(256, 0, 256, 256)
@@ -52,7 +52,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{5.0f * PSI16, -4.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(512, 0, 256, 256)
@@ -70,7 +70,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{4.0f * PSI16, 4.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(768, 0, 256, 256)
@@ -86,7 +86,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{-6.0f * PSI16, -1.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(0, 256, 256, 256)
@@ -102,7 +102,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{0.0f * PSI16, 1.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(256, 256, 256, 256)
@@ -119,7 +119,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{0.0f * PSI16, -6.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(0, 512, 256, 256)
@@ -135,7 +135,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{5.0f * PSI16, -4.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(256, 512, 256, 256)
@@ -152,7 +152,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{5.0f * PSI16, 2.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(0, 768, 256, 256)
@@ -169,7 +169,7 @@ std::map < unsigned int, ObjectData> AsteroidFactory::_objectData =
 				{4.0f * PSI16, 4.0f * PSI16}
 			},
 			{
-				Resources::load<sf::Texture>("asteroid-1.png")
+				Resources::get<sf::Texture>("asteroid-1.png")
 			},
 			{
 				sf::IntRect(256, 768, 256, 256)

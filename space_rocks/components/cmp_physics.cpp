@@ -44,7 +44,6 @@ b2Body*  PhysicsComponent::getBody()
 void PhysicsComponent::setFixtureDef(b2FixtureDef fix)
 {
 	//set properties
-	//fix.density = _dynamic ? 10.f : 0.f;
 	fix.friction = _dynamic ? 0.1f : 0.8f;
 	fix.restitution = .2;
 	_body->SetSleepingAllowed(false);

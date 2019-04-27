@@ -11,7 +11,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{2.0f * PSI8, 2.0f * PSI8}
 			},
 			{
-				Resources::load<sf::Texture>("player.png")
+				Resources::get<sf::Texture>("player.png")
 			},
 			{
 				sf::IntRect(0, 0, 128, 128)
@@ -30,7 +30,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{2.0f * PSI8, 1.0f * PSI8}
 			},
 			{
-				Resources::load<sf::Texture>("enemies.png")
+				Resources::get<sf::Texture>("enemies.png")
 			},
 			{
 				sf::IntRect(0, 0, 128, 128)
@@ -48,7 +48,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{3.0f * PSI8, 1.0f * PSI8}
 			},
 			{
-				Resources::load<sf::Texture>("enemies.png")
+				Resources::get<sf::Texture>("enemies.png")
 			},
 			{
 				sf::IntRect(128, 0, 128, 128)
@@ -67,7 +67,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{4.0f * PSI8, 5.0f * PSI8}
 			},
 			{
-				Resources::load<sf::Texture>("enemies.png")
+				Resources::get<sf::Texture>("enemies.png")
 			},
 			{
 				sf::IntRect(256, 0, 128, 128)
@@ -86,7 +86,7 @@ std::map < unsigned int, ObjectData > ShipFactory::_objectData =
 				{2.0f * PSI8, 5.0f * PSI8}
 			},
 			{
-				Resources::load<sf::Texture>("enemies.png")
+				Resources::get<sf::Texture>("enemies.png")
 			},
 			{
 				sf::IntRect(384, 0, 128, 128)
@@ -201,7 +201,7 @@ std::shared_ptr<Entity> ShipFactory::makeShip()
 
 	// Thruster sprite to all ships
 	auto sprite = entity->addComponent<SpriteComponent>();
-	sprite->setTexure(Resources::load<sf::Texture>("thrust.png"));
+	sprite->setTexure(Resources::get<sf::Texture>("thrust.png"));
 
 	//Add components
 	entity->addComponent<PhysicsComponent>(true, sf::Vector2f(192.0f, 192.0f));

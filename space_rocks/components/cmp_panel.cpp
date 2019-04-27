@@ -14,7 +14,7 @@ PanelComponent::PanelComponent(Entity* const p, const sf::Vector2f anchor, const
 	_buttonPointer = _panelScene->makeEntity();
 	auto spr = _buttonPointer->addComponent<SpriteComponent>();
 	spr->setTextureRect(sf::IntRect(0, 96, 256, 96));
-	spr->setTexure(Resources::load<sf::Texture>("button.png"));
+	spr->setTexure(Resources::get<sf::Texture>("button.png"));
 	_buttonPointer->setVisible(false);
 }
 
@@ -39,7 +39,7 @@ void PanelComponent::addButton(const std::string text, std::function<void()> fun
 	// Create frame
 	auto frame = button->addComponent<SpriteComponent>();
 	frame->setTextureRect(sf::IntRect(0, 0, 256, 96));
-	frame->setTexure(Resources::load<sf::Texture>("button.png"));
+	frame->setTexure(Resources::get<sf::Texture>("button.png"));
 
 	// Create ui component
 	auto ui = button->addComponent<UiComponent>();
@@ -64,7 +64,7 @@ void PanelComponent::addButton(std::function<std::string()> text, std::function<
 	// Create frame
 	auto frame = button->addComponent<SpriteComponent>();
 	frame->setTextureRect(sf::IntRect(0, 0, 256, 96));
-	frame->setTexure(Resources::load<sf::Texture>("button.png"));
+	frame->setTexure(Resources::get<sf::Texture>("button.png"));
 
 	// Create ui component
 	if (button->getComponents<UiComponent>().size() == 0)
@@ -159,12 +159,6 @@ void PanelComponent::pointerNext()
 		_currentButton = _buttons.front();
 	else
 	{
-		/*std::vector<std::shared_ptr<Entity>>::iterator it = std::find(_buttons.begin(), _buttons.end(), _currentButton);
-
-		int i = std::distance(_buttons.begin(), it);
-
-		_currentButton = _buttons.at(i + 1);//*/
-
 		for (int i = 0; i < _buttons.size(); i++)
 		{
 			if (_currentButton == _buttons[i])

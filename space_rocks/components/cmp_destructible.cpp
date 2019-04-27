@@ -115,7 +115,6 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 			//Spawn bullet particles for all bullet impacts, regardless if they kill (unless off screen)
 			if((coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).y < 400.0f || (coords - sf::Vector2f(GAMEX / 2, GAMEY / 2)).x < 650.0f)
 				particleBurst(coords, 5, 35.0f);
-			//TODO: vary depending on bullet type
 			audioManager.playSound("bullet_impact_light");
 			break;
 		//1: Player
@@ -169,8 +168,6 @@ void DestructibleComponent::spawnFragments(const sf::Vector2f coords)
 	}
 }
 
-
-//TODO: Add lifetime as argument
 //Generates a particle burst at the given coords with the given properties
 void DestructibleComponent::particleBurst(const sf::Vector2f coords, unsigned int noParticles, float magnitude)
 {
