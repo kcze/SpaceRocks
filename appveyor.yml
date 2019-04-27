@@ -19,7 +19,7 @@ before_build:
 
     cd build
     
-    cmake -G "Visual Studio 15 2017 Win64" ../
+    cmake -G "Visual Studio 15 2017 Win32" ../
     
 build:
   project: C:\projects\spacerocks\build\PACKAGE.vcxproj
@@ -29,7 +29,7 @@ build:
 after_build:
 - cmd: >-
 
-    7z a SpaceRocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/SpaceRocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
+    7z a SpaceRocks%CONFIGURATION%_win32.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/SpaceRocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
     
     cd C:/projects/spacerocks/build/
     
@@ -39,7 +39,7 @@ after_build:
     
     dir
     
-    for %%a in (*.exe) do ren "%%~a" "%%~na_%CONFIGURATION%_win64%%~xa"
+    for %%a in (*.exe) do ren "%%~a" "%%~na_%CONFIGURATION%_win32%%~xa"
     
     dir
     
