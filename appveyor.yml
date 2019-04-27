@@ -29,7 +29,7 @@ build:
 after_build:
 - cmd: >-
 
-    copy /y C:/projects/spacerocks/lib/sfml/extlibs/bin/x86/openal32.dll %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/
+    copy /y C:\projects\spacerocks\lib\sfml\extlibs\bin\x86\openal32.dll %APPVEYOR_BUILD_FOLDER%\build\bin\%CONFIGURATION%
 
     7z a SpaceRocks%CONFIGURATION%_win64.zip %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/SpaceRocks.exe %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/*.dll  %APPVEYOR_BUILD_FOLDER%/build/bin/%CONFIGURATION%/**/*
     
