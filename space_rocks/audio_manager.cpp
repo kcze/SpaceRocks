@@ -101,7 +101,7 @@ std::map<std::string, sf::SoundBuffer> AudioManager::_soundBuffers =
 	}	
 };
 
-sf::Sound AudioManager::_sounds[20] = { sf::Sound()};
+sf::Sound AudioManager::_sounds[30] = { sf::Sound()};
 
 // Play a sound
 void AudioManager::playSound(std::string name) { 
@@ -120,7 +120,7 @@ void AudioManager::_playSound()
 	{
 		std::string name = _soundQueue.front();
 		_soundQueue.pop();
-		_soundIndex = _soundIndex > 19 ? 0 : _soundIndex;
+		_soundIndex = _soundIndex > 29 ? 0 : _soundIndex;
 		_sounds[_soundIndex].setBuffer(_soundBuffers[name]);
 		_sounds[_soundIndex].play();
 		_soundIndex++;
