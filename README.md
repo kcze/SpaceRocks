@@ -32,4 +32,4 @@ Space Rocks
 __________________________________________________________________________________________________
 >###### Note
 >When launching, in case of an error involving "openal32.dll", 
-please copy it over from *Repository folder*[\lib\sfml\extlibs\bin\x86](https://github.com/SFML/SFML/tree/0980e90ee486de80b082bf77c3e4762b885b4d67/extlibs/bin/x86) to *Build folder*\bin\Release (or bin\Debug).
+please copy it over from *Repository folder*\lib\sfml\extlibs\bin\x86 to *Build folder*\bin\Release (or bin\Debug), or download from [here](https://github.com/SFML/SFML/tree/0980e90ee486de80b082bf77c3e4762b885b4d67/extlibs/bin/x86).
