@@ -6,7 +6,9 @@ Space Rocks
 | Branch        | Status        | 
 | ------------- |:-------------:| 
 | Master        | [![Build status](https://ci.appveyor.com/api/projects/status/i8pd1360bfrbaxw4/branch/master?svg=true)](https://ci.appveyor.com/project/SubStrifer/spacerocks/branch/master) |
+------
 
+![Gif of Space Rocks!](https://media.giphy.com/media/ftHRxYhUwHKE1S6Gsz/giphy.gif)
 ------
 ### Building Space Rocks from source on Windows
 #### Software:
