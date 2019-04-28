@@ -12,7 +12,7 @@ Space Rocks
 #### Software:
 - [CMake](https://cmake.org/).
 - [Visual Studio](https://visualstudio.microsoft.com/downloads/).
-- (optional) Git client; [git-scm](https://git-scm.com/downloads).
+- Git client; [git-scm](https://git-scm.com/downloads) *(optional)*.
 
 #### Instructions
 1. Install required software.
