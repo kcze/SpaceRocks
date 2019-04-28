@@ -10,29 +10,26 @@ Space Rocks
 ------
 ### Building Space Rocks from source on Windows
 #### Software:
-- [CMake](https://cmake.org/)
-- [Visual Studio](https://visualstudio.microsoft.com/downloads/)
-- (optional) git client; [git-scm](https://git-scm.com/downloads)
+- [CMake](https://cmake.org/).
+- [Visual Studio](https://visualstudio.microsoft.com/downloads/).
+- (optional) Git client; [git-scm](https://git-scm.com/downloads).
 
-#### Steps
-1. Install required software
-2. Clone or download this repository
+#### Instructions
+1. Install required software.
+2. Clone or download this repository.
 3. In CMake:
-  * Set *Where is the source code* path to the local repository folder
-  * Set *Where to build the binaries* to a different folder (**outside the repository**)
-  * Press *Configure*
-  * Press *Generate* (select *Visual Studio 15 2017*, or any other newer version)
-  * *Open Project*
+    1. Set "Where is the source code" path to the local repository folder.
+    2. Set "Where to build the binaries" to a different folder (**outside the repository**).
+    3. Press:
+        1. **Configure**.
+        2. **Generate** (select *Visual Studio 15 2017*, or any other newer version).
+        3. **Open Project**.
 4. In Visual Studio
-  * You can change to a *Release* configuration
-  * Right click on the *SPACE_ROCKS* project (in the *Solution Explorer*)
-  * Select *Build*
-5. If successful, you can find .exe file in the *Build folder*\bin\Release (or bin\Debug) folder
-
-#### Note
-When launching, in the case of an error about "openal32.dll",  
-plase copy it over from *Repository folder*\lib\sfml\extlibs\bin\x86 to *Build folder*\bin\Release (or bin\Debug).
-
-------
-* Game Design Document
-https://docs.google.com/document/d/1G6GCR1EvAarPW5XVATN63ufdhNCaqoHT2BB9JJ5qnwQ/edit?usp=sharing
+    1. Change to a *Release* configuration if desired.
+    2. Right click on the *SPACE_ROCKS* project (in the *Solution Explorer*).
+    3. Select *Build*.
+5. If successful, you can find .exe file in the *Build folder*\bin\Release (or bin\Debug) folder.
+__________________________________________________________________________________________________
+>###### Note
+>When launching, in case of an error involving "openal32.dll", 
+please copy it over from *Repository folder* [\lib\sfml\extlibs\bin\x86](https://github.com/SFML/SFML/tree/0980e90ee486de80b082bf77c3e4762b885b4d67/extlibs/bin/x86) to *Build folder*\bin\Release (or bin\Debug).
